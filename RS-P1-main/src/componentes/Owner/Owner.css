@@ -1,0 +1,125 @@
+.container {
+  display: flex;
+  flex-direction: column;
+  margin: auto;
+  margin-top: 100px;
+  background-color: #ffffff;
+  padding: 30px;
+  border-radius: 10px;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+  max-width: 1200px; /* Ajusta el ancho máximo */
+}
+
+.header {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  margin-bottom: 40px;
+}
+
+.text {
+  color: rgb(0, 0, 0);
+  font-size: 32px; /* Tamaño del título ajustado */
+  font-weight: 700;
+  text-align: center;
+}
+
+.underline {
+  width: 80px; /* Ajusta el ancho de la línea */
+  height: 6px;
+  background-color: rgb(0, 0, 0);
+  border-radius: 3px;
+  margin-top: 10px;
+}
+
+.content-wrapper {
+  display: flex;
+  align-items: flex-start;
+  gap: 20px;
+}
+
+.profile-image {
+  width: 150px;
+  height: 120px;
+  background-color: #E7CF8A;
+  border-radius: 50%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  overflow: hidden;
+  margin-top: 100px;
+  margin-left: 60px;
+}
+
+.profile-image img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+.content {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  gap: 50px;
+  margin-left: 100px;
+}
+
+.input {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  margin-bottom: 7px; /* Añadido espacio debajo de cada input */
+}
+
+.input label {
+  font-size: 16px;
+  font-weight: 600;
+}
+
+.input input {
+  height: 40px;
+  width: 100%;
+  padding: 0 10px;
+  border: 1px solid #ccc;
+  border-radius: 5px;
+  font-size: 16px;
+}
+
+.input-wrapper {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.input-wrapper .input {
+  background-color: #E7CF8A; 
+  border-radius: 5px;
+  padding: 10px;
+}
+
+.submit-container {
+  display: flex;
+  gap: 20px;
+  justify-content: center;
+  margin-top: 30px;
+}
+
+.submit {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  width: 150px;
+  height: 50px;
+  color: #000000;
+  background-color: #E7CF8A;
+  border-radius: 25px;
+  font-size: 16px;
+  font-weight: 700;
+  cursor: pointer;
+  transition: background-color 0.3s ease;
+}
+
+.submit:hover {
+  background-color: #D0B874;
+}

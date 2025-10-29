@@ -1,0 +1,95 @@
+.donation-container {
+    display: flex;
+    flex-direction: column;
+    margin: auto;
+    margin-top: 30px;
+    background-color: #FFF8E1;
+    padding: 30px;
+    border-radius: 10px;
+    max-width: 600px;
+    box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.1);
+}
+
+.project-banner img {
+    width: 100%;
+    height: auto;
+    border-radius: 10px;
+}
+
+.project-info h1 {
+    font-size: 24px;
+    font-weight: bold;
+    color: #000;
+    text-align: center;
+    margin: 20px 0;
+}
+
+.donation-form {
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+}
+
+.input {
+    display: flex;
+    align-items: center;
+    width: 100%;
+    height: 40px;
+    background-color: #E7CF8A;
+    border-radius: 6px;
+    padding-left: 10px;
+}
+
+.input input {
+    width: 100%;
+    border: none;
+    outline: none;
+    background-color: transparent;
+    font-size: 16px;
+    color: #555;
+    padding: 5px;
+}
+
+.checkbox-container {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    color: #000;
+    justify-content: flex-start; /* Alinea los elementos a la izquierda */
+}
+
+.checkbox-container input[type="checkbox"] {
+    margin-right: 0px; /* Espacio entre el checkbox y el texto */
+}
+
+.button-container {
+    display: flex;
+    justify-content: space-between;
+}
+
+.submit {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    width: 150px;
+    height: 40px;
+    background-color: #E7CF8A;
+    border-radius: 20px;
+    font-size: 16px;
+    font-weight: bold;
+    cursor: pointer;
+    color: black;
+    text-align: center; /* Alinea el texto al centro del botón */
+}
+
+.submit:hover {
+    background-color: #D0B874;
+}
+
+.exit {
+    background-color: #E7CF8A;
+}
+
+.exit:hover {
+    background-color: #D0B874;
+}

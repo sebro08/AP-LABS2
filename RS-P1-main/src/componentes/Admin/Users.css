@@ -1,0 +1,38 @@
+/* Users.css */
+.container {
+    padding: 20px;
+  }
+  
+  .user-table {
+    width: 100%;
+    border-collapse: collapse;
+  }
+  
+  .user-table th, .user-table td {
+    border: 1px solid #ddd;
+    padding: 8px;
+  }
+  
+  .user-table th {
+    background-color: #f4f4f4;
+    text-align: left;
+  }
+  
+  .back-button-container {
+    margin-top: 20px;
+  }
+  
+  .back-button-container .btn {
+    padding: 10px 20px;
+    background-color: #d6bd87;
+    color: rgb(0, 0, 0);
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+    border-radius: 50px;
+  }
+  
+  .back-button-container .btn:hover {
+    background-color: #b09c6a;
+  }
+  

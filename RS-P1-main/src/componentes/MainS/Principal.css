@@ -1,0 +1,121 @@
+/* General container styling */
+.container {
+    padding: 20px;
+}
+
+/* Header styling */
+.header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    margin-bottom: 20px;
+}
+
+.site-title {
+    margin: 0;
+}
+
+.button-group {
+    display: flex;
+    gap: 10px;
+}
+
+.button {
+    padding: 10px 15px;
+    border-radius: 4px;
+    background-color: #f0df9b; /* Botón dorado */
+    color: #000;
+    text-decoration: none;
+    text-align: center;
+}
+
+.button:hover {
+    background-color: #e6b800;
+}
+
+/* Search section styling */
+.search-section {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    margin: 10px 0;
+}
+
+.search-bar {
+    flex: 1;
+    padding: 8px;
+    border-radius: 4px;
+    border: 1px solid #ccc;
+}
+
+.search-button {
+    padding: 8px 12px;
+    border: none;
+    border-radius: 4px;
+    background-color: #f0df9b; /* Botón dorado */
+    color: #000;
+    cursor: pointer;
+}
+
+.search-button:hover {
+    background-color: #e6b800;
+}
+
+/* Date Picker section styling */
+.date-picker-section {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    margin: 10px 0;
+}
+
+.date-picker {
+    padding: 8px;
+    border-radius: 4px;
+    border: 1px solid #ccc;
+}
+
+/* Filter section styling */
+.filter-section {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    margin-bottom: 20px;
+}
+
+.filter-button {
+    padding: 8px 12px;
+    border: none;
+    border-radius: 4px;
+    background-color: #f0df9b; /* Botón dorado */
+    color: #000;
+    cursor: pointer;
+}
+
+.filter-button:hover {
+    background-color: #e6b800;
+}
+
+/* Separator line styling */
+.separator-line {
+    margin: 10px 0;
+    border: 0;
+    border-top: 1px solid #ccc;
+}
+
+/* Table styling */
+.project-table {
+    width: 100%;
+    border-collapse: collapse;
+}
+
+.project-table th, .project-table td {
+    padding: 10px;
+    border: 1px solid #ddd;
+    text-align: left;
+}
+
+.project-table th {
+    background-color: #f0df9b; /* Dorado */
+    color: #000;
+}

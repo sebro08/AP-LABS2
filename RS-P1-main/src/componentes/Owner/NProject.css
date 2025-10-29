@@ -1,0 +1,62 @@
+/* NProject.css */
+
+.container {
+    display: flex;
+    flex-direction: column;
+    margin: auto;
+    margin-top: 100px;
+    background-color: #E7CF8A; /* Fondo dorado */
+    padding: 30px;
+    border-radius: 10px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    max-width: 800px; /* Ajusta el ancho máximo */
+  }
+  
+  h1 {
+    text-align: center;
+    font-size: 32px;
+    color: #000000;
+    margin-bottom: 20px;
+  }
+  
+  form {
+    display: flex;
+    flex-direction: column;
+    gap: 15px;
+  }
+  
+  label {
+    font-size: 16px;
+    font-weight: 600;
+  }
+  
+  input, textarea {
+    width: 100%;
+    padding: 10px;
+    border-radius: 5px;
+    border: 1px solid #ccc;
+    font-size: 16px;
+  }
+  
+  textarea {
+    height: 100px; /* Ajusta la altura del textarea */
+  }
+  
+  button, .back-button {
+    display: block;
+    margin: 20px auto 0; /* Centra los botones */
+    width: 200px;
+    padding: 15px;
+    background-color: #e9d08c;
+    color: #000000;
+    border: none;
+    border-radius: 25px;
+    font-size: 16px;
+    font-weight: 700;
+    cursor: pointer;
+  }
+  
+  button:hover, .back-button:hover {
+    background-color: #ab9367;
+  }
+  

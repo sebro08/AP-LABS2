@@ -1,0 +1,71 @@
+.container {
+  width: 100%;
+  max-width: 500px; 
+  margin: 0 auto;
+  padding: 20px;
+  background-color: rgba(200, 162, 65, 0.258);
+  border-radius: 8px; 
+}
+
+h1 {
+  text-align: center;
+  margin-bottom: 20px;
+}
+
+.form-group {
+  margin-bottom: 20px;
+}
+
+label {
+  display: block;
+  margin-bottom: 8px;
+  font-weight: bold;
+}
+
+.input-field, .form-control {
+  width: 100%;
+  padding: 10px;
+  font-size: 16px;
+  border: 1px solid #ccc;
+  border-radius: 4px;
+  box-sizing: border-box;
+}
+
+.input-field {
+  resize: none;
+}
+
+textarea.input-field {
+  height: 100px; /* Puedes ajustar la altura según la necesidad */
+}
+
+/* Estilos de los botones */
+.submit, .button {
+  background-color: #E7CF8A; 
+  border: none;
+  padding: 10px 20px;
+  text-align: center;
+  font-size: 16px;
+  color: black;
+  border-radius: 4px;
+  cursor: pointer;
+  text-decoration: none;
+  font-weight: normal; /* Quitar la negrita del botón */
+}
+
+/* Hover de los botones */
+.submit:hover, .button:hover {
+  background-color: #D0B874;
+}
+
+/* Centrado de botones */
+.buttons-container {
+  display: flex;
+  justify-content: center;
+  margin-top: 20px;
+  gap: 20px; /* Espacio entre los botones */
+}
+
+.button {
+  background-color: #E7CF8A;
+}

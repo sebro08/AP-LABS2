@@ -1,0 +1,39 @@
+.admin-screen-container {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 100vh;
+    background-color: #ffffff; 
+}
+
+.overlay {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    background-color: #fff;
+    border-radius: 10px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    padding: 10px;
+}
+
+.option {
+    cursor: pointer;
+    padding: 15px;
+    margin: 10px 0;
+    width: 200px;
+    text-align: center;
+    border-radius: 5px;
+    background-color: #d2c5a1; 
+    color: #000000; /* Asegúrate de que el texto sea negro */
+    font-weight: bold;
+    transition: background-color 0.3s;
+    text-decoration: none; /* Elimina el subrayado si es un enlace */
+}
+
+.option:hover {
+    background-color: transparent; /* Cambia el color de fondo al pasar el mouse */
+}
+
+.option.active {
+    background-color: #ffffff;
+}
