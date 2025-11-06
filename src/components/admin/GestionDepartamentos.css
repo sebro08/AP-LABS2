@@ -1,0 +1,55 @@
+.gestion-departamentos {
+  padding: 30px;
+  max-width: 1600px;
+  margin: 0 auto;
+}
+
+/* Reusing styles from GestionLaboratorios */
+.depto-codigo {
+  background: #e6f3ff;
+  color: #0066cc;
+  padding: 4px 12px;
+  border-radius: 6px;
+  font-weight: 600;
+  font-size: 13px;
+  font-family: 'Courier New', monospace;
+}
+
+.depto-name {
+  font-weight: 600;
+  color: #2d3748;
+}
+
+.departamentos-table {
+  width: 100%;
+  border-collapse: collapse;
+}
+
+.departamentos-table thead {
+  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  color: white;
+}
+
+.departamentos-table th {
+  padding: 16px;
+  text-align: left;
+  font-weight: 600;
+  font-size: 14px;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+}
+
+.departamentos-table tbody tr {
+  border-bottom: 1px solid #e2e8f0;
+  transition: background-color 0.2s ease;
+}
+
+.departamentos-table tbody tr:hover {
+  background-color: #f7fafc;
+}
+
+.departamentos-table td {
+  padding: 16px;
+  font-size: 14px;
+  color: #4a5568;
+}
