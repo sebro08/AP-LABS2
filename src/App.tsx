@@ -29,6 +29,7 @@ import GestionReportes from './components/admin/GestionReportes';
 import PerfilUsuario from './components/admin/PerfilUsuario';
 import GestionNotificaciones from './components/admin/GestionNotificaciones';
 import ParametrosGlobales from './components/admin/ParametrosGlobales';
+import AdminCalendario from './components/admin/AdminCalendario';
 import UserLayout from './components/user/UserLayout';
 import UserDashboard from './components/user/UserDashboard';
 import UserProfile from './components/user/UserProfile';
@@ -38,6 +39,7 @@ import UserNotificaciones from './components/user/UserNotificaciones';
 import UserSolicitudes from './components/user/UserSolicitudes';
 import UserReservas from './components/user/UserReservas';
 import UserHistorial from './components/user/UserHistorial';
+import UserCalendario from './components/user/UserCalendario';
 import TecnicoLayout from './components/tecnico/TecnicoLayout';
 import TecnicoDashboard from './components/tecnico/TecnicoDashboard';
 import TecnicoGestionSolicitudes from './components/tecnico/TecnicoGestionSolicitudes';
@@ -75,6 +77,7 @@ function App() {
             <Route path="dashboard" element={<AdminDashboard />} />
             <Route path="perfil" element={<PerfilUsuario />} />
             <Route path="bitacora" element={<GestionBitacora />} />
+            <Route path="calendario" element={<AdminCalendario />} />
             <Route path="reportes-uso" element={<div style={{padding: '30px'}}>Reportes de Uso (Próximamente)</div>} />
             <Route path="reportes-generales" element={<GestionReportes />} />
             <Route path="notificaciones" element={<GestionNotificaciones />} />
@@ -113,6 +116,7 @@ function App() {
             <Route path="perfil" element={<UserProfile />} />
             <Route path="perfil/editar" element={<EditUserProfile />} />
             <Route path="reservas" element={<UserReservas />} />
+            <Route path="calendario" element={<UserCalendario />} />
             <Route path="mensajes" element={<UserMensajeria />} />
             <Route path="notificaciones" element={<UserNotificaciones />} />
             <Route path="mis-solicitudes" element={<UserSolicitudes />} />

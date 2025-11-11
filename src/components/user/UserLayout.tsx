@@ -56,6 +56,7 @@ const UserLayout = () => {
     { id: 'dashboard', icon: '🏠', label: 'Inicio', path: '/user/dashboard' },
     { id: 'perfil', icon: '👤', label: 'Perfil', path: '/user/perfil' },
     { id: 'separator1', isSeparator: true, label: 'Servicios' },
+    { id: 'calendario', icon: '📅', label: 'Calendario', path: '/user/calendario' },
     { id: 'reservas', icon: '🏢', label: 'Reservas', path: '/user/reservas' },
     { id: 'mis-solicitudes', icon: '📋', label: 'Mis Solicitudes', path: '/user/mis-solicitudes' },
     { id: 'historial', icon: '📊', label: 'Historial de Uso', path: '/user/historial' },
