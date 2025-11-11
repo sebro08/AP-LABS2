@@ -2,6 +2,10 @@ import { useState, useEffect } from 'react';
 import { collection, getDocs, query, where } from 'firebase/firestore';
 import { db } from '../../firebase/config';
 import { useAuth } from '../../context/AuthContext';
+import { registrarEnBitacora } from '../../utils/bitacoraHelper';
+import jsPDF from 'jspdf';
+import autoTable from 'jspdf-autotable';
+import * as XLSX from 'xlsx';
 import './UserHistorial.css';
 
 interface HistorialItem {
@@ -20,6 +24,13 @@ interface HistorialItem {
   estado: number;
 }
 
+interface FiltrosExportacion {
+  fechaInicio: string;
+  fechaFin: string;
+  tipoReporte: 'completo' | 'laboratorios' | 'recursos';
+  formato: 'pdf' | 'excel' | 'ambos';
+}
+
 const UserHistorial = () => {
   const { user } = useAuth();
   const [historial, setHistorial] = useState<HistorialItem[]>([]);
@@ -27,7 +38,16 @@ const UserHistorial = () => {
   const [searchTerm, setSearchTerm] = useState('');
   const [filterTipo, setFilterTipo] = useState<'todos' | 'laboratorio' | 'recurso'>('todos');
   const [showDetalle, setShowDetalle] = useState(false);
+  const [showExportModal, setShowExportModal] = useState(false);
   const [itemSeleccionado, setItemSeleccionado] = useState<HistorialItem | null>(null);
+  const [loadingExport, setLoadingExport] = useState(false);
+
+  const [filtrosExport, setFiltrosExport] = useState<FiltrosExportacion>({
+    fechaInicio: new Date(new Date().setMonth(new Date().getMonth() - 1)).toISOString().split('T')[0],
+    fechaFin: new Date().toISOString().split('T')[0],
+    tipoReporte: 'completo',
+    formato: 'ambos'
+  });
 
   useEffect(() => {
     if (user) {
@@ -157,6 +177,365 @@ const UserHistorial = () => {
     }
   };
 
+  const obtenerHistorialFiltrado = () => {
+    const fechaInicio = new Date(filtrosExport.fechaInicio).getTime();
+    const fechaFin = new Date(filtrosExport.fechaFin).getTime();
+
+    return historial.filter(item => {
+      // Filtrar por tipo
+      if (filtrosExport.tipoReporte === 'laboratorios' && item.tipo !== 'laboratorio') return false;
+      if (filtrosExport.tipoReporte === 'recursos' && item.tipo !== 'recurso') return false;
+
+      // Filtrar por fecha
+      const fechaItem = new Date(item.fecha_devolucion_real || item.fecha_devolucion).getTime();
+      return fechaItem >= fechaInicio && fechaItem <= fechaFin;
+    });
+  };
+
+  const exportarPDF = async () => {
+    try {
+      const doc = new jsPDF();
+      let yPos = 20;
+
+      // Título
+      doc.setFontSize(18);
+      doc.text('HISTORIAL DE USO - AP-LABS', 15, yPos);
+      yPos += 10;
+
+      doc.setFontSize(10);
+      doc.text(`Usuario: ${user?.nombre || 'N/A'}`, 15, yPos);
+      yPos += 5;
+      doc.text(`Email: ${user?.email || 'N/A'}`, 15, yPos);
+      yPos += 5;
+      doc.text(`Período: ${filtrosExport.fechaInicio} al ${filtrosExport.fechaFin}`, 15, yPos);
+      yPos += 5;
+      doc.text(`Generado: ${new Date().toLocaleString('es-ES')}`, 15, yPos);
+      yPos += 15;
+
+      const datosHistorial = obtenerHistorialFiltrado();
+
+      // Estadísticas
+      doc.setFontSize(14);
+      doc.text('RESUMEN', 15, yPos);
+      yPos += 10;
+
+      const totalLabs = datosHistorial.filter(h => h.tipo === 'laboratorio').length;
+      const totalRecursos = datosHistorial.filter(h => h.tipo === 'recurso').length;
+
+      const statsData = [
+        ['Total de Laboratorios Usados', totalLabs.toString()],
+        ['Total de Recursos Usados', totalRecursos.toString()],
+        ['Total de Reservas Completadas', datosHistorial.length.toString()]
+      ];
+
+      autoTable(doc, {
+        startY: yPos,
+        head: [['Indicador', 'Valor']],
+        body: statsData,
+        theme: 'grid',
+        headStyles: { fillColor: [102, 126, 234] }
+      });
+
+      yPos = (doc as any).lastAutoTable.finalY + 15;
+
+      // Historial de Laboratorios
+      if (filtrosExport.tipoReporte === 'completo' || filtrosExport.tipoReporte === 'laboratorios') {
+        const laboratorios = datosHistorial.filter(h => h.tipo === 'laboratorio');
+        
+        if (laboratorios.length > 0) {
+          if (yPos > 200) {
+            doc.addPage();
+            yPos = 20;
+          }
+
+          doc.setFontSize(14);
+          doc.text(`HISTORIAL DE LABORATORIOS (${laboratorios.length})`, 15, yPos);
+          yPos += 10;
+
+          const labsData = laboratorios.map(l => [
+            l.nombre,
+            formatearFecha(l.fecha_reserva),
+            l.horarios || 'N/A',
+            l.participantes?.toString() || '0',
+            formatearFecha(l.fecha_devolucion_real || l.fecha_devolucion),
+            l.motivo
+          ]);
+
+          autoTable(doc, {
+            startY: yPos,
+            head: [['Laboratorio', 'Fecha Reserva', 'Horarios', 'Participantes', 'Devuelto', 'Motivo']],
+            body: labsData,
+            theme: 'striped',
+            headStyles: { fillColor: [102, 126, 234] },
+            styles: { fontSize: 8 }
+          });
+
+          yPos = (doc as any).lastAutoTable.finalY + 15;
+        }
+      }
+
+      // Historial de Recursos
+      if (filtrosExport.tipoReporte === 'completo' || filtrosExport.tipoReporte === 'recursos') {
+        const recursos = datosHistorial.filter(h => h.tipo === 'recurso');
+        
+        if (recursos.length > 0) {
+          if (yPos > 200) {
+            doc.addPage();
+            yPos = 20;
+          }
+
+          doc.setFontSize(14);
+          doc.text(`HISTORIAL DE RECURSOS (${recursos.length})`, 15, yPos);
+          yPos += 10;
+
+          const recursosData = recursos.map(r => [
+            r.nombre,
+            formatearFecha(r.fecha_reserva),
+            formatearFecha(r.fecha_devolucion),
+            r.cantidad?.toString() || '0',
+            r.unidad || '',
+            formatearFecha(r.fecha_devolucion_real || r.fecha_devolucion),
+            r.motivo
+          ]);
+
+          autoTable(doc, {
+            startY: yPos,
+            head: [['Recurso', 'Fecha Reserva', 'Fecha Programada', 'Cantidad', 'Unidad', 'Devuelto', 'Motivo']],
+            body: recursosData,
+            theme: 'striped',
+            headStyles: { fillColor: [102, 126, 234] },
+            styles: { fontSize: 8 }
+          });
+        }
+      }
+
+      // Guardar PDF
+      const tipoReporte = filtrosExport.tipoReporte === 'completo' ? 'Completo' : 
+                          filtrosExport.tipoReporte === 'laboratorios' ? 'Laboratorios' : 'Recursos';
+      doc.save(`Historial_${tipoReporte}_${filtrosExport.fechaInicio}_${filtrosExport.fechaFin}.pdf`);
+
+    } catch (error) {
+      console.error('Error generando PDF:', error);
+      alert('Error al generar el PDF');
+    }
+  };
+
+  const exportarExcel = () => {
+    try {
+      const workbook = XLSX.utils.book_new();
+      const datosHistorial = obtenerHistorialFiltrado();
+
+      // Preparar datos para una sola hoja
+      const dataCompleta: any[][] = [];
+
+      // ===== SECCIÓN 1: ENCABEZADO =====
+      dataCompleta.push(['HISTORIAL DE USO - SISTEMA AP-LABS']);
+      dataCompleta.push([]); // Línea en blanco
+
+      // ===== SECCIÓN 2: INFORMACIÓN DEL USUARIO =====
+      dataCompleta.push(['INFORMACIÓN DEL USUARIO']);
+      dataCompleta.push(['Usuario:', user?.nombre || 'N/A']);
+      dataCompleta.push(['Email:', user?.email || 'N/A']);
+      dataCompleta.push(['Período:', `${filtrosExport.fechaInicio} al ${filtrosExport.fechaFin}`]);
+      dataCompleta.push(['Generado:', new Date().toLocaleString('es-ES')]);
+      dataCompleta.push([]); // Línea en blanco
+
+      // ===== SECCIÓN 3: RESUMEN ESTADÍSTICO =====
+      dataCompleta.push(['RESUMEN ESTADÍSTICO']);
+      dataCompleta.push(['Indicador', 'Valor']);
+      dataCompleta.push(['Total de Laboratorios Usados', datosHistorial.filter(h => h.tipo === 'laboratorio').length]);
+      dataCompleta.push(['Total de Recursos Usados', datosHistorial.filter(h => h.tipo === 'recurso').length]);
+      dataCompleta.push(['Total de Reservas Completadas', datosHistorial.length]);
+      dataCompleta.push([]); // Línea en blanco
+      dataCompleta.push([]); // Línea en blanco
+
+      // ===== SECCIÓN 4: HISTORIAL DE LABORATORIOS =====
+      if (filtrosExport.tipoReporte === 'completo' || filtrosExport.tipoReporte === 'laboratorios') {
+        const laboratorios = datosHistorial.filter(h => h.tipo === 'laboratorio');
+        
+        if (laboratorios.length > 0) {
+          dataCompleta.push([`HISTORIAL DE LABORATORIOS (${laboratorios.length} registros)`]);
+          dataCompleta.push([]); // Línea en blanco
+          
+          // Encabezados de la tabla
+          dataCompleta.push([
+            'Laboratorio',
+            'Fecha Reserva',
+            'Horarios',
+            'Participantes',
+            'Fecha Devolución',
+            'Motivo',
+            'Comentarios'
+          ]);
+          
+          // Datos de laboratorios
+          laboratorios.forEach(l => {
+            dataCompleta.push([
+              l.nombre,
+              formatearFecha(l.fecha_reserva),
+              l.horarios || 'N/A',
+              l.participantes || 0,
+              formatearFecha(l.fecha_devolucion_real || l.fecha_devolucion),
+              l.motivo,
+              l.comentario || 'Sin comentarios'
+            ]);
+          });
+          
+          dataCompleta.push([]); // Línea en blanco
+          dataCompleta.push([]); // Línea en blanco
+        }
+      }
+
+      // ===== SECCIÓN 5: HISTORIAL DE RECURSOS =====
+      if (filtrosExport.tipoReporte === 'completo' || filtrosExport.tipoReporte === 'recursos') {
+        const recursos = datosHistorial.filter(h => h.tipo === 'recurso');
+        
+        if (recursos.length > 0) {
+          dataCompleta.push([`HISTORIAL DE RECURSOS (${recursos.length} registros)`]);
+          dataCompleta.push([]); // Línea en blanco
+          
+          // Encabezados de la tabla
+          dataCompleta.push([
+            'Recurso',
+            'Fecha Reserva',
+            'Fecha Programada',
+            'Cantidad',
+            'Unidad',
+            'Fecha Devolución Real',
+            'Motivo',
+            'Comentarios'
+          ]);
+          
+          // Datos de recursos
+          recursos.forEach(r => {
+            dataCompleta.push([
+              r.nombre,
+              formatearFecha(r.fecha_reserva),
+              formatearFecha(r.fecha_devolucion),
+              r.cantidad || 0,
+              r.unidad || '',
+              formatearFecha(r.fecha_devolucion_real || r.fecha_devolucion),
+              r.motivo,
+              r.comentario || 'Sin comentarios'
+            ]);
+          });
+        }
+      }
+
+      // Crear la hoja de cálculo
+      const worksheet = XLSX.utils.aoa_to_sheet(dataCompleta);
+
+      // ===== CONFIGURAR ANCHOS DE COLUMNAS =====
+      worksheet['!cols'] = [
+        { wch: 25 }, // Columna A
+        { wch: 18 }, // Columna B
+        { wch: 20 }, // Columna C
+        { wch: 13 }, // Columna D
+        { wch: 18 }, // Columna E
+        { wch: 30 }, // Columna F
+        { wch: 30 }, // Columna G
+        { wch: 30 }  // Columna H
+      ];
+
+      // ===== APLICAR MERGES (FUSIONES) =====
+      if (!worksheet['!merges']) worksheet['!merges'] = [];
+      
+      let currentRow = 0;
+      
+      // Merge del título principal (fila 1)
+      worksheet['!merges'].push({
+        s: { r: currentRow, c: 0 },
+        e: { r: currentRow, c: 7 }
+      });
+      currentRow += 2; // Saltar título + línea en blanco
+
+      // Merge del subtítulo "INFORMACIÓN DEL USUARIO" (fila 3)
+      worksheet['!merges'].push({
+        s: { r: currentRow, c: 0 },
+        e: { r: currentRow, c: 7 }
+      });
+      currentRow += 6; // Saltar sección de usuario + línea en blanco
+
+      // Merge del subtítulo "RESUMEN ESTADÍSTICO" (fila 9)
+      worksheet['!merges'].push({
+        s: { r: currentRow, c: 0 },
+        e: { r: currentRow, c: 7 }
+      });
+      currentRow += 6; // Saltar resumen + 2 líneas en blanco
+
+      // ===== CALCULAR POSICIÓN DE SECCIONES DE LABORATORIOS Y RECURSOS =====
+      if (filtrosExport.tipoReporte === 'completo' || filtrosExport.tipoReporte === 'laboratorios') {
+        const laboratorios = datosHistorial.filter(h => h.tipo === 'laboratorio');
+        if (laboratorios.length > 0) {
+          // Merge del título de laboratorios
+          worksheet['!merges'].push({
+            s: { r: currentRow, c: 0 },
+            e: { r: currentRow, c: 7 }
+          });
+          currentRow += 2 + laboratorios.length + 2; // Título + espacio + datos + 2 líneas en blanco
+        }
+      }
+
+      if (filtrosExport.tipoReporte === 'completo' || filtrosExport.tipoReporte === 'recursos') {
+        const recursos = datosHistorial.filter(h => h.tipo === 'recurso');
+        if (recursos.length > 0) {
+          // Merge del título de recursos
+          worksheet['!merges'].push({
+            s: { r: currentRow, c: 0 },
+            e: { r: currentRow, c: 7 }
+          });
+        }
+      }
+
+      // Agregar la hoja al libro
+      const tipoReporte = filtrosExport.tipoReporte === 'completo' ? 'Completo' : 
+                          filtrosExport.tipoReporte === 'laboratorios' ? 'Laboratorios' : 'Recursos';
+      XLSX.utils.book_append_sheet(workbook, worksheet, 'Historial Completo');
+
+      // Guardar archivo
+      XLSX.writeFile(workbook, `Historial_${tipoReporte}_${filtrosExport.fechaInicio}_${filtrosExport.fechaFin}.xlsx`);
+
+    } catch (error) {
+      console.error('Error generando Excel:', error);
+      alert('Error al generar el archivo Excel');
+    }
+  };
+
+  const handleExportar = async () => {
+    if (!user) return;
+
+    setLoadingExport(true);
+    try {
+      if (filtrosExport.formato === 'pdf' || filtrosExport.formato === 'ambos') {
+        await exportarPDF();
+      }
+
+      if (filtrosExport.formato === 'excel' || filtrosExport.formato === 'ambos') {
+        exportarExcel();
+      }
+
+      // Registrar en bitácora
+      await registrarEnBitacora({
+        usuario_nombre: user.nombre,
+        usuario_email: user.email,
+        usuario_rol: user.rol,
+        accion: 'Exportar Historial',
+        accion_detalle: `Exportó historial de ${filtrosExport.tipoReporte} en formato ${filtrosExport.formato}`,
+        modulo: 'Historial de Usuario',
+        observaciones: `Período: ${filtrosExport.fechaInicio} al ${filtrosExport.fechaFin}`
+      });
+
+      alert('✅ Historial exportado exitosamente');
+      setShowExportModal(false);
+
+    } catch (error: any) {
+      console.error('Error exportando historial:', error);
+      alert('Error al exportar el historial: ' + error.message);
+    } finally {
+      setLoadingExport(false);
+    }
+  };
+
   const handleVerDetalle = (item: HistorialItem) => {
     setItemSeleccionado(item);
     setShowDetalle(true);
@@ -183,6 +562,16 @@ const UserHistorial = () => {
       <div className="historial-header">
         <h1>📊 Historial de Uso</h1>
         <p className="subtitle">Consulta tu historial de reservas completadas</p>
+      </div>
+
+      {/* Botón de Exportar */}
+      <div className="export-section">
+        <button 
+          className="btn-export"
+          onClick={() => setShowExportModal(true)}
+        >
+          📥 Exportar Historial
+        </button>
       </div>
 
       {/* Filtros */}
@@ -284,6 +673,83 @@ const UserHistorial = () => {
           </div>
         )}
       </div>
+
+      {/* Modal de Exportación */}
+      {showExportModal && (
+        <div className="modal-overlay" onClick={() => setShowExportModal(false)}>
+          <div className="modal-export" onClick={(e) => e.stopPropagation()}>
+            <div className="modal-header">
+              <h2>📥 Exportar Historial</h2>
+              <button className="btn-close" onClick={() => setShowExportModal(false)}>✕</button>
+            </div>
+
+            <div className="modal-body">
+              <div className="form-group">
+                <label>Tipo de Reporte:</label>
+                <select
+                  value={filtrosExport.tipoReporte}
+                  onChange={(e) => setFiltrosExport({ ...filtrosExport, tipoReporte: e.target.value as any })}
+                >
+                  <option value="completo">📊 Historial Completo</option>
+                  <option value="laboratorios">🏢 Solo Laboratorios</option>
+                  <option value="recursos">📦 Solo Recursos</option>
+                </select>
+              </div>
+
+              <div className="form-group">
+                <label>Fecha Inicio:</label>
+                <input
+                  type="date"
+                  value={filtrosExport.fechaInicio}
+                  onChange={(e) => setFiltrosExport({ ...filtrosExport, fechaInicio: e.target.value })}
+                />
+              </div>
+
+              <div className="form-group">
+                <label>Fecha Fin:</label>
+                <input
+                  type="date"
+                  value={filtrosExport.fechaFin}
+                  onChange={(e) => setFiltrosExport({ ...filtrosExport, fechaFin: e.target.value })}
+                />
+              </div>
+
+              <div className="form-group">
+                <label>Formato:</label>
+                <select
+                  value={filtrosExport.formato}
+                  onChange={(e) => setFiltrosExport({ ...filtrosExport, formato: e.target.value as any })}
+                >
+                  <option value="ambos">📄 PDF + Excel</option>
+                  <option value="pdf">📄 Solo PDF</option>
+                  <option value="excel">📊 Solo Excel</option>
+                </select>
+              </div>
+
+              <div className="info-box">
+                <p>ℹ️ Se exportarán <strong>{obtenerHistorialFiltrado().length}</strong> registros del periodo seleccionado.</p>
+              </div>
+            </div>
+
+            <div className="modal-footer">
+              <button 
+                className="btn-secondary" 
+                onClick={() => setShowExportModal(false)}
+                disabled={loadingExport}
+              >
+                Cancelar
+              </button>
+              <button 
+                className="btn-primary" 
+                onClick={handleExportar}
+                disabled={loadingExport}
+              >
+                {loadingExport ? '⏳ Exportando...' : '📥 Exportar'}
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
 
       {/* Modal de detalle */}
       {showDetalle && itemSeleccionado && (
