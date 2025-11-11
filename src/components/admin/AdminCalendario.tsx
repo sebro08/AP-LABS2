@@ -3,6 +3,9 @@ import { collection, getDocs, query, where, addDoc, updateDoc, doc, Timestamp } 
 import { db } from '../../firebase/config';
 import { useAuth } from '../../context/AuthContext';
 import { registrarEnBitacora } from '../../utils/bitacoraHelper';
+import { FiCalendar } from 'react-icons/fi';
+import { MdScience, MdBlock } from 'react-icons/md';
+import { FiPackage } from 'react-icons/fi';
 import './AdminCalendario.css';
 
 interface Reserva {
@@ -425,11 +428,11 @@ const AdminCalendario = () => {
     <div className="admin-calendario">
       <div className="calendario-header-admin">
         <div>
-          <h1>📅 Calendario del Sistema</h1>
+          <h1><FiCalendar className="header-icon" /> Calendario del Sistema</h1>
           <p>Vista completa de reservas y bloqueos</p>
         </div>
         <button className="btn-crear-bloqueo" onClick={() => setShowModalBloqueo(true)}>
-          🚫 Crear Bloqueo
+          <MdBlock /> Crear Bloqueo
         </button>
       </div>
 

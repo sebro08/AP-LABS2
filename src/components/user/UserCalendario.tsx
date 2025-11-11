@@ -4,6 +4,11 @@ import { db } from '../../firebase/config';
 import { useAuth } from '../../context/AuthContext';
 import { registrarEnBitacora } from '../../utils/bitacoraHelper';
 import { crearNotificacion } from '../../utils/notificacionesHelper';
+import { FiCalendar, FiChevronLeft, FiChevronRight, FiClock, FiUsers, FiPackage, FiSend } from 'react-icons/fi';
+import { MdScience, MdEventAvailable, MdOutlineCalendarMonth } from 'react-icons/md';
+import { BiCalendarWeek } from 'react-icons/bi';
+import { AiOutlinePlus, AiOutlineLoading3Quarters } from 'react-icons/ai';
+import { IoLocationOutline } from 'react-icons/io5';
 import './UserCalendario.css';
 
 interface Laboratorio {
@@ -464,12 +469,14 @@ const UserCalendario = () => {
                     reservasDelDia.map(reserva => (
                       <div key={reserva.id} className={`reserva-item ${reserva.tipo}`}>
                         <div className="reserva-tipo-icon">
-                          {reserva.tipo === 'laboratorio' ? '🔬' : '📦'}
+                          {reserva.tipo === 'laboratorio' ? <MdScience /> : <FiPackage />}
                         </div>
                         <div className="reserva-info">
                           <div className="reserva-nombre">{reserva.nombre}</div>
                           {reserva.hora_inicio && (
-                            <div className="reserva-hora">{reserva.hora_inicio} - {reserva.hora_fin}</div>
+                            <div className="reserva-hora">
+                              <FiClock size={12} /> {reserva.hora_inicio} - {reserva.hora_fin}
+                            </div>
                           )}
                           <div className={`reserva-estado ${reserva.estado.toLowerCase()}`}>
                             {reserva.estado}
@@ -495,7 +502,7 @@ const UserCalendario = () => {
                       }
                     }}
                   >
-                    + Solicitar
+                    <AiOutlinePlus /> Solicitar
                   </button>
                 </div>
               </div>
@@ -560,7 +567,7 @@ const UserCalendario = () => {
   return (
     <div className="user-calendario">
       <div className="calendario-header">
-        <h1>📅 Calendario de Disponibilidad</h1>
+        <h1><FiCalendar className="header-icon" /> Calendario de Disponibilidad</h1>
         <p>Consulta la disponibilidad y solicita laboratorios y recursos</p>
       </div>
 
@@ -571,13 +578,13 @@ const UserCalendario = () => {
             className={`vista-btn ${vista === 'semanal' ? 'active' : ''}`}
             onClick={() => setVista('semanal')}
           >
-            📅 Semanal
+            <BiCalendarWeek /> Semanal
           </button>
           <button
             className={`vista-btn ${vista === 'mensual' ? 'active' : ''}`}
             onClick={() => setVista('mensual')}
           >
-            📆 Mensual
+            <MdOutlineCalendarMonth /> Mensual
           </button>
         </div>
 
@@ -586,18 +593,18 @@ const UserCalendario = () => {
             className="nav-btn"
             onClick={() => vista === 'semanal' ? cambiarSemana(-1) : cambiarMes(-1)}
           >
-            ← Anterior
+            <FiChevronLeft /> Anterior
           </button>
           
           <button className="btn-hoy" onClick={irHoy}>
-            Hoy
+            <MdEventAvailable /> Hoy
           </button>
           
           <button
             className="nav-btn"
             onClick={() => vista === 'semanal' ? cambiarSemana(1) : cambiarMes(1)}
           >
-            Siguiente →
+            Siguiente <FiChevronRight />
           </button>
         </div>
 
@@ -613,15 +620,15 @@ const UserCalendario = () => {
       {/* Leyenda */}
       <div className="calendario-leyenda">
         <div className="leyenda-item">
-          <span className="leyenda-dot laboratorio"></span>
+          <MdScience className="leyenda-icon laboratorio" />
           <span>Laboratorio</span>
         </div>
         <div className="leyenda-item">
-          <span className="leyenda-dot recurso"></span>
+          <FiPackage className="leyenda-icon recurso" />
           <span>Recurso</span>
         </div>
         <div className="leyenda-item">
-          <span className="leyenda-dot hoy"></span>
+          <MdEventAvailable className="leyenda-icon hoy" />
           <span>Hoy</span>
         </div>
       </div>
@@ -643,11 +650,11 @@ const UserCalendario = () => {
         <div className="modal-overlay" onClick={cerrarModal}>
           <div className="modal-content calendario-modal" onClick={(e) => e.stopPropagation()}>
             <h3>
-              {itemSeleccionado.tipo === 'laboratorio' ? '🔬' : '📦'} Nueva Solicitud
+              {itemSeleccionado.tipo === 'laboratorio' ? <MdScience /> : <FiPackage />} Nueva Solicitud
             </h3>
             <h4>{itemSeleccionado.item.nombre}</h4>
             <p className="fecha-seleccionada">
-              📅 {diaSeleccionado.toLocaleDateString('es-ES', { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' })}
+              <FiCalendar /> {diaSeleccionado.toLocaleDateString('es-ES', { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' })}
             </p>
 
             {/* Selector de item */}
@@ -740,7 +747,7 @@ const UserCalendario = () => {
                 onClick={handleEnviarSolicitud}
                 disabled={loading}
               >
-                {loading ? '⏳ Enviando...' : '📤 Enviar Solicitud'}
+                {loading ? <><AiOutlineLoading3Quarters className="spinning-icon" /> Enviando...</> : <><FiSend /> Enviar Solicitud</>}
               </button>
               <button className="btn-secondary" onClick={cerrarModal}>
                 Cancelar
