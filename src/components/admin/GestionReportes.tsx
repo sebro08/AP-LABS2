@@ -6,6 +6,7 @@ import { FiltrosReporte, EstadisticasGenerales, DatosReporte } from '../../types
 import { registrarEnBitacora } from '../../utils/bitacoraHelper';
 import jsPDF from 'jspdf';
 import autoTable from 'jspdf-autotable';
+import * as XLSX from 'xlsx';
 import './GestionReportes.css';
 
 const GestionReportes = () => {
@@ -344,78 +345,320 @@ const GestionReportes = () => {
 
   const exportarExcel = (datos: DatosReporte) => {
     try {
-      let csvContent = '\uFEFF'; // BOM para UTF-8
-      
-      // Encabezado
-      csvContent += `REPORTE GENERAL - SISTEMA AP-LABS\n`;
-      csvContent += `Período: ${filtros.fechaInicio} al ${filtros.fechaFin}\n`;
-      csvContent += `Generado: ${new Date().toLocaleString('es-ES')}\n\n`;
+      const workbook = XLSX.utils.book_new();
 
-      // Estadísticas
+      // Preparar datos para una sola hoja
+      const dataCompleta: any[][] = [];
+
+      // ===== SECCIÓN 1: ENCABEZADO =====
+      dataCompleta.push(['REPORTE GENERAL - SISTEMA AP-LABS']);
+      dataCompleta.push([]); // Línea en blanco
+
+      // ===== SECCIÓN 2: INFORMACIÓN DEL REPORTE =====
+      dataCompleta.push(['INFORMACIÓN DEL REPORTE']);
+      dataCompleta.push(['Período:', `${filtros.fechaInicio} al ${filtros.fechaFin}`]);
+      dataCompleta.push(['Tipo de Reporte:', filtros.tipoReporte]);
+      dataCompleta.push(['Generado:', new Date().toLocaleString('es-ES')]);
+      dataCompleta.push([]); // Línea en blanco
+      dataCompleta.push([]); // Línea en blanco
+
+      // ===== SECCIÓN 3: ESTADÍSTICAS GENERALES =====
       if (datos.estadisticas) {
-        csvContent += `ESTADÍSTICAS GENERALES\n`;
-        csvContent += `Indicador,Valor\n`;
-        csvContent += `Total Usuarios,${datos.estadisticas.totalUsuarios}\n`;
-        csvContent += `Usuarios Activos,${datos.estadisticas.usuariosActivos}\n`;
-        csvContent += `Total Laboratorios,${datos.estadisticas.totalLaboratorios}\n`;
-        csvContent += `Laboratorios Activos,${datos.estadisticas.laboratoriosActivos}\n`;
-        csvContent += `Total Recursos,${datos.estadisticas.totalRecursos}\n`;
-        csvContent += `Recursos Disponibles,${datos.estadisticas.recursosDisponibles}\n`;
-        csvContent += `Recursos en Mantenimiento,${datos.estadisticas.recursosEnMantenimiento}\n`;
-        csvContent += `Solicitudes Pendientes,${datos.estadisticas.solicitudesPendientes}\n`;
-        csvContent += `Solicitudes Aprobadas,${datos.estadisticas.solicitudesAprobadas}\n`;
-        csvContent += `Solicitudes Rechazadas,${datos.estadisticas.solicitudesRechazadas}\n`;
-        csvContent += `Mantenimientos Programados,${datos.estadisticas.mantenimientosProgramados}\n`;
-        csvContent += `Mantenimientos Completados,${datos.estadisticas.mantenimientosCompletados}\n`;
-        csvContent += `Mensajes Enviados,${datos.estadisticas.mensajesEnviados}\n`;
-        csvContent += `Actividades Registradas,${datos.estadisticas.actividadesBitacora}\n\n`;
+        dataCompleta.push(['ESTADÍSTICAS GENERALES']);
+        dataCompleta.push([]); // Línea en blanco
+        
+        // Encabezados
+        dataCompleta.push(['Indicador', 'Valor']);
+        
+        // Datos
+        dataCompleta.push(['Total Usuarios', datos.estadisticas.totalUsuarios]);
+        dataCompleta.push(['Usuarios Activos', datos.estadisticas.usuariosActivos]);
+        dataCompleta.push(['Total Laboratorios', datos.estadisticas.totalLaboratorios]);
+        dataCompleta.push(['Laboratorios Activos', datos.estadisticas.laboratoriosActivos]);
+        dataCompleta.push(['Total Recursos', datos.estadisticas.totalRecursos]);
+        dataCompleta.push(['Recursos Disponibles', datos.estadisticas.recursosDisponibles]);
+        dataCompleta.push(['Recursos en Mantenimiento', datos.estadisticas.recursosEnMantenimiento]);
+        dataCompleta.push(['Solicitudes Pendientes', datos.estadisticas.solicitudesPendientes]);
+        dataCompleta.push(['Solicitudes Aprobadas', datos.estadisticas.solicitudesAprobadas]);
+        dataCompleta.push(['Solicitudes Rechazadas', datos.estadisticas.solicitudesRechazadas]);
+        dataCompleta.push(['Mantenimientos Programados', datos.estadisticas.mantenimientosProgramados]);
+        dataCompleta.push(['Mantenimientos Completados', datos.estadisticas.mantenimientosCompletados]);
+        dataCompleta.push(['Mensajes Enviados', datos.estadisticas.mensajesEnviados]);
+        dataCompleta.push(['Actividades Registradas', datos.estadisticas.actividadesBitacora]);
+        
+        dataCompleta.push([]); // Línea en blanco
+        dataCompleta.push([]); // Línea en blanco
       }
 
-      // Usuarios
+      // ===== SECCIÓN 4: USUARIOS =====
       if (datos.usuarios && datos.usuarios.length > 0) {
-        csvContent += `\nUSUARIOS (${datos.usuarios.length})\n`;
-        csvContent += `Nombre,Email,Rol,Estado\n`;
+        dataCompleta.push([`USUARIOS (${datos.usuarios.length} registros)`]);
+        dataCompleta.push([]); // Línea en blanco
+        
+        // Encabezados
+        dataCompleta.push(['Nombre Completo', 'Email', 'Rol', 'Estado']);
+        
+        // Datos
         datos.usuarios.forEach(u => {
-          const rol = u.id_rol === '1' ? 'Estudiante' : u.id_rol === '2' ? 'Docente' : u.id_rol === '3' ? 'Admin' : 'Técnico';
-          csvContent += `"${u.primer_nombre} ${u.primer_apellido}","${u.email || ''}","${rol}","${u.activo ? 'Activo' : 'Inactivo'}"\n`;
+          const rol = u.id_rol === '1' ? 'Estudiante' : 
+                      u.id_rol === '2' ? 'Docente' : 
+                      u.id_rol === '3' ? 'Admin' : 'Técnico';
+          dataCompleta.push([
+            `${u.primer_nombre} ${u.primer_apellido}`,
+            u.email || '',
+            rol,
+            u.activo ? 'Activo' : 'Inactivo'
+          ]);
         });
+        
+        dataCompleta.push([]); // Línea en blanco
+        dataCompleta.push([]); // Línea en blanco
       }
 
-      // Laboratorios
+      // ===== SECCIÓN 5: LABORATORIOS =====
       if (datos.laboratorios && datos.laboratorios.length > 0) {
-        csvContent += `\nLABORATORIOS (${datos.laboratorios.length})\n`;
-        csvContent += `Nombre,Capacidad,Estado\n`;
+        dataCompleta.push([`LABORATORIOS (${datos.laboratorios.length} registros)`]);
+        dataCompleta.push([]); // Línea en blanco
+        
+        // Encabezados
+        dataCompleta.push(['Nombre', 'Capacidad', 'Estado']);
+        
+        // Datos
         datos.laboratorios.forEach(l => {
-          csvContent += `"${l.nombre || ''}","${l.capacidad || ''}","${l.activo ? 'Activo' : 'Inactivo'}"\n`;
+          dataCompleta.push([
+            l.nombre || '',
+            l.capacidad || 0,
+            l.activo ? 'Activo' : 'Inactivo'
+          ]);
         });
+        
+        dataCompleta.push([]); // Línea en blanco
+        dataCompleta.push([]); // Línea en blanco
       }
 
-      // Recursos
+      // ===== SECCIÓN 6: RECURSOS =====
       if (datos.recursos && datos.recursos.length > 0) {
-        csvContent += `\nRECURSOS (${datos.recursos.length})\n`;
-        csvContent += `Nombre,Estado,Cantidad\n`;
+        dataCompleta.push([`RECURSOS (${datos.recursos.length} registros)`]);
+        dataCompleta.push([]); // Línea en blanco
+        
+        // Encabezados
+        dataCompleta.push(['Nombre', 'Estado', 'Cantidad']);
+        
+        // Datos
         datos.recursos.forEach(r => {
-          const estado = r.id_estado === '1' ? 'Disponible' : r.id_estado === '2' ? 'Reservado' : r.id_estado === '3' ? 'Mantenimiento' : 'Inactivo';
-          csvContent += `"${r.nombre || ''}","${estado}","${r.cantidad || ''}"\n`;
+          const estado = r.id_estado === '1' ? 'Disponible' : 
+                        r.id_estado === '2' ? 'Reservado' : 
+                        r.id_estado === '3' ? 'Mantenimiento' : 'Inactivo';
+          dataCompleta.push([
+            r.nombre || '',
+            estado,
+            r.cantidad || 0
+          ]);
         });
+        
+        dataCompleta.push([]); // Línea en blanco
+        dataCompleta.push([]); // Línea en blanco
       }
 
-      // Solicitudes
+      // ===== SECCIÓN 7: SOLICITUDES =====
       if (datos.solicitudes && datos.solicitudes.length > 0) {
-        csvContent += `\nSOLICITUDES (${datos.solicitudes.length})\n`;
-        csvContent += `Fecha,Estado,Observaciones\n`;
+        dataCompleta.push([`SOLICITUDES (${datos.solicitudes.length} registros)`]);
+        dataCompleta.push([]); // Línea en blanco
+        
+        // Encabezados
+        dataCompleta.push(['Fecha Solicitud', 'Estado', 'Observaciones']);
+        
+        // Datos
         datos.solicitudes.forEach(s => {
-          const estado = s.id_estado === '1' ? 'Pendiente' : s.id_estado === '2' ? 'Aprobada' : 'Rechazada';
-          csvContent += `"${s.fecha_solicitud || ''}","${estado}","${s.observaciones || ''}"\n`;
+          const estado = s.id_estado === '1' ? 'Pendiente' : 
+                        s.id_estado === '2' ? 'Aprobada' : 'Rechazada';
+          dataCompleta.push([
+            s.fecha_solicitud || 'N/A',
+            estado,
+            s.observaciones || 'Sin observaciones'
+          ]);
+        });
+        
+        dataCompleta.push([]); // Línea en blanco
+        dataCompleta.push([]); // Línea en blanco
+      }
+
+      // ===== SECCIÓN 8: MANTENIMIENTOS =====
+      if (datos.mantenimientos && datos.mantenimientos.length > 0) {
+        dataCompleta.push([`MANTENIMIENTOS (${datos.mantenimientos.length} registros)`]);
+        dataCompleta.push([]); // Línea en blanco
+        
+        // Encabezados
+        dataCompleta.push(['Fecha Programada', 'Tipo', 'Estado', 'Descripción']);
+        
+        // Datos
+        datos.mantenimientos.forEach(m => {
+          const estado = m.id_estado === '1' ? 'Completado' : 
+                        m.id_estado === '2' ? 'En Proceso' : 
+                        m.id_estado === '3' ? 'Programado' : 'Cancelado';
+          dataCompleta.push([
+            m.fecha_programada || 'N/A',
+            m.tipo_mantenimiento || 'N/A',
+            estado,
+            m.descripcion || 'Sin descripción'
+          ]);
+        });
+        
+        dataCompleta.push([]); // Línea en blanco
+        dataCompleta.push([]); // Línea en blanco
+      }
+
+      // ===== SECCIÓN 9: MENSAJES =====
+      if (datos.mensajes && datos.mensajes.length > 0) {
+        dataCompleta.push([`MENSAJES (${datos.mensajes.length} registros)`]);
+        dataCompleta.push([]); // Línea en blanco
+        
+        // Encabezados
+        dataCompleta.push(['Fecha Envío', 'Asunto', 'Destinatarios', 'Estado']);
+        
+        // Datos
+        datos.mensajes.forEach(m => {
+          dataCompleta.push([
+            m.fecha_envio || 'N/A',
+            m.asunto || 'Sin asunto',
+            m.destinatarios?.length || 0,
+            m.enviado ? 'Enviado' : 'Pendiente'
+          ]);
+        });
+        
+        dataCompleta.push([]); // Línea en blanco
+        dataCompleta.push([]); // Línea en blanco
+      }
+
+      // ===== SECCIÓN 10: BITÁCORA =====
+      if (datos.bitacora && datos.bitacora.length > 0) {
+        dataCompleta.push([`BITÁCORA (${datos.bitacora.length} registros)`]);
+        dataCompleta.push([]); // Línea en blanco
+        
+        // Encabezados
+        dataCompleta.push(['Fecha/Hora', 'Usuario', 'Acción', 'Módulo', 'Detalle']);
+        
+        // Datos
+        datos.bitacora.forEach(b => {
+          const fecha = b.timestamp?.toDate ? 
+                       b.timestamp.toDate().toLocaleString('es-ES') : 'N/A';
+          dataCompleta.push([
+            fecha,
+            b.usuario_nombre || 'N/A',
+            b.accion || 'N/A',
+            b.modulo || 'N/A',
+            b.accion_detalle || 'Sin detalles'
+          ]);
         });
       }
 
-      // Crear y descargar
-      const blob = new Blob([csvContent], { type: 'text/csv;charset=utf-8;' });
-      const link = document.createElement('a');
-      link.href = URL.createObjectURL(blob);
-      link.download = `Reporte_General_${filtros.fechaInicio}_${filtros.fechaFin}.csv`;
-      link.click();
+      // Crear la hoja de cálculo
+      const worksheet = XLSX.utils.aoa_to_sheet(dataCompleta);
+
+      // ===== CONFIGURAR ANCHOS DE COLUMNAS =====
+      worksheet['!cols'] = [
+        { wch: 30 }, // Columna A
+        { wch: 25 }, // Columna B
+        { wch: 20 }, // Columna C
+        { wch: 20 }, // Columna D
+        { wch: 40 }  // Columna E
+      ];
+
+      // ===== APLICAR MERGES (FUSIONES) =====
+      if (!worksheet['!merges']) worksheet['!merges'] = [];
+      
+      let currentRow = 0;
+      
+      // Merge del título principal
+      worksheet['!merges'].push({
+        s: { r: currentRow, c: 0 },
+        e: { r: currentRow, c: 4 }
+      });
+      currentRow += 2;
+
+      // Merge "INFORMACIÓN DEL REPORTE"
+      worksheet['!merges'].push({
+        s: { r: currentRow, c: 0 },
+        e: { r: currentRow, c: 4 }
+      });
+      currentRow += 6;
+
+      // Merge "ESTADÍSTICAS GENERALES"
+      if (datos.estadisticas) {
+        worksheet['!merges'].push({
+          s: { r: currentRow, c: 0 },
+          e: { r: currentRow, c: 4 }
+        });
+        currentRow += 17; // Título + espacio + encabezados + 14 filas + 2 espacios
+      }
+
+      // Merge "USUARIOS"
+      if (datos.usuarios && datos.usuarios.length > 0) {
+        worksheet['!merges'].push({
+          s: { r: currentRow, c: 0 },
+          e: { r: currentRow, c: 4 }
+        });
+        currentRow += 3 + datos.usuarios.length + 2;
+      }
+
+      // Merge "LABORATORIOS"
+      if (datos.laboratorios && datos.laboratorios.length > 0) {
+        worksheet['!merges'].push({
+          s: { r: currentRow, c: 0 },
+          e: { r: currentRow, c: 4 }
+        });
+        currentRow += 3 + datos.laboratorios.length + 2;
+      }
+
+      // Merge "RECURSOS"
+      if (datos.recursos && datos.recursos.length > 0) {
+        worksheet['!merges'].push({
+          s: { r: currentRow, c: 0 },
+          e: { r: currentRow, c: 4 }
+        });
+        currentRow += 3 + datos.recursos.length + 2;
+      }
+
+      // Merge "SOLICITUDES"
+      if (datos.solicitudes && datos.solicitudes.length > 0) {
+        worksheet['!merges'].push({
+          s: { r: currentRow, c: 0 },
+          e: { r: currentRow, c: 4 }
+        });
+        currentRow += 3 + datos.solicitudes.length + 2;
+      }
+
+      // Merge "MANTENIMIENTOS"
+      if (datos.mantenimientos && datos.mantenimientos.length > 0) {
+        worksheet['!merges'].push({
+          s: { r: currentRow, c: 0 },
+          e: { r: currentRow, c: 4 }
+        });
+        currentRow += 3 + datos.mantenimientos.length + 2;
+      }
+
+      // Merge "MENSAJES"
+      if (datos.mensajes && datos.mensajes.length > 0) {
+        worksheet['!merges'].push({
+          s: { r: currentRow, c: 0 },
+          e: { r: currentRow, c: 4 }
+        });
+        currentRow += 3 + datos.mensajes.length + 2;
+      }
+
+      // Merge "BITÁCORA"
+      if (datos.bitacora && datos.bitacora.length > 0) {
+        worksheet['!merges'].push({
+          s: { r: currentRow, c: 0 },
+          e: { r: currentRow, c: 4 }
+        });
+      }
+
+      // Agregar la hoja al libro
+      XLSX.utils.book_append_sheet(workbook, worksheet, 'Reporte General');
+
+      // Guardar archivo
+      XLSX.writeFile(workbook, `Reporte_General_${filtros.fechaInicio}_${filtros.fechaFin}.xlsx`);
 
     } catch (error) {
       console.error('Error generando Excel:', error);
