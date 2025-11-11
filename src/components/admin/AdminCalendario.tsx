@@ -84,7 +84,66 @@ const AdminCalendario = () => {
       const reservasData: Reserva[] = [];
       const { inicioRango, finRango } = obtenerRangoFechas();
 
-      // Cargar reservas de laboratorios
+      // Cargar SOLICITUDES de laboratorios (pendientes)
+      const solicitudesLabsSnapshot = await getDocs(collection(db, 'solicitudes_labs'));
+      
+      for (const docSnap of solicitudesLabsSnapshot.docs) {
+        const data = docSnap.data();
+        let fecha = '';
+        
+        if (data.dia) {
+          fecha = data.dia; // formato YYYY-MM-DD
+        } else if (data.fecha_reserva) {
+          if (typeof data.fecha_reserva === 'string') {
+            fecha = data.fecha_reserva;
+          } else if (data.fecha_reserva.toDate) {
+            fecha = data.fecha_reserva.toDate().toISOString().split('T')[0];
+          } else if (data.fecha_reserva.seconds) {
+            fecha = new Date(data.fecha_reserva.seconds * 1000).toISOString().split('T')[0];
+          }
+        }
+
+        // Solo mostrar solicitudes pendientes
+        if (data.estado_solicitud !== 'pendiente') continue;
+
+        let nombreLab = 'Laboratorio';
+        if (data.id_lab) {
+          const labQuery = query(collection(db, 'laboratorios'), where('__name__', '==', data.id_lab));
+          const labSnapshot = await getDocs(labQuery);
+          if (!labSnapshot.empty) {
+            nombreLab = labSnapshot.docs[0].data().nombre || 'Laboratorio';
+          }
+        }
+
+        let nombreUsuario = 'Usuario';
+        if (data.id_usuario) {
+          const userQuery = query(collection(db, 'usuarios'), where('__name__', '==', data.id_usuario));
+          const userSnapshot = await getDocs(userQuery);
+          if (!userSnapshot.empty) {
+            const userData = userSnapshot.docs[0].data();
+            nombreUsuario = `${userData.primer_nombre || ''} ${userData.primer_apellido || ''}`.trim();
+          }
+        }
+
+        const fechaDate = new Date(fecha);
+        if (fechaDate >= inicioRango && fechaDate <= finRango && fecha) {
+          const horarios = data.horarios && data.horarios.length > 0 ? data.horarios[0] : {};
+          reservasData.push({
+            id: docSnap.id,
+            tipo: 'laboratorio',
+            nombre: nombreLab,
+            usuario: nombreUsuario,
+            fecha: fecha,
+            hora_inicio: horarios.hora_inicio || '',
+            hora_fin: horarios.hora_fin || '',
+            estado: 'Pendiente',
+            id_item: data.id_lab || '',
+            id_usuario: data.id_usuario || ''
+          });
+        }
+      }
+
+      // Cargar reservas de laboratorios (ya aprobadas)
       const labsSnapshot = await getDocs(collection(db, 'reserva_labs'));
       
       for (const docSnap of labsSnapshot.docs) {
@@ -138,7 +197,61 @@ const AdminCalendario = () => {
         }
       }
 
-      // Cargar reservas de recursos
+      // Cargar SOLICITUDES de recursos (pendientes)
+      const solicitudesRecursosSnapshot = await getDocs(collection(db, 'solicitudes_recursos'));
+      
+      for (const docSnap of solicitudesRecursosSnapshot.docs) {
+        const data = docSnap.data();
+        let fecha = '';
+        
+        if (data.fecha_reserva) {
+          if (typeof data.fecha_reserva === 'string') {
+            fecha = data.fecha_reserva;
+          } else if (data.fecha_reserva.toDate) {
+            fecha = data.fecha_reserva.toDate().toISOString().split('T')[0];
+          } else if (data.fecha_reserva.seconds) {
+            fecha = new Date(data.fecha_reserva.seconds * 1000).toISOString().split('T')[0];
+          }
+        }
+
+        // Solo mostrar solicitudes pendientes
+        if (data.estado_solicitud !== 'pendiente') continue;
+
+        let nombreRecurso = 'Recurso';
+        if (data.id_recurso) {
+          const recursoQuery = query(collection(db, 'recurso'), where('__name__', '==', data.id_recurso));
+          const recursoSnapshot = await getDocs(recursoQuery);
+          if (!recursoSnapshot.empty) {
+            nombreRecurso = recursoSnapshot.docs[0].data().nombre || 'Recurso';
+          }
+        }
+
+        let nombreUsuario = 'Usuario';
+        if (data.id_usuario) {
+          const userQuery = query(collection(db, 'usuarios'), where('__name__', '==', data.id_usuario));
+          const userSnapshot = await getDocs(userQuery);
+          if (!userSnapshot.empty) {
+            const userData = userSnapshot.docs[0].data();
+            nombreUsuario = `${userData.primer_nombre || ''} ${userData.primer_apellido || ''}`.trim();
+          }
+        }
+
+        const fechaDate = new Date(fecha);
+        if (fechaDate >= inicioRango && fechaDate <= finRango && fecha) {
+          reservasData.push({
+            id: docSnap.id,
+            tipo: 'recurso',
+            nombre: nombreRecurso,
+            usuario: nombreUsuario,
+            fecha: fecha,
+            estado: 'Pendiente',
+            id_item: data.id_recurso || '',
+            id_usuario: data.id_usuario || ''
+          });
+        }
+      }
+
+      // Cargar reservas de recursos (ya aprobadas)
       const recursosSnapshot = await getDocs(collection(db, 'reserva_recurso'));
 
       for (const docSnap of recursosSnapshot.docs) {
@@ -406,7 +519,7 @@ const AdminCalendario = () => {
                       <span className="count-badge">{reservasDelDia.length}</span>
                       {reservasDelDia.slice(0, 3).map(r => (
                         <div key={r.id} className={`mini-reserva ${r.tipo} ${r.estado.toLowerCase()}`} title={`${r.nombre} - ${r.usuario}`}>
-                          <span className="mini-icon">{r.tipo === 'laboratorio' ? '🔬' : '📦'}</span>
+                          <span className="mini-icon">{r.tipo === 'laboratorio' ? <MdScience /> : <FiPackage />}</span>
                           <span className="mini-text">{r.nombre.substring(0, 15)}</span>
                         </div>
                       ))}
@@ -524,7 +637,7 @@ const AdminCalendario = () => {
       {showModalBloqueo && (
         <div className="modal-overlay" onClick={cerrarModalBloqueo}>
           <div className="modal-content" onClick={(e) => e.stopPropagation()}>
-            <h3>🚫 Crear Bloqueo</h3>
+            <h3><MdBlock /> Crear Bloqueo</h3>
             
             <div className="form-group">
               <label>Tipo</label>

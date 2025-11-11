@@ -490,3 +490,9 @@
     grid-template-columns: 1fr 1fr;
   }
 }
+
+/* Estilos para iconos */
+.header-icon {
+  margin-right: 10px;
+  vertical-align: middle;
+}

@@ -611,3 +611,44 @@
     font-size: 1.2rem;
   }
 }
+
+/* Animación para ícono de carga */
+@keyframes spin {
+  from {
+    transform: rotate(0deg);
+  }
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+.spinning-icon {
+  display: inline-block;
+  animation: spin 1s linear infinite;
+  margin-right: 8px;
+}
+
+/* Estilos para iconos en header */
+.header-icon {
+  margin-right: 10px;
+  vertical-align: middle;
+}
+
+/* Estilos para iconos en leyenda */
+.leyenda-icon {
+  font-size: 1.2rem;
+  margin-right: 8px;
+  vertical-align: middle;
+}
+
+.leyenda-icon.laboratorio {
+  color: #4299e1;
+}
+
+.leyenda-icon.recurso {
+  color: #48bb78;
+}
+
+.leyenda-icon.hoy {
+  color: #ed8936;
+}

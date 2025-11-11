@@ -8,7 +8,6 @@ import { FiCalendar, FiChevronLeft, FiChevronRight, FiClock, FiUsers, FiPackage,
 import { MdScience, MdEventAvailable, MdOutlineCalendarMonth } from 'react-icons/md';
 import { BiCalendarWeek } from 'react-icons/bi';
 import { AiOutlinePlus, AiOutlineLoading3Quarters } from 'react-icons/ai';
-import { IoLocationOutline } from 'react-icons/io5';
 import './UserCalendario.css';
 
 interface Laboratorio {
