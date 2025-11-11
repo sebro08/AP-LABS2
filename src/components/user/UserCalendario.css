@@ -1,0 +1,613 @@
+.user-calendario {
+  padding: 20px;
+  max-width: 1400px;
+  margin: 0 auto;
+}
+
+.calendario-header {
+  text-align: center;
+  margin-bottom: 30px;
+}
+
+.calendario-header h1 {
+  color: #2d3748;
+  font-size: 2rem;
+  margin-bottom: 10px;
+}
+
+.calendario-header p {
+  color: #718096;
+  font-size: 1.1rem;
+}
+
+/* Controles */
+.calendario-controles {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 20px;
+  padding: 20px;
+  background: white;
+  border-radius: 12px;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+  flex-wrap: wrap;
+  gap: 15px;
+}
+
+.vista-selector {
+  display: flex;
+  gap: 10px;
+}
+
+.vista-btn {
+  padding: 10px 20px;
+  border: 2px solid #e2e8f0;
+  background: white;
+  border-radius: 8px;
+  cursor: pointer;
+  font-size: 1rem;
+  font-weight: 500;
+  transition: all 0.3s ease;
+}
+
+.vista-btn:hover {
+  background: #f7fafc;
+  border-color: #cbd5e0;
+}
+
+.vista-btn.active {
+  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  color: white;
+  border-color: #667eea;
+}
+
+.navegacion {
+  display: flex;
+  gap: 10px;
+  align-items: center;
+}
+
+.nav-btn {
+  padding: 10px 20px;
+  background: white;
+  border: 2px solid #e2e8f0;
+  border-radius: 8px;
+  cursor: pointer;
+  font-weight: 500;
+  transition: all 0.3s ease;
+}
+
+.nav-btn:hover {
+  background: #f7fafc;
+  border-color: #cbd5e0;
+}
+
+.btn-hoy {
+  padding: 10px 20px;
+  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  color: white;
+  border: none;
+  border-radius: 8px;
+  cursor: pointer;
+  font-weight: 600;
+  transition: all 0.3s ease;
+}
+
+.btn-hoy:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 4px 12px rgba(102, 126, 234, 0.4);
+}
+
+.fecha-actual h2 {
+  color: #2d3748;
+  font-size: 1.5rem;
+  margin: 0;
+  text-transform: capitalize;
+}
+
+/* Leyenda */
+.calendario-leyenda {
+  display: flex;
+  gap: 20px;
+  justify-content: center;
+  margin-bottom: 20px;
+  padding: 15px;
+  background: white;
+  border-radius: 8px;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
+}
+
+.leyenda-item {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  font-size: 0.9rem;
+  color: #4a5568;
+}
+
+.leyenda-dot {
+  width: 16px;
+  height: 16px;
+  border-radius: 50%;
+  display: inline-block;
+}
+
+.leyenda-dot.laboratorio {
+  background: #667eea;
+}
+
+.leyenda-dot.recurso {
+  background: #48bb78;
+}
+
+.leyenda-dot.hoy {
+  background: #f6ad55;
+  border: 2px solid #ed8936;
+}
+
+/* Vista Semanal */
+.vista-semanal .calendario-grid.semanal {
+  display: grid;
+  grid-template-columns: repeat(7, 1fr);
+  gap: 15px;
+}
+
+.dia-card {
+  background: white;
+  border-radius: 12px;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+  overflow: hidden;
+  transition: all 0.3s ease;
+  min-height: 300px;
+  display: flex;
+  flex-direction: column;
+}
+
+.dia-card:hover {
+  box-shadow: 0 4px 16px rgba(0, 0, 0, 0.15);
+  transform: translateY(-2px);
+}
+
+.dia-card.hoy {
+  border: 3px solid #f6ad55;
+  box-shadow: 0 4px 16px rgba(246, 173, 85, 0.3);
+}
+
+.dia-header {
+  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  color: white;
+  padding: 15px;
+  text-align: center;
+}
+
+.dia-nombre {
+  font-size: 0.9rem;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 1px;
+}
+
+.dia-numero {
+  font-size: 2rem;
+  font-weight: 700;
+  margin: 5px 0;
+}
+
+.dia-mes {
+  font-size: 0.85rem;
+  opacity: 0.9;
+  text-transform: capitalize;
+}
+
+.dia-reservas {
+  flex: 1;
+  padding: 15px;
+  overflow-y: auto;
+  max-height: 200px;
+}
+
+.reserva-item {
+  background: #f7fafc;
+  border-left: 4px solid #667eea;
+  border-radius: 8px;
+  padding: 10px;
+  margin-bottom: 10px;
+  display: flex;
+  gap: 10px;
+  transition: all 0.3s ease;
+}
+
+.reserva-item:hover {
+  background: #edf2f7;
+  transform: translateX(4px);
+}
+
+.reserva-item.laboratorio {
+  border-left-color: #667eea;
+}
+
+.reserva-item.recurso {
+  border-left-color: #48bb78;
+}
+
+.reserva-tipo-icon {
+  font-size: 1.5rem;
+  display: flex;
+  align-items: center;
+}
+
+.reserva-info {
+  flex: 1;
+}
+
+.reserva-nombre {
+  font-weight: 600;
+  color: #2d3748;
+  font-size: 0.9rem;
+  margin-bottom: 4px;
+}
+
+.reserva-hora {
+  font-size: 0.85rem;
+  color: #718096;
+  margin-bottom: 4px;
+}
+
+.reserva-estado {
+  display: inline-block;
+  padding: 2px 8px;
+  border-radius: 12px;
+  font-size: 0.75rem;
+  font-weight: 600;
+}
+
+.reserva-estado.pendiente {
+  background: #fef5e7;
+  color: #d68910;
+}
+
+.reserva-estado.aprobada {
+  background: #e8f5e9;
+  color: #2e7d32;
+}
+
+.sin-reservas {
+  text-align: center;
+  color: #a0aec0;
+  font-style: italic;
+  padding: 20px;
+}
+
+.dia-acciones {
+  padding: 15px;
+  border-top: 1px solid #e2e8f0;
+}
+
+.btn-solicitar-rapido {
+  width: 100%;
+  padding: 10px;
+  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  color: white;
+  border: none;
+  border-radius: 8px;
+  cursor: pointer;
+  font-weight: 600;
+  transition: all 0.3s ease;
+}
+
+.btn-solicitar-rapido:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 4px 12px rgba(102, 126, 234, 0.4);
+}
+
+/* Vista Mensual */
+.vista-mensual .calendario-grid.mensual {
+  background: white;
+  border-radius: 12px;
+  padding: 20px;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+}
+
+.dias-semana-header {
+  display: grid;
+  grid-template-columns: repeat(7, 1fr);
+  gap: 5px;
+  margin-bottom: 10px;
+}
+
+.dia-semana-nombre {
+  text-align: center;
+  font-weight: 600;
+  color: #4a5568;
+  padding: 10px;
+  font-size: 0.9rem;
+}
+
+.dias-grid {
+  display: grid;
+  grid-template-columns: repeat(7, 1fr);
+  gap: 5px;
+}
+
+.dia-mes {
+  aspect-ratio: 1;
+  border: 2px solid #e2e8f0;
+  border-radius: 8px;
+  padding: 8px;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  position: relative;
+  background: white;
+}
+
+.dia-mes:hover {
+  border-color: #cbd5e0;
+  background: #f7fafc;
+  transform: scale(1.05);
+}
+
+.dia-mes.otro-mes {
+  opacity: 0.3;
+  pointer-events: none;
+}
+
+.dia-mes.hoy {
+  background: linear-gradient(135deg, rgba(102, 126, 234, 0.1) 0%, rgba(118, 75, 162, 0.1) 100%);
+  border-color: #f6ad55;
+  border-width: 3px;
+  font-weight: 700;
+}
+
+.dia-mes .dia-numero {
+  font-weight: 600;
+  color: #2d3748;
+  font-size: 1.1rem;
+  margin-bottom: 4px;
+}
+
+.reservas-indicador {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  margin-top: 8px;
+}
+
+.reservas-count {
+  font-size: 0.75rem;
+  color: #718096;
+  font-weight: 600;
+}
+
+.reserva-dot {
+  width: 100%;
+  height: 4px;
+  border-radius: 2px;
+}
+
+.reserva-dot.laboratorio {
+  background: #667eea;
+}
+
+.reserva-dot.recurso {
+  background: #48bb78;
+}
+
+/* Loading */
+.calendario-loading {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding: 60px;
+  background: white;
+  border-radius: 12px;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+}
+
+.calendario-loading .spinner {
+  width: 50px;
+  height: 50px;
+  border: 4px solid #e2e8f0;
+  border-top-color: #667eea;
+  border-radius: 50%;
+  animation: spin 1s linear infinite;
+  margin-bottom: 20px;
+}
+
+@keyframes spin {
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+.calendario-loading p {
+  color: #718096;
+  font-size: 1.1rem;
+}
+
+/* Modal */
+.modal-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: rgba(0, 0, 0, 0.5);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 1000;
+  backdrop-filter: blur(4px);
+}
+
+.modal-content.calendario-modal {
+  background: white;
+  border-radius: 16px;
+  padding: 30px;
+  max-width: 500px;
+  width: 90%;
+  max-height: 90vh;
+  overflow-y: auto;
+  box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3);
+}
+
+.modal-content.calendario-modal h3 {
+  color: #2d3748;
+  font-size: 1.5rem;
+  margin-bottom: 10px;
+}
+
+.modal-content.calendario-modal h4 {
+  color: #667eea;
+  font-size: 1.2rem;
+  margin-bottom: 10px;
+}
+
+.fecha-seleccionada {
+  background: linear-gradient(135deg, rgba(102, 126, 234, 0.1) 0%, rgba(118, 75, 162, 0.1) 100%);
+  padding: 10px;
+  border-radius: 8px;
+  text-align: center;
+  font-weight: 600;
+  color: #2d3748;
+  margin-bottom: 20px;
+  text-transform: capitalize;
+}
+
+.form-group {
+  margin-bottom: 20px;
+}
+
+.form-group label {
+  display: block;
+  font-weight: 600;
+  color: #2d3748;
+  margin-bottom: 8px;
+}
+
+.form-group input,
+.form-group select,
+.form-group textarea {
+  width: 100%;
+  padding: 12px;
+  border: 2px solid #e2e8f0;
+  border-radius: 8px;
+  font-size: 1rem;
+  transition: all 0.3s ease;
+}
+
+.form-group input:focus,
+.form-group select:focus,
+.form-group textarea:focus {
+  outline: none;
+  border-color: #667eea;
+  box-shadow: 0 0 0 3px rgba(102, 126, 234, 0.1);
+}
+
+.form-row {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 15px;
+}
+
+.modal-actions {
+  display: flex;
+  gap: 10px;
+  justify-content: flex-end;
+  margin-top: 25px;
+}
+
+.btn-primary {
+  padding: 12px 24px;
+  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  color: white;
+  border: none;
+  border-radius: 8px;
+  cursor: pointer;
+  font-weight: 600;
+  font-size: 1rem;
+  transition: all 0.3s ease;
+}
+
+.btn-primary:hover:not(:disabled) {
+  transform: translateY(-2px);
+  box-shadow: 0 6px 20px rgba(102, 126, 234, 0.4);
+}
+
+.btn-primary:disabled {
+  opacity: 0.6;
+  cursor: not-allowed;
+}
+
+.btn-secondary {
+  padding: 12px 24px;
+  background: white;
+  color: #4a5568;
+  border: 2px solid #e2e8f0;
+  border-radius: 8px;
+  cursor: pointer;
+  font-weight: 600;
+  font-size: 1rem;
+  transition: all 0.3s ease;
+}
+
+.btn-secondary:hover {
+  background: #f7fafc;
+  border-color: #cbd5e0;
+}
+
+/* Responsive */
+@media (max-width: 1200px) {
+  .vista-semanal .calendario-grid.semanal {
+    grid-template-columns: repeat(4, 1fr);
+  }
+}
+
+@media (max-width: 768px) {
+  .calendario-controles {
+    flex-direction: column;
+    align-items: stretch;
+  }
+
+  .vista-selector,
+  .navegacion {
+    justify-content: center;
+  }
+
+  .vista-semanal .calendario-grid.semanal {
+    grid-template-columns: repeat(2, 1fr);
+  }
+
+  .dias-grid {
+    grid-template-columns: repeat(7, 1fr);
+    gap: 2px;
+  }
+
+  .dia-mes {
+    padding: 4px;
+    font-size: 0.8rem;
+  }
+
+  .modal-content.calendario-modal {
+    width: 95%;
+    padding: 20px;
+  }
+
+  .form-row {
+    grid-template-columns: 1fr;
+  }
+}
+
+@media (max-width: 480px) {
+  .vista-semanal .calendario-grid.semanal {
+    grid-template-columns: 1fr;
+  }
+
+  .calendario-header h1 {
+    font-size: 1.5rem;
+  }
+
+  .fecha-actual h2 {
+    font-size: 1.2rem;
+  }
+}

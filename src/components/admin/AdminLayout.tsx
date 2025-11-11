@@ -13,6 +13,7 @@ const AdminLayout = () => {
     { id: 'inicio', icon: '🏠', label: 'Inicio', path: '/admin/dashboard' },
     { id: 'perfil', icon: '👤', label: 'Perfil', path: '/admin/perfil' },
     { id: 'bitacora', icon: '📋', label: 'Bitácora', path: '/admin/bitacora' },
+    { id: 'calendario', icon: '📅', label: 'Calendario Sistema', path: '/admin/calendario' },
     { id: 'separator1', isSeparator: true, label: 'Reportes' },
     { id: 'reportes-generales', icon: '📈', label: 'Reportes Generales', path: '/admin/reportes-generales' },
     { id: 'separator2', isSeparator: true, label: 'Comunicación' },
