@@ -4,6 +4,7 @@ import { db } from '../../firebase/config';
 import { useAuth } from '../../context/AuthContext';
 import { registrarEnBitacora } from '../../utils/bitacoraHelper';
 import { crearNotificacion } from '../../utils/notificacionesHelper';
+import { FiClipboard, FiPackage, FiSearch, FiTrash2, FiTag, FiBarChart } from 'react-icons/fi';
 import './UserReservas.css';
 
 interface Laboratorio {
@@ -338,7 +339,7 @@ const UserReservas: React.FC = () => {
   return (
     <div className="user-reservas-container">
       <div className="reservas-header">
-        <h2>📋 Reservas y Solicitudes</h2>
+        <h2><FiClipboard /> Reservas y Solicitudes</h2>
         <p>Solicita laboratorios y recursos para tus actividades académicas</p>
       </div>
 
@@ -360,7 +361,7 @@ const UserReservas: React.FC = () => {
             setSearchTerm('');
           }}
         >
-          📦 Recursos
+          <FiPackage /> Recursos
         </button>
       </div>
 
@@ -369,7 +370,7 @@ const UserReservas: React.FC = () => {
         <input
           type="text"
           className="search-input-main"
-          placeholder={tabActiva === 'laboratorios' ? '🔍 Buscar por nombre, código o ubicación...' : '🔍 Buscar recurso...'}
+          placeholder={tabActiva === 'laboratorios' ? 'Buscar por nombre, código o ubicación...' : 'Buscar recurso...'}
           value={searchTerm}
           onChange={(e) => setSearchTerm(e.target.value)}
         />
@@ -413,7 +414,7 @@ const UserReservas: React.FC = () => {
         )}
         
         <button className="btn-clear-filters" onClick={limpiarFiltros}>
-          🗑️ Limpiar filtros
+          <FiTrash2 /> Limpiar filtros
         </button>
         </div>
       </div>
@@ -457,7 +458,7 @@ const UserReservas: React.FC = () => {
             recursosFiltrados.map(rec => (
               <div key={rec.id} className="item-card">
                 <div className="item-header">
-                  <h3>📦 {rec.nombre}</h3>
+                  <h3><FiPackage /> {rec.nombre}</h3>
                   <span className={`badge badge-${
                     rec.estado?.toLowerCase().includes('disponible') ? 'success' : 
                     rec.estado?.toLowerCase().includes('mantenimiento') ? 'warning' : 
@@ -468,8 +469,8 @@ const UserReservas: React.FC = () => {
                   </span>
                 </div>
                 <div className="item-info">
-                  <p><strong>🏷️ Tipo:</strong> {rec.tipo_recurso}</p>
-                  <p><strong>📊 Disponible:</strong> {rec.cantidad_disponible} {rec.unidad}</p>
+                  <p><strong><FiTag /> Tipo:</strong> {rec.tipo_recurso}</p>
+                  <p><strong><FiBarChart /> Disponible:</strong> {rec.cantidad_disponible} {rec.unidad}</p>
                 </div>
                 <button
                   className="btn-solicitar"

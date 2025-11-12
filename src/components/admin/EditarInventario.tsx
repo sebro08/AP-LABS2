@@ -72,10 +72,10 @@ const EditarInventario = () => {
         setError('Recurso no encontrado');
       }
 
-      console.log('✅ Datos cargados');
+      console.log('Datos cargados');
       setLoading(false);
     } catch (err: any) {
-      console.error('❌ Error cargando datos:', err);
+      console.error('Error cargando datos:', err);
       setError('Error al cargar los datos: ' + err.message);
       setLoading(false);
     }
@@ -115,7 +115,7 @@ const EditarInventario = () => {
     setSuccess('');
 
     try {
-      console.log('💾 Actualizando recurso...');
+      console.log('Actualizando recurso...');
       
       // Obtener nombres de los catálogos seleccionados
       const estadoSeleccionado = estados.find(e => e.id === formData.id_estado);
@@ -151,7 +151,7 @@ const EditarInventario = () => {
         fecha_ultimo_mantenimiento: formData.fecha_ultimo_mantenimiento
       });
 
-      console.log('✅ Recurso actualizado exitosamente');
+      console.log('Recurso actualizado exitosamente');
       setSuccess('Recurso actualizado exitosamente');
       
       setTimeout(() => {
@@ -159,7 +159,7 @@ const EditarInventario = () => {
       }, 1500);
 
     } catch (err: any) {
-      console.error('❌ Error:', err);
+      console.error('Error:', err);
       setError(err.message || 'Error al actualizar el recurso');
     } finally {
       setSaving(false);

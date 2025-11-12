@@ -2,6 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { Link } from 'react-router-dom';
 import { getAuth } from 'firebase/auth';
 import { getFirestore, collection, query, where, getDocs } from 'firebase/firestore';
+import { FiClipboard, FiCheckCircle, FiMail, FiBell, FiBarChart, FiMessageSquare, FiCalendar, FiClock, FiChevronRight } from 'react-icons/fi';
 import './UserDashboard.css';
 
 interface QuickStats {
@@ -145,28 +146,28 @@ const UserDashboard: React.FC = () => {
     {
       title: 'Nueva Reserva',
       description: 'Solicitar laboratorio o recurso',
-      icon: '🏢',
+      icon: <FiCalendar />,
       link: '/user/reservas',
       color: '#3b82f6'
     },
     {
       title: 'Mis Solicitudes',
       description: 'Ver estado de solicitudes',
-      icon: '📋',
+      icon: <FiClipboard />,
       link: '/user/mis-solicitudes',
       color: '#8b5cf6'
     },
     {
       title: 'Mensajes',
       description: 'Bandeja de entrada',
-      icon: '💬',
+      icon: <FiMessageSquare />,
       link: '/user/mensajes',
       color: '#10b981'
     },
     {
       title: 'Historial',
       description: 'Ver historial de uso',
-      icon: '📊',
+      icon: <FiBarChart />,
       link: '/user/historial',
       color: '#f59e0b'
     }
@@ -190,7 +191,7 @@ const UserDashboard: React.FC = () => {
       {/* Stats Cards */}
       <div className="stats-grid">
         <div className="stat-card blue">
-          <div className="stat-icon">📋</div>
+          <div className="stat-icon"><FiClipboard /></div>
           <div className="stat-content">
             <h3>{stats.solicitudesPendientes}</h3>
             <p>Solicitudes Pendientes</p>
@@ -198,7 +199,7 @@ const UserDashboard: React.FC = () => {
         </div>
 
         <div className="stat-card green">
-          <div className="stat-icon">💬</div>
+          <div className="stat-icon"><FiMessageSquare /></div>
           <div className="stat-content">
             <h3>{stats.mensajesNoLeidos}</h3>
             <p>Mensajes No Leídos</p>
@@ -206,7 +207,7 @@ const UserDashboard: React.FC = () => {
         </div>
 
         <div className="stat-card purple">
-          <div className="stat-icon">✅</div>
+          <div className="stat-icon"><FiCheckCircle /></div>
           <div className="stat-content">
             <h3>{stats.reservasActivas}</h3>
             <p>Reservas Activas</p>
@@ -214,7 +215,7 @@ const UserDashboard: React.FC = () => {
         </div>
 
         <div className="stat-card orange">
-          <div className="stat-icon">🔔</div>
+          <div className="stat-icon"><FiBell /></div>
           <div className="stat-content">
             <h3>{stats.notificacionesNuevas}</h3>
             <p>Notificaciones Nuevas</p>
@@ -240,7 +241,7 @@ const UserDashboard: React.FC = () => {
                 <h3>{action.title}</h3>
                 <p>{action.description}</p>
               </div>
-              <div className="action-arrow">→</div>
+              <div className="action-arrow"><FiChevronRight /></div>
             </Link>
           ))}
         </div>
@@ -252,7 +253,7 @@ const UserDashboard: React.FC = () => {
         <div className="activity-list">
           {stats.solicitudesPendientes > 0 && (
             <div className="activity-item">
-              <div className="activity-icon pending">⏳</div>
+              <div className="activity-icon pending"><FiClock /></div>
               <div className="activity-content">
                 <p className="activity-title">Tienes solicitudes pendientes</p>
                 <p className="activity-time">{stats.solicitudesPendientes} solicitud(es) esperando aprobación</p>
@@ -262,7 +263,7 @@ const UserDashboard: React.FC = () => {
           
           {stats.mensajesNoLeidos > 0 && (
             <div className="activity-item">
-              <div className="activity-icon message">💬</div>
+              <div className="activity-icon message"><FiMail /></div>
               <div className="activity-content">
                 <p className="activity-title">Mensajes nuevos</p>
                 <p className="activity-time">{stats.mensajesNoLeidos} mensaje(s) sin leer</p>
@@ -272,7 +273,7 @@ const UserDashboard: React.FC = () => {
 
           {stats.reservasActivas > 0 && (
             <div className="activity-item">
-              <div className="activity-icon success">✅</div>
+              <div className="activity-icon success"><FiCheckCircle /></div>
               <div className="activity-content">
                 <p className="activity-title">Reservas activas</p>
                 <p className="activity-time">{stats.reservasActivas} reserva(s) aprobada(s)</p>

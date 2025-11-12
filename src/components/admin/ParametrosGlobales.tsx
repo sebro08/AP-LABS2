@@ -3,6 +3,7 @@ import { collection, doc, getDocs, updateDoc } from 'firebase/firestore';
 import { db } from '../../firebase/config';
 import { useAuth } from '../../context/AuthContext';
 import { registrarEnBitacora } from '../../utils/bitacoraHelper';
+import { FiSettings, FiCalendar, FiRefreshCw, FiCheckCircle, FiXCircle, FiEdit, FiX } from 'react-icons/fi';
 import './ParametrosGlobales.css';
 
 interface EstadoItem {
@@ -83,10 +84,10 @@ const ParametrosGlobales = () => {
       }));
 
       setUsuarios(usuariosData);
-      console.log('👥 Usuarios cargados:', usuariosData.length);
+      console.log('Usuarios cargados:', usuariosData.length);
 
     } catch (error) {
-      console.error('❌ Error cargando usuarios:', error);
+      console.error('Error cargando usuarios:', error);
     }
   };
 
@@ -118,10 +119,10 @@ const ParametrosGlobales = () => {
       ];
 
       setEstados(estadosDefecto);
-      console.log('🔄 Estados configurados:', estadosDefecto.length);
+      console.log('Estados configurados:', estadosDefecto.length);
 
     } catch (error) {
-      console.error('❌ Error cargando estados:', error);
+      console.error('Error cargando estados:', error);
     }
   };
 
@@ -163,11 +164,11 @@ const ParametrosGlobales = () => {
         });
       }
 
-      console.log(`✅ Estado ${estadoEditando ? 'actualizado' : 'creado'}:`, estadoCompleto.nombre);
+      console.log(`Estado ${estadoEditando ? 'actualizado' : 'creado'}:`, estadoCompleto.nombre);
       handleCerrarModal();
 
     } catch (error) {
-      console.error('❌ Error guardando estado:', error);
+      console.error('Error guardando estado:', error);
       alert('Error al guardar el estado. Inténtalo de nuevo.');
     } finally {
       setGuardando(false);
@@ -307,10 +308,10 @@ const ParametrosGlobales = () => {
       ];
 
       setParametros(parametrosConfig);
-      console.log('📊 Parámetros configurados:', parametrosConfig.length);
+      console.log('Parámetros configurados:', parametrosConfig.length);
 
     } catch (error) {
-      console.error('❌ Error configurando parámetros:', error);
+      console.error('Error configurando parámetros:', error);
     }
   };
 
@@ -347,26 +348,24 @@ const ParametrosGlobales = () => {
         });
       }
 
-      console.log(`✅ Parámetro ${parametro.nombre} actualizado:`, nuevoValor);
+      console.log(`Parámetro ${parametro.nombre} actualizado:`, nuevoValor);
 
     } catch (error) {
-      console.error('❌ Error actualizando parámetro:', error);
+      console.error('Error actualizando parámetro:', error);
     } finally {
       setGuardando(false);
     }
   };
 
-  const parametrosFiltrados = parametros;
-
   const parametrosPorCategoria = parametros.filter(p => p.categoria === tabActiva);
 
   const getIconoCategoria = (categoria: string) => {
     switch (categoria) {
-      case 'reservas': return '📅';
-      case 'estados': return '🔄';
-      case 'notificaciones': return '🔔';
-      case 'politicas': return '⚖️';
-      default: return '⚙️';
+      case 'reservas': return <FiCalendar />;
+      case 'estados': return <FiRefreshCw />;
+      case 'notificaciones': return <FiSettings />;
+      case 'politicas': return <FiSettings />;
+      default: return <FiSettings />;
     }
   };
 
@@ -385,7 +384,7 @@ const ParametrosGlobales = () => {
               <span className="slider"></span>
             </label>
             <span className="value-display">
-              {parametro.valor ? '✅ Activado' : '❌ Desactivado'}
+              {parametro.valor ? <><FiCheckCircle /> Activado</> : <><FiXCircle /> Desactivado</>}
             </span>
           </div>
         );
@@ -500,7 +499,7 @@ const ParametrosGlobales = () => {
   return (
     <div className="parametros-globales">
       <div className="parametros-header">
-        <h1>⚙️ Parámetros Globales</h1>
+        <h1><FiSettings /> Parámetros Globales</h1>
         <p className="subtitle">Configuración general del sistema</p>
       </div>
 
@@ -523,7 +522,7 @@ const ParametrosGlobales = () => {
       {tabActiva === 'estados' ? (
         <div className="estados-gestion">
           <div className="estados-header">
-            <h2>🔄 Gestión de Estados</h2>
+            <h2><FiRefreshCw /> Gestión de Estados</h2>
             <button 
               className="btn btn-primary"
               onClick={() => {
@@ -531,7 +530,7 @@ const ParametrosGlobales = () => {
                 setMostrarModalEstado(true);
               }}
             >
-              ➕ Nuevo Estado
+              Nuevo Estado
             </button>
           </div>
           
@@ -563,7 +562,7 @@ const ParametrosGlobales = () => {
                             onClick={() => handleEditarEstado(estado)}
                             title="Editar estado"
                           >
-                            ✏️
+                            <FiEdit />
                           </button>
                           
                           <label className="switch small">
@@ -588,7 +587,7 @@ const ParametrosGlobales = () => {
         <div className="parametros-lista">
           {parametrosPorCategoria.length === 0 ? (
             <div className="empty-state">
-              <div className="empty-icon">⚙️</div>
+              <div className="empty-icon"><FiSettings /></div>
               <h3>No hay parámetros</h3>
               <p>No se encontraron parámetros para la categoría seleccionada.</p>
             </div>
@@ -627,7 +626,7 @@ const ParametrosGlobales = () => {
             <div className="modal-header">
               <h2>{estadoEditando ? 'Editar Estado' : 'Nuevo Estado'}</h2>
               <button className="modal-close" onClick={handleCerrarModal}>
-                ❌
+                <FiX />
               </button>
             </div>
             
@@ -662,10 +661,10 @@ const ParametrosGlobales = () => {
                     onChange={(e) => setNuevoEstado(prev => ({ ...prev, tipo: e.target.value as any }))}
                     className="form-select"
                   >
-                    <option value="equipos">🔧 Equipos</option>
-                    <option value="solicitudes">📋 Solicitudes</option>
-                    <option value="mantenimientos">🔧 Mantenimientos</option>
-                    <option value="reservas">📅 Reservas</option>
+                    <option value="equipos">Equipos</option>
+                    <option value="solicitudes">Solicitudes</option>
+                    <option value="mantenimientos">Mantenimientos</option>
+                    <option value="reservas">Reservas</option>
                   </select>
                 </div>
 

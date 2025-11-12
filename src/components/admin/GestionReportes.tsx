@@ -7,6 +7,18 @@ import { registrarEnBitacora } from '../../utils/bitacoraHelper';
 import jsPDF from 'jspdf';
 import autoTable from 'jspdf-autotable';
 import * as XLSX from 'xlsx';
+import { 
+  FiUsers, 
+  FiActivity, 
+  FiPackage, 
+  FiFileText, 
+  FiTool, 
+  FiMail,
+  FiDownload,
+  FiCalendar,
+  FiFilter
+} from 'react-icons/fi';
+import { HiOutlineChartBar } from 'react-icons/hi';
 import './GestionReportes.css';
 
 const GestionReportes = () => {
@@ -671,10 +683,10 @@ const GestionReportes = () => {
 
     setLoading(true);
     try {
-      console.log('🔄 Generando reporte con filtros:', filtros);
+      console.log('Generando reporte con filtros:', filtros);
 
       const datos = await obtenerDatosReporte();
-      console.log('📊 Datos obtenidos:', datos);
+      console.log('Datos obtenidos:', datos);
 
       if (filtros.formato === 'pdf' || filtros.formato === 'ambos') {
         await exportarPDF(datos);
@@ -695,7 +707,7 @@ const GestionReportes = () => {
         observaciones: `Período: ${filtros.fechaInicio} al ${filtros.fechaFin}`
       });
 
-      alert('✅ Reporte generado exitosamente');
+      alert('Reporte generado exitosamente');
 
     } catch (error: any) {
       console.error('Error generando reporte:', error);
@@ -708,15 +720,18 @@ const GestionReportes = () => {
   return (
     <div className="gestion-reportes">
       <div className="reportes-header">
-        <h1>📊 Reportes Generales</h1>
-        <p className="subtitle">Generación de reportes y estadísticas del sistema</p>
+        <HiOutlineChartBar className="header-icon" />
+        <div>
+          <h1>Reportes Generales</h1>
+          <p className="subtitle">Generación de reportes y estadísticas del sistema</p>
+        </div>
       </div>
 
       {/* Tarjetas de Estadísticas */}
       {estadisticas && (
         <div className="estadisticas-grid">
           <div className="stat-card">
-            <div className="stat-icon">👥</div>
+            <FiUsers className="stat-icon" />
             <div className="stat-content">
               <div className="stat-label">Usuarios</div>
               <div className="stat-value">{estadisticas.totalUsuarios}</div>
@@ -725,7 +740,7 @@ const GestionReportes = () => {
           </div>
 
           <div className="stat-card">
-            <div className="stat-icon">🧪</div>
+            <FiActivity className="stat-icon" />
             <div className="stat-content">
               <div className="stat-label">Laboratorios</div>
               <div className="stat-value">{estadisticas.totalLaboratorios}</div>
@@ -734,7 +749,7 @@ const GestionReportes = () => {
           </div>
 
           <div className="stat-card">
-            <div className="stat-icon">📦</div>
+            <FiPackage className="stat-icon" />
             <div className="stat-content">
               <div className="stat-label">Recursos</div>
               <div className="stat-value">{estadisticas.totalRecursos}</div>
@@ -743,7 +758,7 @@ const GestionReportes = () => {
           </div>
 
           <div className="stat-card">
-            <div className="stat-icon">📋</div>
+            <FiFileText className="stat-icon" />
             <div className="stat-content">
               <div className="stat-label">Solicitudes</div>
               <div className="stat-value">{estadisticas.solicitudesPendientes}</div>
@@ -752,7 +767,7 @@ const GestionReportes = () => {
           </div>
 
           <div className="stat-card">
-            <div className="stat-icon">🔧</div>
+            <FiTool className="stat-icon" />
             <div className="stat-content">
               <div className="stat-label">Mantenimientos</div>
               <div className="stat-value">{estadisticas.mantenimientosProgramados}</div>
@@ -761,7 +776,7 @@ const GestionReportes = () => {
           </div>
 
           <div className="stat-card">
-            <div className="stat-icon">💬</div>
+            <FiMail className="stat-icon" />
             <div className="stat-content">
               <div className="stat-label">Mensajes</div>
               <div className="stat-value">{estadisticas.mensajesEnviados}</div>
@@ -773,7 +788,10 @@ const GestionReportes = () => {
 
       {/* Formulario de Filtros */}
       <div className="filtros-container">
-        <h2>🔍 Configurar Reporte</h2>
+        <div className="section-header">
+          <FiFilter className="section-icon" />
+          <h2>Configurar Reporte</h2>
+        </div>
         
         <div className="filtros-grid">
           <div className="form-group">
@@ -782,19 +800,22 @@ const GestionReportes = () => {
               value={filtros.tipoReporte}
               onChange={(e) => setFiltros({ ...filtros, tipoReporte: e.target.value as any })}
             >
-              <option value="completo">📊 Reporte Completo</option>
-              <option value="usuarios">👥 Usuarios</option>
-              <option value="laboratorios">🧪 Laboratorios</option>
-              <option value="inventario">📦 Inventario</option>
-              <option value="solicitudes">📋 Solicitudes</option>
-              <option value="mantenimientos">🔧 Mantenimientos</option>
-              <option value="mensajes">💬 Mensajes</option>
-              <option value="bitacora">📖 Bitácora</option>
+              <option value="completo">Reporte Completo</option>
+              <option value="usuarios">Usuarios</option>
+              <option value="laboratorios">Laboratorios</option>
+              <option value="inventario">Inventario</option>
+              <option value="solicitudes">Solicitudes</option>
+              <option value="mantenimientos">Mantenimientos</option>
+              <option value="mensajes">Mensajes</option>
+              <option value="bitacora">Bitácora</option>
             </select>
           </div>
 
           <div className="form-group">
-            <label>Fecha Inicio:</label>
+            <label>
+              <FiCalendar className="label-icon" />
+              Fecha Inicio:
+            </label>
             <input
               type="date"
               value={filtros.fechaInicio}
@@ -803,7 +824,10 @@ const GestionReportes = () => {
           </div>
 
           <div className="form-group">
-            <label>Fecha Fin:</label>
+            <label>
+              <FiCalendar className="label-icon" />
+              Fecha Fin:
+            </label>
             <input
               type="date"
               value={filtros.fechaFin}
@@ -817,9 +841,9 @@ const GestionReportes = () => {
               value={filtros.formato}
               onChange={(e) => setFiltros({ ...filtros, formato: e.target.value as any })}
             >
-              <option value="ambos">📄 PDF + Excel</option>
-              <option value="pdf">📄 Solo PDF</option>
-              <option value="excel">📊 Solo Excel</option>
+              <option value="ambos">PDF + Excel</option>
+              <option value="pdf">Solo PDF</option>
+              <option value="excel">Solo Excel</option>
             </select>
           </div>
 
@@ -860,12 +884,11 @@ const GestionReportes = () => {
             onClick={handleGenerarReporte}
             disabled={loading}
           >
-            {loading ? '⏳ Generando...' : '📊 Generar Reporte'}
+            <FiDownload />
+            {loading ? 'Generando...' : 'Generar Reporte'}
           </button>
         </div>
       </div>
-
-
     </div>
   );
 };

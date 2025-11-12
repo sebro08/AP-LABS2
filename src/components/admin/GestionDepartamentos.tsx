@@ -3,6 +3,7 @@ import { useNavigate } from 'react-router-dom';
 import { collection, getDocs, doc, updateDoc, deleteDoc } from 'firebase/firestore';
 import { db } from '../../firebase/config';
 import { Departamento } from '../../types/Departamento';
+import { FiBox, FiCheckCircle, FiXCircle, FiSearch, FiEdit, FiTrash2, FiAlertCircle, FiPlus } from 'react-icons/fi';
 import './GestionDepartamentos.css';
 
 const GestionDepartamentos = () => {
@@ -23,11 +24,11 @@ const GestionDepartamentos = () => {
     setError('');
     try {
       const deptosSnapshot = await getDocs(collection(db, 'departamentos'));
-      console.log('📦 Snapshot obtenido, total documentos:', deptosSnapshot.size);
+      console.log('Snapshot obtenido, total documentos:', deptosSnapshot.size);
       
       const deptosData = deptosSnapshot.docs.map(doc => {
         const data = doc.data();
-        console.log('📄 Procesando doc ID:', doc.id, 'Data:', data);
+        console.log('Procesando doc ID:', doc.id, 'Data:', data);
         
         return {
           id: doc.id,
@@ -42,13 +43,13 @@ const GestionDepartamentos = () => {
         } as Departamento;
       });
 
-      console.log('✅ Departamentos procesados:', deptosData);
+      console.log('Departamentos procesados:', deptosData);
       setDepartamentos(deptosData);
       setLoading(false);
-      console.log('✅ [FIN] Carga completada exitosamente');
+      console.log('[FIN] Carga completada exitosamente');
     } catch (err: any) {
-      console.error('❌ [ERROR] Error en cargarDatos:', err);
-      console.error('❌ Mensaje:', err.message);
+      console.error('[ERROR] Error en cargarDatos:', err);
+      console.error('Mensaje:', err.message);
       setError('Error al cargar los departamentos: ' + err.message);
       setLoading(false);
     }
@@ -65,9 +66,9 @@ const GestionDepartamentos = () => {
         d.id === depto.id ? { ...d, activo: nuevoEstado } : d
       ));
 
-      console.log(`✅ Departamento ${nuevoEstado ? 'activado' : 'desactivado'}`);
+      console.log(`Departamento ${nuevoEstado ? 'activado' : 'desactivado'}`);
     } catch (error) {
-      console.error('❌ Error cambiando estado:', error);
+      console.error('Error cambiando estado:', error);
       setError('Error al cambiar el estado del departamento');
     }
   };
@@ -81,9 +82,9 @@ const GestionDepartamentos = () => {
         
         setDepartamentos(departamentos.filter(d => d.id !== deptoId));
         
-        console.log('✅ Departamento eliminado correctamente');
+        console.log('Departamento eliminado correctamente');
       } catch (err) {
-        console.error('❌ Error al eliminar departamento:', err);
+        console.error('Error al eliminar departamento:', err);
         setError('Error al eliminar el departamento');
       }
     }
@@ -120,7 +121,7 @@ const GestionDepartamentos = () => {
   if (error) {
     return (
       <div className="error-container">
-        <div className="error-icon">⚠️</div>
+        <div className="error-icon"><FiAlertCircle /></div>
         <h2>Error al cargar datos</h2>
         <p>{error}</p>
         <button className="btn-primary" onClick={cargarDatos}>
@@ -134,19 +135,19 @@ const GestionDepartamentos = () => {
     <div className="gestion-departamentos">
       {/* Header */}
       <div className="page-header">
-        <h1>🏢 Gestión de Departamentos</h1>
+        <h1><FiBox className="header-icon" /> Gestión de Departamentos</h1>
         <button 
           className="btn-primary"
           onClick={() => navigate('/admin/departamentos/nuevo')}
         >
-          ➕ Nuevo Departamento
+          <FiPlus /> Nuevo Departamento
         </button>
       </div>
 
       {/* Filtros */}
       <div className="filters-section">
         <div className="search-box">
-          <span className="search-icon">🔍</span>
+          <span className="search-icon"><FiSearch /></span>
           <input
             type="text"
             placeholder="Buscar por nombre o código..."
@@ -165,7 +166,7 @@ const GestionDepartamentos = () => {
             <option value="inactivo">Solo Inactivos</option>
           </select>
           <button className="btn-secondary" onClick={limpiarFiltros}>
-            🗑️ Limpiar filtros
+            Limpiar filtros
           </button>
         </div>
       </div>
@@ -173,28 +174,28 @@ const GestionDepartamentos = () => {
       {/* Cards de resumen */}
       <div className="summary-cards">
         <div className="summary-card">
-          <div className="summary-icon">🏢</div>
+          <div className="summary-icon"><FiBox /></div>
           <div className="summary-info">
             <div className="summary-value">{departamentos.length}</div>
             <div className="summary-label">Total</div>
           </div>
         </div>
         <div className="summary-card">
-          <div className="summary-icon">✅</div>
+          <div className="summary-icon"><FiCheckCircle /></div>
           <div className="summary-info">
             <div className="summary-value">{departamentos.filter(d => d.activo).length}</div>
             <div className="summary-label">Activos</div>
           </div>
         </div>
         <div className="summary-card">
-          <div className="summary-icon">❌</div>
+          <div className="summary-icon"><FiXCircle /></div>
           <div className="summary-info">
             <div className="summary-value">{departamentos.filter(d => !d.activo).length}</div>
             <div className="summary-label">Inactivos</div>
           </div>
         </div>
         <div className="summary-card">
-          <div className="summary-icon">🔍</div>
+          <div className="summary-icon"><FiSearch /></div>
           <div className="summary-info">
             <div className="summary-value">{departamentosFiltrados.length}</div>
             <div className="summary-label">Resultados</div>
@@ -245,21 +246,21 @@ const GestionDepartamentos = () => {
                         onClick={() => toggleEstadoDepartamento(depto)}
                         title={depto.activo ? 'Desactivar' : 'Activar'}
                       >
-                        {depto.activo ? '🔴' : '🟢'}
+                        {depto.activo ? <FiXCircle /> : <FiCheckCircle />}
                       </button>
                       <button 
                         className="btn-icon btn-edit"
                         onClick={() => navigate(`/admin/departamentos/editar/${depto.id}`)}
                         title="Editar"
                       >
-                        ✏️
+                        <FiEdit />
                       </button>
                       <button
                         className="btn-icon btn-delete"
                         onClick={() => eliminarDepartamento(depto.id, depto.nombre)}
                         title="Eliminar"
                       >
-                        🗑️
+                        <FiTrash2 />
                       </button>
                     </div>
                   </td>

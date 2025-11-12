@@ -5,6 +5,7 @@ import { useAuth } from '../../context/AuthContext';
 import { useNavigate } from 'react-router-dom';
 import { Notificacion, FiltrosNotificacion } from '../../types/Notificacion';
 import { registrarEnBitacora } from '../../utils/bitacoraHelper';
+import { FiBell, FiCheckCircle, FiXCircle, FiMessageSquare, FiTool } from 'react-icons/fi';
 import './GestionNotificaciones.css';
 
 const GestionNotificaciones = () => {
@@ -17,6 +18,15 @@ const GestionNotificaciones = () => {
   });
   const [searchTerm, setSearchTerm] = useState('');
 
+  // Helper para convertir fechas de Firestore
+  const convertirFecha = (fecha: any): Date => {
+    if (typeof fecha === 'string') return new Date(fecha);
+    if (fecha instanceof Date) return fecha;
+    if (fecha?.toDate) return fecha.toDate();
+    if (fecha?.seconds) return new Date(fecha.seconds * 1000);
+    return new Date();
+  };
+
   useEffect(() => {
     cargarNotificaciones();
   }, [currentUser]);
@@ -28,40 +38,40 @@ const GestionNotificaciones = () => {
       setLoading(true);
 
       // Buscar el ID del usuario en Firestore
-      console.log('🔍 Buscando usuario con email:', currentUser.email);
+      console.log('Buscando usuario con email:', currentUser.email);
       const usuariosRef = collection(db, 'usuarios');
       let qUsuario = query(usuariosRef, where('email', '==', currentUser.email));
       let usuarioSnapshot = await getDocs(qUsuario);
       
       if (usuarioSnapshot.empty) {
-        console.log('❌ No encontrado con "email", probando con "correo"');
+        console.log('No encontrado con "email", probando con "correo"');
         qUsuario = query(usuariosRef, where('correo', '==', currentUser.email));
         usuarioSnapshot = await getDocs(qUsuario);
       }
 
       if (usuarioSnapshot.empty) {
-        console.error('❌ Usuario no encontrado en ninguna de las dos búsquedas');
+        console.error('Usuario no encontrado en ninguna de las dos búsquedas');
         return;
       }
 
       const usuarioId = usuarioSnapshot.docs[0].id;
-      console.log('✅ Usuario encontrado con ID:', usuarioId);
+      console.log('Usuario encontrado con ID:', usuarioId);
 
       // Cargar notificaciones del usuario
-      console.log('🔍 Buscando notificaciones para usuario ID:', usuarioId);
+      console.log('Buscando notificaciones para usuario ID:', usuarioId);
       const notificacionesRef = collection(db, 'notificaciones');
       const qNotificaciones = query(
         notificacionesRef,
         where('id_usuario', '==', usuarioId)
       );
 
-      console.log('📡 Ejecutando consulta a Firestore...');
+      console.log('Ejecutando consulta a Firestore...');
       const snapshot = await getDocs(qNotificaciones);
-      console.log('📊 Documentos encontrados en consulta:', snapshot.size);
+      console.log('Documentos encontrados en consulta:', snapshot.size);
       
       const notificacionesData: Notificacion[] = snapshot.docs.map(doc => {
         const data = doc.data();
-        console.log('📄 Documento encontrado:', { id: doc.id, ...data });
+        console.log('Documento encontrado:', { id: doc.id, ...data });
         return {
           id: doc.id,
           ...data
@@ -69,13 +79,13 @@ const GestionNotificaciones = () => {
       })
       // Ordenar por fecha en el cliente (en lugar de en la consulta)
       .sort((a, b) => {
-        const fechaA = new Date(a.fecha_creacion).getTime();
-        const fechaB = new Date(b.fecha_creacion).getTime();
+        const fechaA = convertirFecha(a.fecha_creacion).getTime();
+        const fechaB = convertirFecha(b.fecha_creacion).getTime();
         return fechaB - fechaA; // Orden descendente (más recientes primero)
       });
 
-      console.log('📢 Notificaciones cargadas desde "notificaciones":', notificacionesData.length);
-      console.log('📋 Resumen de notificaciones:');
+      console.log('Notificaciones cargadas desde "notificaciones":', notificacionesData.length);
+      console.log('Resumen de notificaciones:');
       notificacionesData.forEach((n, index) => {
         console.log(`  ${index + 1}. ID: ${n.id}, Título: "${n.titulo}", Leída: ${n.leida}, Usuario: ${n.id_usuario}`);
       });
@@ -90,7 +100,7 @@ const GestionNotificaciones = () => {
       setNotificaciones(notificacionesData);
 
     } catch (error) {
-      console.error('❌ Error cargando notificaciones:', error);
+      console.error('Error cargando notificaciones:', error);
       setNotificaciones([]); // Lista vacía si hay error
     } finally {
       setLoading(false);
@@ -111,11 +121,11 @@ const GestionNotificaciones = () => {
 
 
       // Actualizar en Firebase
-      console.log('🔄 Actualizando en Firebase - Colección: notificaciones, ID:', notificacionId);
+      console.log('Actualizando en Firebase - Colección: notificaciones, ID:', notificacionId);
       await updateDoc(doc(db, 'notificaciones', notificacionId), {
         leida: true
       });
-      console.log('✅ Actualización exitosa en Firebase');
+      console.log('Actualización exitosa en Firebase');
 
       if (currentUser) {
         await registrarEnBitacora({
@@ -128,10 +138,10 @@ const GestionNotificaciones = () => {
         });
       }
 
-      console.log('✅ Notificación marcada como leída en Firebase:', notificacionId);
+      console.log('Notificación marcada como leída en Firebase:', notificacionId);
 
     } catch (error) {
-      console.error('❌ Error marcando notificación como leída:', error);
+      console.error('Error marcando notificación como leída:', error);
       
       // Revertir el cambio local si falla Firebase
       setNotificaciones(prev => 
@@ -168,11 +178,11 @@ const GestionNotificaciones = () => {
   };
 
   const handleAccionNotificacion = async (notificacion: Notificacion) => {
-    console.log('🔔 Click en notificación:', notificacion.titulo, 'Leída:', notificacion.leida);
+    console.log('Click en notificación:', notificacion.titulo, 'Leída:', notificacion.leida);
     
     // Marcar como leída si no lo está
     if (!notificacion.leida) {
-      console.log('📝 Marcando como leída...');
+      console.log('Marcando como leída...');
       await handleMarcarComoLeida(notificacion.id);
     }
 
@@ -180,21 +190,21 @@ const GestionNotificaciones = () => {
     setTimeout(() => {
       switch (notificacion.tipo) {
         case 'mensaje':
-          console.log('📨 Navegando a mensajería');
+          console.log('Navegando a mensajería');
           navigate('/admin/mensajeria');
           break;
         case 'solicitud_aprobada':
         case 'solicitud_rechazada':
-          console.log('📋 Navegando a solicitudes');
+          console.log('Navegando a solicitudes');
           navigate('/admin/solicitudes');
           break;
         case 'mantenimiento_programado':
         case 'mantenimiento_completado':
-          console.log('🔧 Navegando a mantenimientos');
+          console.log('Navegando a mantenimientos');
           navigate('/admin/mantenimientos');
           break;
         default:
-          console.log('ℹ️ Notificación general - solo marcada como leída');
+          console.log('Notificación general - solo marcada como leída');
           break;
       }
     }, 200); // Pausa para que se vea el cambio visual
@@ -202,12 +212,12 @@ const GestionNotificaciones = () => {
 
   const getIconoTipo = (tipo: string) => {
     switch (tipo) {
-      case 'mensaje': return '💬';
-      case 'solicitud_aprobada': return '✅';
-      case 'solicitud_rechazada': return '❌';
-      case 'mantenimiento_programado': return '🔧';
-      case 'mantenimiento_completado': return '✅';
-      default: return '🔔';
+      case 'mensaje': return <FiMessageSquare />;
+      case 'solicitud_aprobada': return <FiCheckCircle />;
+      case 'solicitud_rechazada': return <FiXCircle />;
+      case 'mantenimiento_programado': return <FiTool />;
+      case 'mantenimiento_completado': return <FiCheckCircle />;
+      default: return <FiBell />;
     }
   };
 
@@ -262,7 +272,7 @@ const GestionNotificaciones = () => {
   const notificacionesLeidas = notificaciones.filter(n => n.leida).length;
   const notificacionesHoy = notificaciones.filter(n => {
     const hoy = new Date().toDateString();
-    const fechaNotif = new Date(n.fecha_creacion).toDateString();
+    const fechaNotif = convertirFecha(n.fecha_creacion).toDateString();
     return hoy === fechaNotif;
   }).length;
 
@@ -288,7 +298,7 @@ const GestionNotificaciones = () => {
   return (
     <div className="gestion-notificaciones">
       <div className="notificaciones-header">
-        <h1>🔔 Notificaciones</h1>
+        <h1><FiBell /> Notificaciones</h1>
         <p className="subtitle">Centro de notificaciones y alertas del sistema</p>
       </div>
 
@@ -391,7 +401,7 @@ const GestionNotificaciones = () => {
                 <div className="notificacion-header">
                   <h3 className="notificacion-titulo">{notificacion.titulo}</h3>
                   <span className="notificacion-fecha">
-                    {new Date(notificacion.fecha_creacion).toLocaleString('es-ES')}
+                    {convertirFecha(notificacion.fecha_creacion).toLocaleString('es-ES')}
                   </span>
                 </div>
                 <p className="notificacion-mensaje">{notificacion.mensaje}</p>

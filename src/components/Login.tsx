@@ -38,7 +38,7 @@ const Login = () => {
     setLoading(true);
 
     try {
-      console.log('🔍 Buscando usuario en Firestore con email:', email);
+      console.log('Buscando usuario en Firestore con email:', email);
 
       // PASO 1: Buscar usuario en Firestore
       const usuariosRef = collection(db, 'usuarios');
@@ -54,7 +54,7 @@ const Login = () => {
       const userDoc = querySnapshot.docs[0];
       const userData = userDoc.data() as UserFirestore;
 
-      console.log('✅ Usuario encontrado:', userData);
+      console.log('Usuario encontrado:', userData);
 
       // Verificar si está activo
       if (!userData.activo) {
@@ -68,7 +68,7 @@ const Login = () => {
       const userCredential = await signInWithEmailAndPassword(auth, email, password);
       const firebaseUser = userCredential.user;
 
-      console.log('✅ Autenticación exitosa!');
+      console.log('Autenticación exitosa!');
 
       // Construir nombre completo
       const nombreCompleto = [
@@ -110,7 +110,7 @@ const Login = () => {
         cedula: userData.cedula
       });
 
-      console.log('✅ Login exitoso! Redirigiendo...');
+      console.log('Login exitoso! Redirigiendo...');
       console.log('Rol ID:', rolId);
       console.log('Navegando a:', rolId === '3' ? '/admin' : rolId === '4' ? '/tecnico' : '/user/dashboard');
 
@@ -127,7 +127,7 @@ const Login = () => {
       }, 100);
 
     } catch (error: any) {
-      console.error('❌ Error en login:', error);
+      console.error('Error en login:', error);
       
       if (error.code === 'auth/invalid-credential') {
         setError('Email o contraseña incorrectos');

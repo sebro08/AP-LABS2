@@ -2,6 +2,7 @@ import { useNavigate } from 'react-router-dom';
 import { useState, useEffect } from 'react';
 import { collection, getDocs, query, where } from 'firebase/firestore';
 import { db } from '../../firebase/config';
+import { FiTool, FiClipboard, FiPackage, FiCheckCircle, FiClock, FiBell, FiChevronRight } from 'react-icons/fi';
 import './TecnicoDashboard.css';
 
 const TecnicoDashboard = () => {
@@ -73,7 +74,7 @@ const TecnicoDashboard = () => {
     {
       id: 'solicitudes',
       title: 'Gestión de Solicitudes',
-      icon: '📋',
+      icon: <FiClipboard />,
       description: 'Ver y gestionar solicitudes',
       color: '#667eea',
       path: '/tecnico/solicitudes',
@@ -83,7 +84,7 @@ const TecnicoDashboard = () => {
     {
       id: 'mantenimientos',
       title: 'Gestión de Mantenimientos',
-      icon: '🔧',
+      icon: <FiTool />,
       description: 'Programar y registrar mantenimientos',
       color: '#f59e0b',
       path: '/tecnico/mantenimientos',
@@ -93,7 +94,7 @@ const TecnicoDashboard = () => {
     {
       id: 'inventario',
       title: 'Gestión de Inventario',
-      icon: '📦',
+      icon: <FiPackage />,
       description: 'Consultar inventario de recursos',
       color: '#10b981',
       path: '/tecnico/inventario',
@@ -114,35 +115,35 @@ const TecnicoDashboard = () => {
   return (
     <div className="tecnico-dashboard">
       <div className="dashboard-header">
-        <h1>🔧 Panel de Técnico</h1>
+        <h1><FiTool className="header-icon" /> Panel de Técnico</h1>
         <p className="subtitle">Gestiona las operaciones técnicas del sistema</p>
       </div>
 
       {/* Tarjetas de estadísticas rápidas */}
       <div className="stats-grid">
         <div className="stat-card blue">
-          <div className="stat-icon">📋</div>
+          <div className="stat-icon"><FiClipboard /></div>
           <div className="stat-content">
             <h3>{stats.solicitudesPendientes}</h3>
             <p>Solicitudes Pendientes</p>
           </div>
         </div>
         <div className="stat-card orange">
-          <div className="stat-icon">⏰</div>
+          <div className="stat-icon"><FiClock /></div>
           <div className="stat-content">
             <h3>{stats.mantenimientosHoy}</h3>
             <p>Mantenimientos Hoy</p>
           </div>
         </div>
         <div className="stat-card green">
-          <div className="stat-icon">🔧</div>
+          <div className="stat-icon"><FiTool /></div>
           <div className="stat-content">
             <h3>{stats.mantenimientosPendientes}</h3>
             <p>Mantenimientos Pendientes</p>
           </div>
         </div>
         <div className="stat-card purple">
-          <div className="stat-icon">📦</div>
+          <div className="stat-icon"><FiPackage /></div>
           <div className="stat-content">
             <h3>{stats.inventarioTotal}</h3>
             <p>Recursos en Inventario</p>
@@ -172,18 +173,18 @@ const TecnicoDashboard = () => {
                 </div>
               )}
             </div>
-            <div className="card-arrow">→</div>
+            <div className="card-arrow"><FiChevronRight /></div>
           </div>
         ))}
       </div>
 
       {/* Recordatorios */}
       <div className="reminders-section">
-        <h2>📌 Recordatorios</h2>
+        <h2><FiBell className="header-icon" /> Recordatorios</h2>
         <div className="reminders-grid">
           {stats.mantenimientosHoy > 0 && (
             <div className="reminder-card warning">
-              <span className="reminder-icon">⏰</span>
+              <span className="reminder-icon"><FiClock /></span>
               <div className="reminder-content">
                 <h4>Mantenimientos Programados Hoy</h4>
                 <p>Tienes {stats.mantenimientosHoy} mantenimiento(s) programado(s) para hoy</p>
@@ -192,7 +193,7 @@ const TecnicoDashboard = () => {
           )}
           {stats.solicitudesPendientes > 0 && (
             <div className="reminder-card info">
-              <span className="reminder-icon">📋</span>
+              <span className="reminder-icon"><FiClipboard /></span>
               <div className="reminder-content">
                 <h4>Solicitudes Pendientes</h4>
                 <p>Hay {stats.solicitudesPendientes} solicitud(es) esperando revisión</p>
@@ -201,7 +202,7 @@ const TecnicoDashboard = () => {
           )}
           {stats.mantenimientosPendientes > 0 && (
             <div className="reminder-card alert">
-              <span className="reminder-icon">🔧</span>
+              <span className="reminder-icon"><FiTool /></span>
               <div className="reminder-content">
                 <h4>Mantenimientos Pendientes</h4>
                 <p>{stats.mantenimientosPendientes} mantenimiento(s) por completar</p>
@@ -210,7 +211,7 @@ const TecnicoDashboard = () => {
           )}
           {stats.mantenimientosHoy === 0 && stats.solicitudesPendientes === 0 && stats.mantenimientosPendientes === 0 && (
             <div className="reminder-card success">
-              <span className="reminder-icon">✅</span>
+              <span className="reminder-icon"><FiCheckCircle /></span>
               <div className="reminder-content">
                 <h4>Todo al día</h4>
                 <p>No hay tareas pendientes por el momento</p>

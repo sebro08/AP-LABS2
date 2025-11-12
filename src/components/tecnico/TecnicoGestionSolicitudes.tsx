@@ -2,6 +2,7 @@ import { useState, useEffect } from 'react';
 import { collection, getDocs, doc, updateDoc, addDoc, Timestamp, getDoc } from 'firebase/firestore';
 import { db } from '../../firebase/config';
 import { SolicitudGestion, SolicitudLaboratorio, SolicitudRecurso } from '../../types/Solicitud';
+import { FiClipboard, FiCheckCircle, FiSearch, FiCheck, FiX, FiClock, FiUser, FiCalendar } from 'react-icons/fi';
 import './TecnicoGestionSolicitudes.css';
 
 const TecnicoGestionSolicitudes = () => {
@@ -33,30 +34,30 @@ const TecnicoGestionSolicitudes = () => {
         leida: false,
         datos_adicionales: datosAdicionales || {}
       });
-      console.log('✅ Notificación creada');
+      console.log('Notificación creada');
     } catch (error) {
-      console.error('❌ Error creando notificación:', error);
+      console.error('Error creando notificación:', error);
     }
   };
 
   const cargarSolicitudes = async () => {
     setLoading(true);
     try {
-      console.log('🔄 Cargando solicitudes...');
+      console.log('Cargando solicitudes...');
 
       const solicitudesUnificadas: SolicitudGestion[] = [];
 
       // Cargar solicitudes de laboratorios
       const labsSnapshot = await getDocs(collection(db, 'solicitudes_labs'));
-      console.log(`📦 ${labsSnapshot.docs.length} solicitudes de labs encontradas`);
+      console.log(`${labsSnapshot.docs.length} solicitudes de labs encontradas`);
       
       for (const docSnap of labsSnapshot.docs) {
         const data = docSnap.data();
-        console.log('📄 Datos de solicitud lab:', docSnap.id, data);
+        console.log('Datos de solicitud lab:', docSnap.id, data);
         
         // Validar que existan los IDs necesarios
         if (!data.id_usuario || !data.id_lab) {
-          console.warn('⚠️ Solicitud lab sin ID usuario o lab:', docSnap.id, data);
+          console.warn('Solicitud lab sin ID usuario o lab:', docSnap.id, data);
           continue;
         }
         
@@ -117,21 +118,21 @@ const TecnicoGestionSolicitudes = () => {
             datosOriginales: { ...solicitudData, id: docSnap.id } as SolicitudLaboratorio
           });
         } catch (err) {
-          console.error('❌ Error procesando solicitud lab:', docSnap.id, err);
+          console.error('Error procesando solicitud lab:', docSnap.id, err);
         }
       }
 
       // Cargar solicitudes de recursos
       const recursosSnapshot = await getDocs(collection(db, 'solicitudes_recursos'));
-      console.log(`📦 ${recursosSnapshot.docs.length} solicitudes de recursos encontradas`);
+      console.log(`${recursosSnapshot.docs.length} solicitudes de recursos encontradas`);
       
       for (const docSnap of recursosSnapshot.docs) {
         const data = docSnap.data();
-        console.log('📄 Datos de solicitud recurso:', docSnap.id, data);
+        console.log('Datos de solicitud recurso:', docSnap.id, data);
         
         // Validar que existan los IDs necesarios
         if (!data.id_usuario || !data.id_recurso) {
-          console.warn('⚠️ Solicitud recurso sin ID usuario o recurso:', docSnap.id, data);
+          console.warn('Solicitud recurso sin ID usuario o recurso:', docSnap.id, data);
           continue;
         }
         
@@ -190,7 +191,7 @@ const TecnicoGestionSolicitudes = () => {
             datosOriginales: { ...solicitudData, id: docSnap.id } as SolicitudRecurso
           });
         } catch (err) {
-          console.error('❌ Error procesando solicitud recurso:', docSnap.id, err);
+          console.error('Error procesando solicitud recurso:', docSnap.id, err);
         }
       }
 
@@ -202,7 +203,7 @@ const TecnicoGestionSolicitudes = () => {
       });
 
       setSolicitudes(solicitudesUnificadas);
-      console.log(`✅ ${solicitudesUnificadas.length} solicitudes cargadas`);
+      console.log(`${solicitudesUnificadas.length} solicitudes cargadas`);
       setLoading(false);
     } catch (error: any) {
       console.error('❌ Error cargando solicitudes:', error);
@@ -470,14 +471,15 @@ const TecnicoGestionSolicitudes = () => {
   return (
     <div className="tecnico-gestion-solicitudes">
       <div className="page-header">
-        <h1>📋 Gestión de Solicitudes</h1>
+        <h1><FiClipboard className="header-icon" /> Gestión de Solicitudes</h1>
       </div>
 
       <div className="filters-section">
         <div className="search-box">
+          <FiSearch className="search-icon" />
           <input
             type="text"
-            placeholder="🔍 Buscar por usuario o recurso/laboratorio..."
+            placeholder="Buscar por usuario o recurso/laboratorio..."
             value={searchTerm}
             onChange={(e) => setSearchTerm(e.target.value)}
           />
@@ -531,14 +533,14 @@ const TecnicoGestionSolicitudes = () => {
 
       <div className="summary-cards">
         <div className="summary-card">
-          <div className="summary-icon">📋</div>
+          <div className="summary-icon"><FiClipboard /></div>
           <div className="summary-info">
             <div className="summary-value">{solicitudes.length}</div>
             <div className="summary-label">Total Solicitudes</div>
           </div>
         </div>
         <div className="summary-card">
-          <div className="summary-icon">⏳</div>
+          <div className="summary-icon"><FiClock /></div>
           <div className="summary-info">
             <div className="summary-value">
               {solicitudes.filter(s => s.estado === 'pendiente').length}
@@ -547,7 +549,7 @@ const TecnicoGestionSolicitudes = () => {
           </div>
         </div>
         <div className="summary-card">
-          <div className="summary-icon">✅</div>
+          <div className="summary-icon"><FiCheckCircle /></div>
           <div className="summary-info">
             <div className="summary-value">
               {solicitudes.filter(s => s.estado === 'aprobado').length}
@@ -556,7 +558,7 @@ const TecnicoGestionSolicitudes = () => {
           </div>
         </div>
         <div className="summary-card">
-          <div className="summary-icon">🔍</div>
+          <div className="summary-icon"><FiSearch /></div>
           <div className="summary-info">
             <div className="summary-value">{solicitudesFiltradas.length}</div>
             <div className="summary-label">Resultados</div>
@@ -594,11 +596,11 @@ const TecnicoGestionSolicitudes = () => {
                 <div className="solicitud-main-info">
                   <h3>{solicitud.nombreRecursoLab}</h3>
                   <div className="usuario-info">
-                    <span className="usuario-nombre">👤 {solicitud.nombreUsuario}</span>
+                    <span className="usuario-nombre"><FiUser className="inline-icon" /> {solicitud.nombreUsuario}</span>
                     <span className="usuario-tipo">({solicitud.tipoUsuario})</span>
                   </div>
                   <div className="fecha-solicitud">
-                    📅 Solicitado el: {solicitud.fechaSolicitud}
+                    <FiCalendar className="inline-icon" /> Solicitado el: {solicitud.fechaSolicitud}
                   </div>
                 </div>
 
@@ -618,13 +620,13 @@ const TecnicoGestionSolicitudes = () => {
                     className="btn-aprobar"
                     onClick={() => aprobarSolicitud(solicitud)}
                   >
-                    ✅ Aprobar
+                    <FiCheck /> Aprobar
                   </button>
                   <button
                     className="btn-rechazar"
                     onClick={() => abrirModalRechazo(solicitud)}
                   >
-                    ❌ Rechazar
+                    <FiX /> Rechazar
                   </button>
                 </div>
               )}
@@ -638,8 +640,8 @@ const TecnicoGestionSolicitudes = () => {
         <div className="modal-overlay" onClick={cerrarModalRechazo}>
           <div className="modal-content" onClick={(e) => e.stopPropagation()}>
             <div className="modal-header">
-              <h2>❌ Rechazar Solicitud</h2>
-              <button className="modal-close" onClick={cerrarModalRechazo}>✕</button>
+              <h2><FiX className="header-icon" /> Rechazar Solicitud</h2>
+              <button className="modal-close" onClick={cerrarModalRechazo}>×</button>
             </div>
             
             <div className="modal-body">

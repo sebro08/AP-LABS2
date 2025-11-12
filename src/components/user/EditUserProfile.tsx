@@ -2,6 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { getAuth } from 'firebase/auth';
 import { getFirestore, doc, getDoc, updateDoc } from 'firebase/firestore';
+import { FiArrowLeft } from 'react-icons/fi';
 import './EditUserProfile.css';
 
 interface UserData {
@@ -136,7 +137,7 @@ const EditUserProfile: React.FC = () => {
     <div className="edit-user-profile">
       <div className="edit-profile-header">
         <button className="back-btn" onClick={handleCancel}>
-          ← Volver
+          <FiArrowLeft /> Volver
         </button>
         <h1>Editar Perfil</h1>
         <p>Actualiza tu información personal</p>

@@ -3,6 +3,7 @@ import { useNavigate } from 'react-router-dom';
 import { collection, getDocs, doc, deleteDoc, query, orderBy } from 'firebase/firestore';
 import { db } from '../../firebase/config';
 import { Inventario, Estado, TipoRecurso, Medida } from '../../types/Inventario';
+import { FiPackage, FiCheckCircle, FiTool, FiSearch, FiEdit, FiTrash2, FiPlus } from 'react-icons/fi';
 import './TecnicoGestionInventario.css';
 
 const TecnicoGestionInventario = () => {
@@ -23,7 +24,7 @@ const TecnicoGestionInventario = () => {
   const cargarDatos = async () => {
     setLoading(true);
     try {
-      console.log('🔄 Cargando datos de inventario...');
+      console.log('Cargando datos de inventario...');
 
       // Cargar recursos
       const recursosQuery = query(collection(db, 'recurso'), orderBy('nombre'));
@@ -59,12 +60,12 @@ const TecnicoGestionInventario = () => {
       setTiposRecurso(tiposData);
       setMedidas(medidasData);
 
-      console.log(`✅ ${recursosData.length} recursos cargados`);
-      console.log(`📦 ${estadosData.length} estados, ${tiposData.length} tipos, ${medidasData.length} medidas`);
+      console.log(`${recursosData.length} recursos cargados`);
+      console.log(`${estadosData.length} estados, ${tiposData.length} tipos, ${medidasData.length} medidas`);
 
       setLoading(false);
     } catch (error: any) {
-      console.error('❌ Error cargando datos:', error);
+      console.error('Error cargando datos:', error);
       alert('Error al cargar los datos: ' + error.message);
       setLoading(false);
     }
@@ -77,10 +78,10 @@ const TecnicoGestionInventario = () => {
 
     try {
       await deleteDoc(doc(db, 'recurso', id));
-      console.log('✅ Recurso eliminado');
+      console.log('Recurso eliminado');
       cargarDatos();
     } catch (error: any) {
-      console.error('❌ Error eliminando recurso:', error);
+      console.error('Error eliminando recurso:', error);
       alert('Error al eliminar: ' + error.message);
     }
   };
@@ -132,17 +133,18 @@ const TecnicoGestionInventario = () => {
   return (
     <div className="tecnico-gestion-inventario">
       <div className="page-header">
-        <h1>📦 Gestión de Inventario</h1>
+        <h1><FiPackage className="header-icon" /> Gestión de Inventario</h1>
         <button className="btn-primary" onClick={() => navigate('/tecnico/inventario/nuevo')}>
-          + Nuevo Recurso
+          <FiPlus /> Nuevo Recurso
         </button>
       </div>
 
       <div className="filters-section">
         <div className="search-box">
+          <FiSearch className="search-icon" />
           <input
             type="text"
-            placeholder="🔍 Buscar por nombre, código o descripción..."
+            placeholder="Buscar por nombre, código o descripción..."
             value={searchTerm}
             onChange={(e) => setSearchTerm(e.target.value)}
           />
@@ -190,14 +192,14 @@ const TecnicoGestionInventario = () => {
 
       <div className="summary-cards">
         <div className="summary-card">
-          <div className="summary-icon">📦</div>
+          <div className="summary-icon"><FiPackage /></div>
           <div className="summary-info">
             <div className="summary-value">{recursos.length}</div>
             <div className="summary-label">Total Recursos</div>
           </div>
         </div>
         <div className="summary-card">
-          <div className="summary-icon">✅</div>
+          <div className="summary-icon"><FiCheckCircle /></div>
           <div className="summary-info">
             <div className="summary-value">
               {recursos.filter(r => r.id_estado === '1').length}
@@ -206,7 +208,7 @@ const TecnicoGestionInventario = () => {
           </div>
         </div>
         <div className="summary-card">
-          <div className="summary-icon">🔧</div>
+          <div className="summary-icon"><FiTool /></div>
           <div className="summary-info">
             <div className="summary-value">
               {recursos.filter(r => r.id_estado === '2').length}
@@ -215,7 +217,7 @@ const TecnicoGestionInventario = () => {
           </div>
         </div>
         <div className="summary-card">
-          <div className="summary-icon">🔍</div>
+          <div className="summary-icon"><FiSearch /></div>
           <div className="summary-info">
             <div className="summary-value">{recursosFiltrados.length}</div>
             <div className="summary-label">Resultados</div>
@@ -277,14 +279,14 @@ const TecnicoGestionInventario = () => {
                         onClick={() => navigate(`/tecnico/inventario/editar/${recurso.id}`)}
                         title="Editar"
                       >
-                        ✏️
+                        <FiEdit />
                       </button>
                       <button
                         className="btn-icon btn-delete"
                         onClick={() => eliminarRecurso(recurso.id, recurso.nombre)}
                         title="Eliminar"
                       >
-                        🗑️
+                        <FiTrash2 />
                       </button>
                     </div>
                   </td>

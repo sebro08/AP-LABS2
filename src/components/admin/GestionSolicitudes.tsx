@@ -1,12 +1,11 @@
 import { useState, useEffect } from 'react';
-import { useNavigate } from 'react-router-dom';
 import { collection, getDocs, doc, updateDoc, addDoc, Timestamp, getDoc } from 'firebase/firestore';
 import { db } from '../../firebase/config';
 import { SolicitudGestion, SolicitudLaboratorio, SolicitudRecurso } from '../../types/Solicitud';
+import { FiFileText, FiCheckCircle, FiXCircle, FiSearch, FiClock, FiEye, FiPackage, FiAlertCircle, FiUser, FiCalendar, FiX } from 'react-icons/fi';
 import './GestionSolicitudes.css';
 
 const GestionSolicitudes = () => {
-  const navigate = useNavigate();
   const [solicitudes, setSolicitudes] = useState<SolicitudGestion[]>([]);
   const [loading, setLoading] = useState(true);
   const [searchTerm, setSearchTerm] = useState('');
@@ -35,30 +34,30 @@ const GestionSolicitudes = () => {
         leida: false,
         datos_adicionales: datosAdicionales || {}
       });
-      console.log('✅ Notificación creada');
+      console.log('Notificación creada');
     } catch (error) {
-      console.error('❌ Error creando notificación:', error);
+      console.error('Error creando notificación:', error);
     }
   };
 
   const cargarSolicitudes = async () => {
     setLoading(true);
     try {
-      console.log('🔄 Cargando solicitudes...');
+      console.log('Cargando solicitudes...');
 
       const solicitudesUnificadas: SolicitudGestion[] = [];
 
       // Cargar solicitudes de laboratorios
       const labsSnapshot = await getDocs(collection(db, 'solicitudes_labs'));
-      console.log(`📦 ${labsSnapshot.docs.length} solicitudes de labs encontradas`);
+      console.log(`${labsSnapshot.docs.length} solicitudes de labs encontradas`);
       
       for (const docSnap of labsSnapshot.docs) {
         const data = docSnap.data();
-        console.log('📄 Datos de solicitud lab:', docSnap.id, data);
+        console.log('Datos de solicitud lab:', docSnap.id, data);
         
         // Validar que existan los IDs necesarios
         if (!data.id_usuario || !data.id_lab) {
-          console.warn('⚠️ Solicitud lab sin ID usuario o lab:', docSnap.id, data);
+          console.warn('Solicitud lab sin ID usuario o lab:', docSnap.id, data);
           continue;
         }
         
@@ -119,21 +118,21 @@ const GestionSolicitudes = () => {
             datosOriginales: { ...solicitudData, id: docSnap.id } as SolicitudLaboratorio
           });
         } catch (err) {
-          console.error('❌ Error procesando solicitud lab:', docSnap.id, err);
+          console.error('Error procesando solicitud lab:', docSnap.id, err);
         }
       }
 
       // Cargar solicitudes de recursos
       const recursosSnapshot = await getDocs(collection(db, 'solicitudes_recursos'));
-      console.log(`📦 ${recursosSnapshot.docs.length} solicitudes de recursos encontradas`);
+      console.log(`${recursosSnapshot.docs.length} solicitudes de recursos encontradas`);
       
       for (const docSnap of recursosSnapshot.docs) {
         const data = docSnap.data();
-        console.log('📄 Datos de solicitud recurso:', docSnap.id, data);
+        console.log('Datos de solicitud recurso:', docSnap.id, data);
         
         // Validar que existan los IDs necesarios
         if (!data.id_usuario || !data.id_recurso) {
-          console.warn('⚠️ Solicitud recurso sin ID usuario o recurso:', docSnap.id, data);
+          console.warn('Solicitud recurso sin ID usuario o recurso:', docSnap.id, data);
           continue;
         }
         
@@ -192,7 +191,7 @@ const GestionSolicitudes = () => {
             datosOriginales: { ...solicitudData, id: docSnap.id } as SolicitudRecurso
           });
         } catch (err) {
-          console.error('❌ Error procesando solicitud recurso:', docSnap.id, err);
+          console.error('Error procesando solicitud recurso:', docSnap.id, err);
         }
       }
 
@@ -204,10 +203,10 @@ const GestionSolicitudes = () => {
       });
 
       setSolicitudes(solicitudesUnificadas);
-      console.log(`✅ ${solicitudesUnificadas.length} solicitudes cargadas`);
+      console.log(`${solicitudesUnificadas.length} solicitudes cargadas`);
       setLoading(false);
     } catch (error: any) {
-      console.error('❌ Error cargando solicitudes:', error);
+      console.error('Error cargando solicitudes:', error);
       alert('Error al cargar las solicitudes: ' + error.message);
       setLoading(false);
     }
@@ -219,7 +218,7 @@ const GestionSolicitudes = () => {
     }
 
     try {
-      console.log('✅ Aprobando solicitud...');
+      console.log('Aprobando solicitud...');
 
       if (solicitud.tipo === 'LABORATORIO') {
         const datosLab = solicitud.datosOriginales as SolicitudLaboratorio;
@@ -250,7 +249,7 @@ const GestionSolicitudes = () => {
         await crearNotificacion(
           datosLab.id_usuario,
           'solicitud_aprobada',
-          '✅ Solicitud Aprobada',
+          'Solicitud Aprobada',
           `Tu solicitud del laboratorio ${solicitud.nombreRecursoLab} para el día ${fechaFormato} ha sido aprobada.`,
           {
             id_solicitud: solicitud.id,
@@ -258,7 +257,7 @@ const GestionSolicitudes = () => {
             fecha: datosLab.dia
           }
         );
-        console.log(`✅ Notificación enviada al usuario ${datosLab.id_usuario}`);
+        console.log(`Notificación enviada al usuario ${datosLab.id_usuario}`);
       } else {
         const datosRecurso = solicitud.datosOriginales as SolicitudRecurso;
         
@@ -300,16 +299,16 @@ const GestionSolicitudes = () => {
             id_estado: idEstadoReservado,
             estado: nombreEstadoReservado
           });
-          console.log(`✅ Recurso ${datosRecurso.id_recurso} cambiado a estado ${nombreEstadoReservado}`);
+          console.log(`Recurso ${datosRecurso.id_recurso} cambiado a estado ${nombreEstadoReservado}`);
         }
 
         // Crear notificación para el usuario
-        const fechaInicio = new Date(datosRecurso.fecha_reserva).toLocaleDateString('es-ES');
-        const fechaFin = new Date(datosRecurso.fecha_devolucion).toLocaleDateString('es-ES');
+        const fechaInicio = new Date(datosRecurso.fecha_reserva || '').toLocaleDateString('es-ES');
+        const fechaFin = new Date(datosRecurso.fecha_devolucion || '').toLocaleDateString('es-ES');
         await crearNotificacion(
           datosRecurso.id_usuario,
           'solicitud_aprobada',
-          '✅ Solicitud Aprobada',
+          'Solicitud Aprobada',
           `Tu solicitud del recurso ${solicitud.nombreRecursoLab} para el período ${fechaInicio} - ${fechaFin} ha sido aprobada.`,
           {
             id_solicitud: solicitud.id,
@@ -318,13 +317,13 @@ const GestionSolicitudes = () => {
             fecha_fin: datosRecurso.fecha_devolucion
           }
         );
-        console.log(`✅ Notificación enviada al usuario ${datosRecurso.id_usuario}`);
+        console.log(`Notificación enviada al usuario ${datosRecurso.id_usuario}`);
       }
 
-      console.log('✅ Solicitud aprobada');
+      console.log('Solicitud aprobada');
       cargarSolicitudes();
     } catch (error: any) {
-      console.error('❌ Error aprobando:', error);
+      console.error('Error aprobando:', error);
       alert('Error al aprobar: ' + error.message);
     }
   };
@@ -360,7 +359,7 @@ const GestionSolicitudes = () => {
   const rechazarSolicitud = async (solicitud: SolicitudGestion, motivo: string) => {
 
     try {
-      console.log('❌ Rechazando solicitud...');
+      console.log('Rechazando solicitud...');
 
       if (solicitud.tipo === 'LABORATORIO') {
         const datosLab = solicitud.datosOriginales as SolicitudLaboratorio;
@@ -389,7 +388,7 @@ const GestionSolicitudes = () => {
         await crearNotificacion(
           datosLab.id_usuario,
           'solicitud_rechazada',
-          '❌ Solicitud Rechazada',
+          'Solicitud Rechazada',
           `Tu solicitud del laboratorio ${solicitud.nombreRecursoLab} para el día ${fechaFormato} ha sido rechazada. Motivo: ${motivo}`,
           {
             id_solicitud: solicitud.id,
@@ -398,7 +397,7 @@ const GestionSolicitudes = () => {
             motivo_rechazo: motivo
           }
         );
-        console.log(`✅ Notificación de rechazo enviada al usuario ${datosLab.id_usuario}`);
+        console.log(`Notificación de rechazo enviada al usuario ${datosLab.id_usuario}`);
       } else {
         const datosRecurso = solicitud.datosOriginales as SolicitudRecurso;
         
@@ -422,12 +421,12 @@ const GestionSolicitudes = () => {
         });
 
         // Crear notificación para el usuario
-        const fechaInicio = new Date(datosRecurso.fecha_reserva).toLocaleDateString('es-ES');
-        const fechaFin = new Date(datosRecurso.fecha_devolucion).toLocaleDateString('es-ES');
+        const fechaInicio = new Date(datosRecurso.fecha_reserva || '').toLocaleDateString('es-ES');
+        const fechaFin = new Date(datosRecurso.fecha_devolucion || '').toLocaleDateString('es-ES');
         await crearNotificacion(
           datosRecurso.id_usuario,
           'solicitud_rechazada',
-          '❌ Solicitud Rechazada',
+          'Solicitud Rechazada',
           `Tu solicitud del recurso ${solicitud.nombreRecursoLab} para el período ${fechaInicio} - ${fechaFin} ha sido rechazada. Motivo: ${motivo}`,
           {
             id_solicitud: solicitud.id,
@@ -437,13 +436,13 @@ const GestionSolicitudes = () => {
             motivo_rechazo: motivo
           }
         );
-        console.log(`✅ Notificación de rechazo enviada al usuario ${datosRecurso.id_usuario}`);
+        console.log(`Notificación de rechazo enviada al usuario ${datosRecurso.id_usuario}`);
       }
 
-      console.log('✅ Solicitud rechazada');
+      console.log('Solicitud rechazada');
       cargarSolicitudes();
     } catch (error: any) {
-      console.error('❌ Error rechazando:', error);
+      console.error('Error rechazando:', error);
       alert('Error al rechazar: ' + error.message);
     }
   };
@@ -472,14 +471,14 @@ const GestionSolicitudes = () => {
   return (
     <div className="gestion-solicitudes">
       <div className="page-header">
-        <h1>📋 Gestión de Solicitudes</h1>
+        <h1><FiFileText /> Gestión de Solicitudes</h1>
       </div>
 
       <div className="filters-section">
         <div className="search-box">
           <input
             type="text"
-            placeholder="🔍 Buscar por usuario o recurso/laboratorio..."
+            placeholder="Buscar por usuario o recurso/laboratorio..."
             value={searchTerm}
             onChange={(e) => setSearchTerm(e.target.value)}
           />
@@ -533,14 +532,14 @@ const GestionSolicitudes = () => {
 
       <div className="summary-cards">
         <div className="summary-card">
-          <div className="summary-icon">📋</div>
+          <div className="summary-icon"><FiFileText /></div>
           <div className="summary-info">
             <div className="summary-value">{solicitudes.length}</div>
             <div className="summary-label">Total Solicitudes</div>
           </div>
         </div>
         <div className="summary-card">
-          <div className="summary-icon">⏳</div>
+          <div className="summary-icon"><FiClock /></div>
           <div className="summary-info">
             <div className="summary-value">
               {solicitudes.filter(s => s.estado === 'pendiente').length}
@@ -549,7 +548,7 @@ const GestionSolicitudes = () => {
           </div>
         </div>
         <div className="summary-card">
-          <div className="summary-icon">✅</div>
+          <div className="summary-icon"><FiCheckCircle /></div>
           <div className="summary-info">
             <div className="summary-value">
               {solicitudes.filter(s => s.estado === 'aprobado').length}
@@ -558,7 +557,7 @@ const GestionSolicitudes = () => {
           </div>
         </div>
         <div className="summary-card">
-          <div className="summary-icon">🔍</div>
+          <div className="summary-icon"><FiSearch /></div>
           <div className="summary-info">
             <div className="summary-value">{solicitudesFiltradas.length}</div>
             <div className="summary-label">Resultados</div>
@@ -575,15 +574,15 @@ const GestionSolicitudes = () => {
               <div className="solicitud-header">
                 <div className="solicitud-tipo">
                   <span className={`tipo-badge tipo-${solicitud.tipo.toLowerCase()}`}>
-                    {solicitud.tipo === 'LABORATORIO' ? '🔬' : '📦'} {solicitud.tipo}
+                    {solicitud.tipo === 'LABORATORIO' ? <FiEye /> : <FiPackage />} {solicitud.tipo}
                   </span>
                   {solicitud.tipoRecurso && (
                     <span className="tipo-recurso">{solicitud.tipoRecurso}</span>
                   )}
                   <span className={`prioridad-badge prioridad-${solicitud.prioridad.toLowerCase()}`}>
-                    {solicitud.prioridad === 'Alta' && '🔴'}
-                    {solicitud.prioridad === 'Media' && '🟡'}
-                    {solicitud.prioridad === 'Baja' && '🟢'}
+                    {solicitud.prioridad === 'Alta' && <FiAlertCircle />}
+                    {solicitud.prioridad === 'Media' && <FiAlertCircle />}
+                    {solicitud.prioridad === 'Baja' && <FiAlertCircle />}
                     {solicitud.prioridad}
                   </span>
                 </div>
@@ -596,11 +595,11 @@ const GestionSolicitudes = () => {
                 <div className="solicitud-main-info">
                   <h3>{solicitud.nombreRecursoLab}</h3>
                   <div className="usuario-info">
-                    <span className="usuario-nombre">👤 {solicitud.nombreUsuario}</span>
+                    <span className="usuario-nombre"><FiUser /> {solicitud.nombreUsuario}</span>
                     <span className="usuario-tipo">({solicitud.tipoUsuario})</span>
                   </div>
                   <div className="fecha-solicitud">
-                    📅 Solicitado el: {solicitud.fechaSolicitud}
+                    <FiCalendar /> Solicitado el: {solicitud.fechaSolicitud}
                   </div>
                 </div>
 
@@ -620,13 +619,13 @@ const GestionSolicitudes = () => {
                     className="btn-aprobar"
                     onClick={() => aprobarSolicitud(solicitud)}
                   >
-                    ✅ Aprobar
+                    <FiCheckCircle /> Aprobar
                   </button>
                   <button
                     className="btn-rechazar"
                     onClick={() => abrirModalRechazo(solicitud)}
                   >
-                    ❌ Rechazar
+                    <FiXCircle /> Rechazar
                   </button>
                 </div>
               )}
@@ -640,8 +639,8 @@ const GestionSolicitudes = () => {
         <div className="modal-overlay" onClick={cerrarModalRechazo}>
           <div className="modal-content" onClick={(e) => e.stopPropagation()}>
             <div className="modal-header">
-              <h2>❌ Rechazar Solicitud</h2>
-              <button className="modal-close" onClick={cerrarModalRechazo}>✕</button>
+              <h2><FiXCircle /> Rechazar Solicitud</h2>
+              <button className="modal-close" onClick={cerrarModalRechazo}><FiX /></button>
             </div>
             
             <div className="modal-body">

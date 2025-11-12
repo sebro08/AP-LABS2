@@ -1,10 +1,10 @@
 import { useState, useEffect } from 'react';
-import { useNavigate } from 'react-router-dom';
 import { collection, query, orderBy, limit, getDocs, where, Timestamp } from 'firebase/firestore';
 import { db } from '../../firebase/config';
 import { BitacoraEntry } from '../../types/Bitacora';
 import jsPDF from 'jspdf';
 import autoTable from 'jspdf-autotable';
+import { FiFileText, FiDownload, FiSearch, FiFolder } from 'react-icons/fi';
 import './GestionBitacora.css';
 
 const GestionBitacora = () => {
@@ -140,7 +140,7 @@ const GestionBitacora = () => {
       }
 
       setShowExportModal(false);
-      alert(`✅ Exportación completada. ${entries.length} registros exportados.`);
+      alert(`Exportación completada. ${entries.length} registros exportados.`);
     } catch (error: any) {
       console.error('Error exportando:', error);
       alert('Error al exportar: ' + error.message);
@@ -231,9 +231,9 @@ const GestionBitacora = () => {
   return (
     <div className="gestion-bitacora">
       <div className="page-header">
-        <h1>📋 Bitácora del Sistema</h1>
+        <h1><FiFileText /> Bitácora del Sistema</h1>
         <button className="btn-primary" onClick={handleExportModalOpen}>
-          📊 Exportar Bitácora
+          <FiDownload /> Exportar Bitácora
         </button>
       </div>
 
@@ -241,7 +241,7 @@ const GestionBitacora = () => {
         <div className="search-box">
           <input
             type="text"
-            placeholder="🔍 Buscar por usuario, acción, recurso o módulo..."
+            placeholder="Buscar por usuario, acción, recurso o módulo..."
             value={searchTerm}
             onChange={(e) => setSearchTerm(e.target.value)}
           />
@@ -274,21 +274,21 @@ const GestionBitacora = () => {
 
       <div className="summary-cards">
         <div className="summary-card">
-          <div className="summary-icon">📋</div>
+          <div className="summary-icon"><FiFileText /></div>
           <div className="summary-info">
             <div className="summary-value">{bitacora.length}</div>
             <div className="summary-label">Total Registros</div>
           </div>
         </div>
         <div className="summary-card">
-          <div className="summary-icon">🔍</div>
+          <div className="summary-icon"><FiSearch /></div>
           <div className="summary-info">
             <div className="summary-value">{bitacoraFiltrada.length}</div>
             <div className="summary-label">Resultados</div>
           </div>
         </div>
         <div className="summary-card">
-          <div className="summary-icon">📁</div>
+          <div className="summary-icon"><FiFolder /></div>
           <div className="summary-info">
             <div className="summary-value">{modulosUnicos.length}</div>
             <div className="summary-label">Módulos Activos</div>
@@ -360,7 +360,7 @@ const GestionBitacora = () => {
         <div className="modal-overlay" onClick={() => setShowExportModal(false)}>
           <div className="modal-content" onClick={(e) => e.stopPropagation()}>
             <div className="modal-header">
-              <h2>📊 Exportar Bitácora</h2>
+              <h2><FiDownload /> Exportar Bitácora</h2>
               <button className="btn-close" onClick={() => setShowExportModal(false)}>×</button>
             </div>
 
@@ -400,7 +400,7 @@ const GestionBitacora = () => {
                       checked={exportOptions.formatoExcel}
                       onChange={(e) => setExportOptions({ ...exportOptions, formatoExcel: e.target.checked })}
                     />
-                    <span>📊 Excel (CSV)</span>
+                    <span>Excel (CSV)</span>
                   </label>
                   <label className="checkbox-label">
                     <input

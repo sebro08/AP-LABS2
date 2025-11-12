@@ -3,6 +3,7 @@ import { useParams, useNavigate } from 'react-router-dom';
 import { doc, getDoc, updateDoc, collection, getDocs } from 'firebase/firestore';
 import { db } from '../../firebase/config';
 import { Rol, Departamento } from '../../types/Usuario';
+import { FiAlertCircle, FiArrowLeft, FiCheck } from 'react-icons/fi';
 import './EditarUsuario.css';
 
 const EditarUsuario = () => {
@@ -135,7 +136,7 @@ const EditarUsuario = () => {
   if (error && !formData.email) {
     return (
       <div className="error-container">
-        <div className="error-icon">⚠️</div>
+        <div className="error-icon"><FiAlertCircle /></div>
         <h2>Error</h2>
         <p>{error}</p>
         <button className="btn-secondary" onClick={() => navigate('/admin/usuarios')}>
@@ -150,7 +151,7 @@ const EditarUsuario = () => {
       <div className="page-header">
         <div className="header-left">
           <button className="btn-back" onClick={() => navigate('/admin/usuarios')}>
-            ← Volver
+            <FiArrowLeft /> Volver
           </button>
           <h1>Editar Usuario</h1>
         </div>
@@ -303,7 +304,7 @@ const EditarUsuario = () => {
                 checked={formData.activo}
                 onChange={handleChange}
               />
-              <span>Usuario activo</span>
+              <span><FiCheck /> Usuario activo</span>
             </label>
           </div>
         </div>

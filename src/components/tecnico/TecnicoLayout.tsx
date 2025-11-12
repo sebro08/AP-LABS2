@@ -1,6 +1,15 @@
 import { useState } from 'react';
 import { Outlet, useNavigate, useLocation } from 'react-router-dom';
 import { useAuth } from '../../context/AuthContext';
+import { 
+  FiHome, 
+  FiClipboard, 
+  FiTool, 
+  FiPackage, 
+  FiLogOut,
+  FiChevronLeft,
+  FiChevronRight
+} from 'react-icons/fi';
 import './TecnicoLayout.css';
 
 const TecnicoLayout = () => {
@@ -10,11 +19,11 @@ const TecnicoLayout = () => {
   const location = useLocation();
 
   const menuItems = [
-    { id: 'dashboard', icon: '🏠', label: 'Inicio', path: '/tecnico/dashboard' },
+    { id: 'dashboard', icon: <FiHome />, label: 'Inicio', path: '/tecnico/dashboard' },
     { id: 'separator1', isSeparator: true, label: 'Gestión Principal' },
-    { id: 'solicitudes', icon: '📋', label: 'Gestión de Solicitudes', path: '/tecnico/solicitudes' },
-    { id: 'mantenimientos', icon: '🔧', label: 'Gestión de Mantenimientos', path: '/tecnico/mantenimientos' },
-    { id: 'inventario', icon: '📦', label: 'Gestión de Inventario', path: '/tecnico/inventario' }
+    { id: 'solicitudes', icon: <FiClipboard />, label: 'Gestión de Solicitudes', path: '/tecnico/solicitudes' },
+    { id: 'mantenimientos', icon: <FiTool />, label: 'Gestión de Mantenimientos', path: '/tecnico/mantenimientos' },
+    { id: 'inventario', icon: <FiPackage />, label: 'Gestión de Inventario', path: '/tecnico/inventario' }
   ];
 
   const handleLogout = async () => {
@@ -40,12 +49,12 @@ const TecnicoLayout = () => {
             className="toggle-btn" 
             onClick={() => setSidebarOpen(!sidebarOpen)}
           >
-            {sidebarOpen ? '◀' : '▶'}
+            {sidebarOpen ? <FiChevronLeft /> : <FiChevronRight />}
           </button>
         </div>
 
         <div className="user-info">
-          <div className="user-avatar">🔧</div>
+          <div className="user-avatar"><FiTool /></div>
           {sidebarOpen && (
             <div className="user-details">
               <div className="user-name">{user?.email || 'Técnico'}</div>
@@ -82,7 +91,7 @@ const TecnicoLayout = () => {
 
         <div className="sidebar-footer">
           <button className="logout-btn" onClick={handleLogout}>
-            <span className="menu-icon">🚪</span>
+            <span className="menu-icon"><FiLogOut /></span>
             {sidebarOpen && <span>Cerrar Sesión</span>}
           </button>
         </div>

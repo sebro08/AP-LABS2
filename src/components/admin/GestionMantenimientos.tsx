@@ -3,6 +3,7 @@ import { useNavigate } from 'react-router-dom';
 import { collection, getDocs, getDoc, doc } from 'firebase/firestore';
 import { db } from '../../firebase/config';
 import { MantenimientoDetalle } from '../../types/Mantenimiento';
+import { FiTool, FiCheckCircle, FiSearch, FiEye, FiCalendar } from 'react-icons/fi';
 import './GestionMantenimientos.css';
 
 const GestionMantenimientos = () => {
@@ -23,7 +24,7 @@ const GestionMantenimientos = () => {
       console.log('🔄 Cargando mantenimientos...');
 
       const mantenimientosSnapshot = await getDocs(collection(db, 'mantenimiento'));
-      console.log(`📦 ${mantenimientosSnapshot.docs.length} mantenimientos encontrados`);
+      console.log(`${mantenimientosSnapshot.docs.length} mantenimientos encontrados`);
 
       const mantenimientosDetalle: MantenimientoDetalle[] = [];
 
@@ -78,7 +79,7 @@ const GestionMantenimientos = () => {
             estadoNombre
           });
         } catch (err) {
-          console.error('❌ Error procesando mantenimiento:', docSnap.id, err);
+          console.error('Error procesando mantenimiento:', docSnap.id, err);
         }
       }
 
@@ -90,10 +91,10 @@ const GestionMantenimientos = () => {
       });
 
       setMantenimientos(mantenimientosDetalle);
-      console.log(`✅ ${mantenimientosDetalle.length} mantenimientos cargados`);
+      console.log(`${mantenimientosDetalle.length} mantenimientos cargados`);
       setLoading(false);
     } catch (error: any) {
-      console.error('❌ Error cargando mantenimientos:', error);
+      console.error('Error cargando mantenimientos:', error);
       alert('Error al cargar los mantenimientos: ' + error.message);
       setLoading(false);
     }
@@ -126,13 +127,13 @@ const GestionMantenimientos = () => {
   return (
     <div className="gestion-mantenimientos">
       <div className="page-header">
-        <h1>🔧 Gestión de Mantenimientos</h1>
+        <h1><FiTool className="header-icon" /> Gestión de Mantenimientos</h1>
         <div className="header-buttons">
           <button className="btn-secondary" onClick={() => navigate('/admin/mantenimientos/programar')}>
             📅 Programar Mantenimiento
           </button>
           <button className="btn-primary" onClick={() => navigate('/admin/mantenimientos/registrar')}>
-            ✅ Registrar Mantenimiento
+            <FiCheckCircle /> Registrar Mantenimiento
           </button>
         </div>
       </div>
@@ -141,7 +142,7 @@ const GestionMantenimientos = () => {
         <div className="search-box">
           <input
             type="text"
-            placeholder="🔍 Buscar por recurso, técnico, tipo o detalles..."
+            placeholder="Buscar por recurso, técnico, tipo o detalles..."
             value={searchTerm}
             onChange={(e) => setSearchTerm(e.target.value)}
           />
@@ -195,14 +196,14 @@ const GestionMantenimientos = () => {
 
       <div className="summary-cards">
         <div className="summary-card">
-          <div className="summary-icon">🔧</div>
+          <div className="summary-icon"><FiTool /></div>
           <div className="summary-info">
             <div className="summary-value">{mantenimientos.length}</div>
             <div className="summary-label">Total Mantenimientos</div>
           </div>
         </div>
         <div className="summary-card">
-          <div className="summary-icon">✅</div>
+          <div className="summary-icon"><FiCheckCircle /></div>
           <div className="summary-info">
             <div className="summary-value">
               {mantenimientos.filter(m => m.id_estado === '1').length}
@@ -265,7 +266,7 @@ const GestionMantenimientos = () => {
                         onClick={() => navigate(`/admin/mantenimientos/detalle/${mant.id}`)}
                         title="Ver Detalles"
                       >
-                        👁️
+                        <FiEye />
                       </button>
                     </div>
                   </td>

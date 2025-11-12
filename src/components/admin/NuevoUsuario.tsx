@@ -123,8 +123,8 @@ const NuevoUsuario = () => {
         formData.password
       );
 
-      console.log('✅ Usuario creado en Auth:', userCredential.user.uid);
-      console.log('💾 Guardando datos en Firestore...');
+      console.log('Usuario creado en Auth:', userCredential.user.uid);
+      console.log('Guardando datos en Firestore...');
 
       // Guardar datos adicionales en Firestore
       await addDoc(collection(db, 'usuarios'), {
@@ -141,14 +141,14 @@ const NuevoUsuario = () => {
         fecha_creacion: new Date().toISOString()
       });
 
-      console.log('✅ Usuario registrado exitosamente');
+      console.log('Usuario registrado exitosamente');
       setSuccess('Usuario registrado correctamente');
       
       setTimeout(() => {
         navigate('/admin/usuarios');
       }, 1500);
     } catch (err: any) {
-      console.error('❌ Error registrando usuario:', err);
+      console.error('Error registrando usuario:', err);
       
       let errorMessage = 'Error al registrar usuario';
       if (err.code === 'auth/email-already-in-use') {

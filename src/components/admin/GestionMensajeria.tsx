@@ -1,10 +1,11 @@
 import { useState, useEffect } from 'react';
 import { collection, query, where, getDocs, addDoc, deleteDoc, updateDoc, doc, getDoc } from 'firebase/firestore';
 import { db } from '../../firebase/config';
-import { Mensaje, MensajeDisplay } from '../../types/Mensaje';
+import { MensajeDisplay } from '../../types/Mensaje';
 import { Usuario } from '../../types/Usuario';
 import { useAuth } from '../../context/AuthContext';
 import { registrarEnBitacora } from '../../utils/bitacoraHelper';
+import { FiMail, FiEdit, FiSend, FiCornerUpLeft, FiTrash2 } from 'react-icons/fi';
 import './GestionMensajeria.css';
 
 const GestionMensajeria = () => {
@@ -44,7 +45,7 @@ const GestionMensajeria = () => {
         } as Usuario))
         .filter(u => u.activo); // Solo usuarios activos
       
-      console.log('👥 Usuarios cargados:', usuariosData.length);
+      console.log('Usuarios cargados:', usuariosData.length);
       setUsuarios(usuariosData);
     } catch (error) {
       console.error('Error cargando usuarios:', error);
@@ -63,7 +64,7 @@ const GestionMensajeria = () => {
       
       // Si no lo encuentra por email, intentar por correo
       if (usuarioSnapshot.empty) {
-        console.error('❌ Usuario no encontrado en Firestore con email:', currentUser.email);
+        console.error('Usuario no encontrado en Firestore con email:', currentUser.email);
         qUsuario = query(usuariosRef, where('correo', '==', currentUser.email));
         usuarioSnapshot = await getDocs(qUsuario);
         if (usuarioSnapshot.empty) {
@@ -73,7 +74,7 @@ const GestionMensajeria = () => {
       }
       
       const usuarioId = usuarioSnapshot.docs[0].id;
-      console.log('🔍 Usuario ID:', usuarioId, 'Email:', currentUser.email);
+      console.log('Usuario ID:', usuarioId, 'Email:', currentUser.email);
 
       const mensajesRef = collection(db, 'mensaje');
       let q;
@@ -110,12 +111,12 @@ const GestionMensajeria = () => {
       }
 
       const snapshot = await getDocs(q);
-      console.log('📨 Mensajes encontrados:', snapshot.size);
+      console.log('Mensajes encontrados:', snapshot.size);
       const mensajesData: MensajeDisplay[] = [];
 
       for (const docSnap of snapshot.docs) {
-        const data = docSnap.data() as Mensaje;
-        console.log('📧 Mensaje:', docSnap.id, data);
+        const data = docSnap.data();
+        console.log('Mensaje:', docSnap.id, data);
 
         // Obtener remitente
         let remitenteNombre = 'Usuario desconocido';
@@ -160,7 +161,7 @@ const GestionMensajeria = () => {
           remitenteEmail,
           destinatarioNombre,
           destinatarioEmail
-        });
+        } as MensajeDisplay);
       }
 
       // Ordenar por fecha_envio en cliente (más recientes primero)
@@ -302,19 +303,19 @@ const GestionMensajeria = () => {
       
       // Si no lo encuentra por email, intentar por correo
       if (usuarioSnapshot.empty) {
-        console.log('⚠️ No encontrado por email, intentando por correo...');
+        console.log('No encontrado por email, intentando por correo...');
         qUsuario = query(usuariosRef, where('correo', '==', currentUser.email));
         usuarioSnapshot = await getDocs(qUsuario);
       }
       
       if (usuarioSnapshot.empty) {
-        console.error('❌ Usuario no encontrado. Email buscado:', currentUser.email);
+        console.error('Usuario no encontrado. Email buscado:', currentUser.email);
         alert('Error: Usuario no encontrado en la base de datos');
         return;
       }
       
       const usuarioId = usuarioSnapshot.docs[0].id;
-      console.log('✅ Usuario remitente encontrado. ID:', usuarioId);
+      console.log('Usuario remitente encontrado. ID:', usuarioId);
 
       const now = new Date();
       const fecha_envio = now.toISOString();
@@ -344,7 +345,7 @@ const GestionMensajeria = () => {
         observaciones: `Asunto: ${formData.asunto}`
       });
 
-      alert('✅ Mensaje enviado correctamente');
+      alert('Mensaje enviado correctamente');
       setFormData({ destinatario: '', asunto: '', contenido: '' });
       setTabActiva('enviados');
     } catch (error: any) {
@@ -379,7 +380,7 @@ const GestionMensajeria = () => {
   return (
     <div className="gestion-mensajeria">
       <div className="page-header">
-        <h1>✉️ Mensajería</h1>
+        <h1><FiMail /> Mensajería</h1>
       </div>
 
       <div className="tabs-container">
@@ -400,7 +401,7 @@ const GestionMensajeria = () => {
           className={`tab ${tabActiva === 'redactar' ? 'active' : ''}`}
           onClick={() => { setTabActiva('redactar'); setShowDetalle(false); }}
         >
-          ✍️ Redactar
+          <FiEdit /> Redactar
         </button>
         <button
           className={`tab ${tabActiva === 'archivados' ? 'active' : ''}`}
@@ -412,7 +413,7 @@ const GestionMensajeria = () => {
 
       {tabActiva === 'redactar' ? (
         <div className="form-container">
-          <h2>✍️ Nuevo Mensaje</h2>
+          <h2><FiEdit /> Nuevo Mensaje</h2>
           <form onSubmit={handleEnviarMensaje}>
             <div className="form-group">
               <label htmlFor="destinatario">
@@ -475,7 +476,7 @@ const GestionMensajeria = () => {
                 Limpiar
               </button>
               <button type="submit" className="btn-primary">
-                📨 Enviar Mensaje
+                <FiSend /> Enviar Mensaje
               </button>
             </div>
           </form>
@@ -487,7 +488,7 @@ const GestionMensajeria = () => {
               <div className="search-box">
                 <input
                   type="text"
-                  placeholder="🔍 Buscar mensajes..."
+                  placeholder="Buscar mensajes..."
                   value={searchTerm}
                   onChange={(e) => setSearchTerm(e.target.value)}
                 />
@@ -561,18 +562,18 @@ const GestionMensajeria = () => {
                 {mensajeSeleccionado.destinatario === usuarioIdActual && (
                   <>
                     <button className="btn-primary" onClick={() => handleResponder(mensajeSeleccionado)}>
-                      ↩️ Responder
+                      <FiCornerUpLeft /> Responder
                     </button>
                     <button
                       className="btn-secondary"
                       onClick={() => handleArchivar(mensajeSeleccionado.id, !mensajeSeleccionado.archivado)}
                     >
-                      {mensajeSeleccionado.archivado ? '📂 Desarchivar' : '📁 Archivar'}
+                      {mensajeSeleccionado.archivado ? 'Desarchivar' : 'Archivar'}
                     </button>
                   </>
                 )}
                 <button className="btn-danger" onClick={() => handleEliminar(mensajeSeleccionado.id)}>
-                  🗑️ Eliminar
+                  <FiTrash2 /> Eliminar
                 </button>
               </div>
             </div>

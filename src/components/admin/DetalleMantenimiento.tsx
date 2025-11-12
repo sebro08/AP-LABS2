@@ -4,6 +4,7 @@ import { doc, getDoc } from 'firebase/firestore';
 import { db } from '../../firebase/config';
 import { MantenimientoDetalle } from '../../types/Mantenimiento';
 import './DetalleMantenimiento.css';
+import { FiCalendar, FiFilter } from 'react-icons/fi';
 
 const DetalleMantenimiento = () => {
   const navigate = useNavigate();
@@ -131,7 +132,7 @@ const DetalleMantenimiento = () => {
         <button className="btn-back" onClick={() => navigate('/admin/mantenimientos')}>
           ← Volver
         </button>
-        <h1>🔍 Detalle del Mantenimiento</h1>
+        <h1><FiFilter></FiFilter> Detalle del Mantenimiento</h1>
       </div>
 
       <div className="detalle-container">
@@ -176,7 +177,7 @@ const DetalleMantenimiento = () => {
               <label>Fecha Programada</label>
               <div className="detalle-value">
                 {mantenimiento.fecha_programada ? (
-                  <span className="fecha">📅 {formatearFecha(mantenimiento.fecha_programada)}</span>
+                  <span className="fecha"><FiCalendar /> {formatearFecha(mantenimiento.fecha_programada)}</span>
                 ) : (
                   <span className="no-disponible">No programada</span>
                 )}
@@ -187,7 +188,7 @@ const DetalleMantenimiento = () => {
               <label>Fecha Realizada</label>
               <div className="detalle-value">
                 {mantenimiento.fecha_realizada ? (
-                  <span className="fecha">✅ {formatearFecha(mantenimiento.fecha_realizada)}</span>
+                  <span className="fecha"> {formatearFecha(mantenimiento.fecha_realizada)}</span>
                 ) : (
                   <span className="no-disponible">Pendiente de realizar</span>
                 )}

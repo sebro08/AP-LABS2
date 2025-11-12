@@ -109,7 +109,7 @@ const EditarLaboratorio = () => {
     setSuccess('');
 
     try {
-      console.log('💾 Actualizando laboratorio...');
+      console.log('Actualizando laboratorio...');
       
       await updateDoc(doc(db, 'laboratorios', id), {
         nombre: formData.nombre,
@@ -122,7 +122,7 @@ const EditarLaboratorio = () => {
         activo: formData.activo
       });
 
-      console.log('✅ Laboratorio actualizado exitosamente');
+      console.log('Laboratorio actualizado exitosamente');
       setSuccess('Laboratorio actualizado exitosamente');
       
       setTimeout(() => {
@@ -130,7 +130,7 @@ const EditarLaboratorio = () => {
       }, 1500);
 
     } catch (err: any) {
-      console.error('❌ Error:', err);
+      console.error('Error:', err);
       setError(err.message || 'Error al actualizar el laboratorio');
     } finally {
       setSaving(false);

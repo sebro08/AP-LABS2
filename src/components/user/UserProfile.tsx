@@ -2,6 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { getAuth } from 'firebase/auth';
 import { getFirestore, doc, getDoc } from 'firebase/firestore';
+import { FiEdit } from 'react-icons/fi';
 import './UserProfile.css';
 
 interface UserData {
@@ -114,7 +115,7 @@ const UserProfile: React.FC = () => {
           className="edit-profile-btn"
           onClick={() => navigate('/user/perfil/editar')}
         >
-          ✏️ Editar Perfil
+          <FiEdit /> Editar Perfil
         </button>
       </div>
 

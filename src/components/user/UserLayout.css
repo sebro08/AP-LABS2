@@ -57,6 +57,11 @@
   justify-content: center;
 }
 
+.toggle-btn svg {
+  width: 18px;
+  height: 18px;
+}
+
 .toggle-btn:hover {
   background: rgba(255, 255, 255, 0.3);
 }
@@ -80,6 +85,11 @@
   justify-content: center;
   font-size: 24px;
   flex-shrink: 0;
+}
+
+.user-avatar svg {
+  width: 24px;
+  height: 24px;
 }
 
 .user-details {
@@ -164,6 +174,14 @@
 .menu-icon {
   font-size: 20px;
   flex-shrink: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.menu-icon svg {
+  width: 20px;
+  height: 20px;
 }
 
 .sidebar.closed .menu-label {

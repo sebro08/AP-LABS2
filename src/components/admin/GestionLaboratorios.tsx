@@ -3,6 +3,7 @@ import { useNavigate } from 'react-router-dom';
 import { collection, getDocs, doc, updateDoc, deleteDoc } from 'firebase/firestore';
 import { db } from '../../firebase/config';
 import { Laboratorio } from '../../types/Laboratorio';
+import { FiActivity, FiCheckCircle, FiXCircle, FiSearch, FiEdit, FiTrash2, FiAlertCircle, FiPlus, FiTool, FiUsers } from 'react-icons/fi';
 import './GestionLaboratorios.css';
 
 const GestionLaboratorios = () => {
@@ -24,14 +25,14 @@ const GestionLaboratorios = () => {
     setError('');
     try {
       console.log('🔄 Intentando conectar con Firebase...');
-      console.log('🔄 Colección: laboratorios');
+      console.log('Colección: laboratorios');
       
       const labsSnapshot = await getDocs(collection(db, 'laboratorios'));
-      console.log('📦 Snapshot obtenido, total documentos:', labsSnapshot.size);
+      console.log('Snapshot obtenido, total documentos:', labsSnapshot.size);
       
       const labsData = labsSnapshot.docs.map(doc => {
         const data = doc.data();
-        console.log('📄 Procesando doc ID:', doc.id, 'Data:', data);
+        console.log('Procesando doc ID:', doc.id, 'Data:', data);
         
         // Asegurar que estado sea un string válido
         let estadoVal: 'Disponible' | 'En Mantenimiento' | 'Fuera de Servicio' = 'Disponible';
@@ -53,15 +54,15 @@ const GestionLaboratorios = () => {
         } as Laboratorio;
       });
 
-      console.log('✅ Laboratorios procesados:', labsData);
+      console.log('Laboratorios procesados:', labsData);
       setLaboratorios(labsData);
-      console.log('✅ Estado actualizado con', labsData.length, 'laboratorios');
+      console.log('Estado actualizado con', labsData.length, 'laboratorios');
       setLoading(false);
-      console.log('✅ [FIN] Carga completada exitosamente');
+      console.log('[FIN] Carga completada exitosamente');
     } catch (err: any) {
-      console.error('❌ [ERROR] Error en cargarDatos:', err);
-      console.error('❌ Mensaje:', err.message);
-      console.error('❌ Código:', err.code);
+      console.error('[ERROR] Error en cargarDatos:', err);
+      console.error('Mensaje:', err.message);
+      console.error('Código:', err.code);
       setError('Error al cargar los laboratorios: ' + err.message);
       setLoading(false);
     }
@@ -78,9 +79,9 @@ const GestionLaboratorios = () => {
         l.id === lab.id ? { ...l, activo: nuevoEstado } : l
       ));
 
-      console.log(`✅ Laboratorio ${nuevoEstado ? 'activado' : 'desactivado'}`);
+      console.log(`Laboratorio ${nuevoEstado ? 'activado' : 'desactivado'}`);
     } catch (error) {
-      console.error('❌ Error cambiando estado:', error);
+      console.error('Error cambiando estado:', error);
       setError('Error al cambiar el estado del laboratorio');
     }
   };
@@ -94,9 +95,9 @@ const GestionLaboratorios = () => {
         
         setLaboratorios(laboratorios.filter(l => l.id !== labId));
         
-        console.log('✅ Laboratorio eliminado correctamente');
+        console.log('Laboratorio eliminado correctamente');
       } catch (err) {
-        console.error('❌ Error al eliminar laboratorio:', err);
+        console.error('Error al eliminar laboratorio:', err);
         setError('Error al eliminar el laboratorio');
       }
     }
@@ -137,11 +138,11 @@ const GestionLaboratorios = () => {
   if (error) {
     return (
       <div className="error-container">
-        <div className="error-icon">⚠️</div>
+        <div className="error-icon"><FiAlertCircle /></div>
         <h2>Error al cargar datos</h2>
         <p>{error}</p>
         <button className="btn-primary" onClick={cargarDatos}>
-          🔄 Reintentar
+          Reintentar
         </button>
       </div>
     );
@@ -151,19 +152,19 @@ const GestionLaboratorios = () => {
     <div className="gestion-laboratorios">
       {/* Header */}
       <div className="page-header">
-        <h1>🧪 Gestión de Laboratorios</h1>
+        <h1>Gestión de Laboratorios</h1>
         <button 
           className="btn-primary"
           onClick={() => navigate('/admin/laboratorios/nuevo')}
         >
-          ➕ Nuevo Laboratorio
+          <FiPlus /> Nuevo Laboratorio
         </button>
       </div>
 
       {/* Filtros */}
       <div className="filters-section">
         <div className="search-box">
-          <span className="search-icon">🔍</span>
+          <span className="search-icon"><FiSearch /></span>
           <input
             type="text"
             placeholder="Buscar por nombre, código o ubicación..."
@@ -192,7 +193,7 @@ const GestionLaboratorios = () => {
             <option value="inactivo">Solo Inactivos</option>
           </select>
           <button className="btn-secondary" onClick={limpiarFiltros}>
-            🗑️ Limpiar filtros
+            Limpiar filtros
           </button>
         </div>
       </div>
@@ -200,28 +201,28 @@ const GestionLaboratorios = () => {
       {/* Cards de resumen */}
       <div className="summary-cards">
         <div className="summary-card">
-          <div className="summary-icon">🧪</div>
+          <div className="summary-icon"><FiActivity /></div>
           <div className="summary-info">
             <div className="summary-value">{laboratorios.length}</div>
             <div className="summary-label">Total</div>
           </div>
         </div>
         <div className="summary-card">
-          <div className="summary-icon">✅</div>
+          <div className="summary-icon"><FiCheckCircle /></div>
           <div className="summary-info">
             <div className="summary-value">{laboratorios.filter(l => l.estado === 'Disponible').length}</div>
             <div className="summary-label">Disponibles</div>
           </div>
         </div>
         <div className="summary-card">
-          <div className="summary-icon">🔧</div>
+          <div className="summary-icon"><FiTool /></div>
           <div className="summary-info">
             <div className="summary-value">{laboratorios.filter(l => l.estado === 'En Mantenimiento').length}</div>
             <div className="summary-label">En Mantenimiento</div>
           </div>
         </div>
         <div className="summary-card">
-          <div className="summary-icon">🔍</div>
+          <div className="summary-icon"><FiSearch /></div>
           <div className="summary-info">
             <div className="summary-value">{laboratoriosFiltrados.length}</div>
             <div className="summary-label">Resultados</div>
@@ -262,7 +263,7 @@ const GestionLaboratorios = () => {
                   <td>{lab.ubicacion}</td>
                   <td>
                     <span className="capacidad-badge">
-                      👥 {lab.capacidad} personas
+                      <FiUsers /> {lab.capacidad} personas
                     </span>
                   </td>
                   <td>
@@ -282,21 +283,21 @@ const GestionLaboratorios = () => {
                         onClick={() => toggleEstadoLaboratorio(lab)}
                         title={lab.activo ? 'Desactivar' : 'Activar'}
                       >
-                        {lab.activo ? '🔴' : '🟢'}
+                        {lab.activo ? <FiXCircle /> : <FiCheckCircle />}
                       </button>
                       <button 
                         className="btn-icon btn-edit"
                         onClick={() => navigate(`/admin/laboratorios/editar/${lab.id}`)}
                         title="Editar"
                       >
-                        ✏️
+                        <FiEdit />
                       </button>
                       <button
                         className="btn-icon btn-delete"
                         onClick={() => eliminarLaboratorio(lab.id, lab.nombre)}
                         title="Eliminar"
                       >
-                        🗑️
+                        <FiTrash2 />
                       </button>
                     </div>
                   </td>

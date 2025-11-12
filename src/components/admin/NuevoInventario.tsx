@@ -55,10 +55,10 @@ const NuevoInventario = () => {
       if (medidasData.length > 0) setFormData(prev => ({ ...prev, id_medida: medidasData[0].id }));
       if (tiposData.length > 0) setFormData(prev => ({ ...prev, id_tipo_recurso: tiposData[0].id }));
 
-      console.log('✅ Catálogos cargados');
+      console.log('Catálogos cargados');
       setLoading(false);
     } catch (err: any) {
-      console.error('❌ Error cargando catálogos:', err);
+      console.error('Error cargando catálogos:', err);
       setError('Error al cargar los catálogos: ' + err.message);
       setLoading(false);
     }
@@ -111,7 +111,7 @@ const NuevoInventario = () => {
     setSuccess('');
 
     try {
-      console.log('💾 Guardando recurso...');
+      console.log('Guardando recurso...');
 
       // Obtener nombre del estado seleccionado y normalizarlo
       const estadoSeleccionado = estados.find(e => e.id === formData.id_estado);
@@ -145,7 +145,7 @@ const NuevoInventario = () => {
         fecha_creacion: Timestamp.now()
       });
 
-      console.log('✅ Recurso creado exitosamente');
+      console.log('Recurso creado exitosamente');
       setSuccess('Recurso creado exitosamente');
 
       setTimeout(() => {
@@ -153,7 +153,7 @@ const NuevoInventario = () => {
       }, 1500);
 
     } catch (err: any) {
-      console.error('❌ Error:', err);
+      console.error('Error:', err);
       setError(err.message || 'Error al crear el recurso');
     } finally {
       setSaving(false);

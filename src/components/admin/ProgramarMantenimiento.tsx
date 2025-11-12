@@ -2,6 +2,7 @@ import { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { collection, getDocs, addDoc, query, where, doc, updateDoc } from 'firebase/firestore';
 import { db } from '../../firebase/config';
+import { FiCalendar, FiSave, FiArrowLeft } from 'react-icons/fi';
 import './FormularioMantenimiento.css';
 
 interface Recurso {
@@ -142,7 +143,7 @@ const ProgramarMantenimiento = () => {
         id_estado: '3'
       });
 
-      setMessage({ type: 'success', text: '✅ Mantenimiento programado exitosamente' });
+      setMessage({ type: 'success', text: 'Mantenimiento programado exitosamente' });
       
       setTimeout(() => {
         navigate('/admin/mantenimientos');
@@ -173,9 +174,9 @@ const ProgramarMantenimiento = () => {
     <div className="formulario-mantenimiento">
       <div className="form-header">
         <button className="btn-back" onClick={() => navigate('/admin/mantenimientos')}>
-          ← Volver
+          <FiArrowLeft /> Volver
         </button>
-        <h1>📅 Programar Mantenimiento</h1>
+        <h1><FiCalendar className="header-icon" /> Programar Mantenimiento</h1>
       </div>
 
       <div className="form-container">
@@ -306,7 +307,7 @@ const ProgramarMantenimiento = () => {
               className="btn-primary"
               disabled={saving}
             >
-              {saving ? 'Programando...' : '📅 Programar Mantenimiento'}
+              {saving ? 'Programando...' : <><FiSave /> Programar Mantenimiento</>}
             </button>
           </div>
         </form>

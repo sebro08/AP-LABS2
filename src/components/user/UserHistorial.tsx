@@ -6,6 +6,7 @@ import { registrarEnBitacora } from '../../utils/bitacoraHelper';
 import jsPDF from 'jspdf';
 import autoTable from 'jspdf-autotable';
 import * as XLSX from 'xlsx';
+import { FiCalendar, FiUsers, FiPackage, FiCheckCircle, FiClock, FiSearch, FiDownload, FiFileText, FiBarChart } from 'react-icons/fi';
 import './UserHistorial.css';
 
 interface HistorialItem {
@@ -525,7 +526,7 @@ const UserHistorial = () => {
         observaciones: `Período: ${filtrosExport.fechaInicio} al ${filtrosExport.fechaFin}`
       });
 
-      alert('✅ Historial exportado exitosamente');
+      alert('Historial exportado exitosamente');
       setShowExportModal(false);
 
     } catch (error: any) {
@@ -560,7 +561,7 @@ const UserHistorial = () => {
   return (
     <div className="user-historial">
       <div className="historial-header">
-        <h1>📊 Historial de Uso</h1>
+        <h1><FiBarChart className="header-icon" /> Historial de Uso</h1>
         <p className="subtitle">Consulta tu historial de reservas completadas</p>
       </div>
 
@@ -570,16 +571,17 @@ const UserHistorial = () => {
           className="btn-export"
           onClick={() => setShowExportModal(true)}
         >
-          📥 Exportar Historial
+          <FiDownload /> Exportar Historial
         </button>
       </div>
 
       {/* Filtros */}
       <div className="filtros-section">
         <div className="search-box">
+          <FiSearch className="search-icon" />
           <input
             type="text"
-            placeholder="🔍 Buscar por nombre o motivo..."
+            placeholder="Buscar por nombre o motivo..."
             value={searchTerm}
             onChange={(e) => setSearchTerm(e.target.value)}
           />
@@ -598,21 +600,21 @@ const UserHistorial = () => {
       {/* Estadísticas */}
       <div className="stats-cards">
         <div className="stat-card">
-          <div className="stat-icon">🏢</div>
+          <div className="stat-icon"><FiPackage /></div>
           <div className="stat-info">
             <h3>{historial.filter(h => h.tipo === 'laboratorio').length}</h3>
             <p>Laboratorios Usados</p>
           </div>
         </div>
         <div className="stat-card">
-          <div className="stat-icon">📦</div>
+          <div className="stat-icon"><FiPackage /></div>
           <div className="stat-info">
             <h3>{historial.filter(h => h.tipo === 'recurso').length}</h3>
             <p>Recursos Usados</p>
           </div>
         </div>
         <div className="stat-card">
-          <div className="stat-icon">✅</div>
+          <div className="stat-icon"><FiCheckCircle /></div>
           <div className="stat-info">
             <h3>{historial.length}</h3>
             <p>Total Devoluciones</p>
@@ -626,7 +628,7 @@ const UserHistorial = () => {
           historialFiltrado.map(item => (
             <div key={item.id} className="historial-item">
               <div className="item-icon">
-                {item.tipo === 'laboratorio' ? '🏢' : '📦'}
+                {item.tipo === 'laboratorio' ? <FiPackage /> : <FiPackage />}
               </div>
               <div className="item-content">
                 <div className="item-header">
@@ -638,19 +640,19 @@ const UserHistorial = () => {
                 <div className="item-details">
                   {item.tipo === 'laboratorio' ? (
                     <>
-                      <p><strong>📅 Fecha:</strong> {formatearFecha(item.fecha_reserva)}</p>
-                      <p><strong>🕐 Horarios:</strong> {item.horarios}</p>
-                      <p><strong>👥 Participantes:</strong> {item.participantes}</p>
+                      <p><FiCalendar className="inline-icon" /> <strong>Fecha:</strong> {formatearFecha(item.fecha_reserva)}</p>
+                      <p><FiClock className="inline-icon" /> <strong>Horarios:</strong> {item.horarios}</p>
+                      <p><FiUsers className="inline-icon" /> <strong>Participantes:</strong> {item.participantes}</p>
                     </>
                   ) : (
                     <>
-                      <p><strong>📅 Reserva:</strong> {formatearFecha(item.fecha_reserva)}</p>
-                      <p><strong>📅 Devolución:</strong> {formatearFecha(item.fecha_devolucion)}</p>
-                      <p><strong>📊 Cantidad:</strong> {item.cantidad} {item.unidad}</p>
+                      <p><FiCalendar className="inline-icon" /> <strong>Reserva:</strong> {formatearFecha(item.fecha_reserva)}</p>
+                      <p><FiCalendar className="inline-icon" /> <strong>Devolución:</strong> {formatearFecha(item.fecha_devolucion)}</p>
+                      <p><FiPackage className="inline-icon" /> <strong>Cantidad:</strong> {item.cantidad} {item.unidad}</p>
                     </>
                   )}
                   {item.fecha_devolucion_real && (
-                    <p><strong>✅ Devuelto:</strong> {formatearFecha(item.fecha_devolucion_real)}</p>
+                    <p><FiCheckCircle className="inline-icon" /> <strong>Devuelto:</strong> {formatearFecha(item.fecha_devolucion_real)}</p>
                   )}
                 </div>
               </div>
@@ -664,7 +666,8 @@ const UserHistorial = () => {
           ))
         ) : (
           <div className="no-results">
-            <p>📭 No se encontraron registros en el historial</p>
+            <FiFileText className="empty-icon" />
+            <p>No se encontraron registros en el historial</p>
             {searchTerm && (
               <button className="btn-clear" onClick={() => setSearchTerm('')}>
                 Limpiar búsqueda
@@ -679,8 +682,8 @@ const UserHistorial = () => {
         <div className="modal-overlay" onClick={() => setShowExportModal(false)}>
           <div className="modal-export" onClick={(e) => e.stopPropagation()}>
             <div className="modal-header">
-              <h2>📥 Exportar Historial</h2>
-              <button className="btn-close" onClick={() => setShowExportModal(false)}>✕</button>
+              <h2><FiDownload /> Exportar Historial</h2>
+              <button className="btn-close" onClick={() => setShowExportModal(false)}>×</button>
             </div>
 
             <div className="modal-body">
@@ -690,9 +693,9 @@ const UserHistorial = () => {
                   value={filtrosExport.tipoReporte}
                   onChange={(e) => setFiltrosExport({ ...filtrosExport, tipoReporte: e.target.value as any })}
                 >
-                  <option value="completo">📊 Historial Completo</option>
-                  <option value="laboratorios">🏢 Solo Laboratorios</option>
-                  <option value="recursos">📦 Solo Recursos</option>
+                  <option value="completo">Historial Completo</option>
+                  <option value="laboratorios">Solo Laboratorios</option>
+                  <option value="recursos">Solo Recursos</option>
                 </select>
               </div>
 
@@ -720,14 +723,14 @@ const UserHistorial = () => {
                   value={filtrosExport.formato}
                   onChange={(e) => setFiltrosExport({ ...filtrosExport, formato: e.target.value as any })}
                 >
-                  <option value="ambos">📄 PDF + Excel</option>
-                  <option value="pdf">📄 Solo PDF</option>
-                  <option value="excel">📊 Solo Excel</option>
+                  <option value="ambos">PDF + Excel</option>
+                  <option value="pdf">Solo PDF</option>
+                  <option value="excel">Solo Excel</option>
                 </select>
               </div>
 
               <div className="info-box">
-                <p>ℹ️ Se exportarán <strong>{obtenerHistorialFiltrado().length}</strong> registros del periodo seleccionado.</p>
+                <p>Se exportarán <strong>{obtenerHistorialFiltrado().length}</strong> registros del periodo seleccionado.</p>
               </div>
             </div>
 
@@ -744,7 +747,7 @@ const UserHistorial = () => {
                 onClick={handleExportar}
                 disabled={loadingExport}
               >
-                {loadingExport ? '⏳ Exportando...' : '📥 Exportar'}
+                {loadingExport ? 'Exportando...' : <><FiDownload /> Exportar</>}
               </button>
             </div>
           </div>
@@ -757,15 +760,15 @@ const UserHistorial = () => {
           <div className="modal-detalle" onClick={(e) => e.stopPropagation()}>
             <div className="modal-header">
               <h2>
-                {itemSeleccionado.tipo === 'laboratorio' ? '🏢' : '📦'} 
+                {itemSeleccionado.tipo === 'laboratorio' ? <FiPackage /> : <FiPackage />} 
                 {' '}{itemSeleccionado.nombre}
               </h2>
-              <button className="btn-close" onClick={() => setShowDetalle(false)}>✕</button>
+              <button className="btn-close" onClick={() => setShowDetalle(false)}>×</button>
             </div>
 
             <div className="modal-body">
               <div className="detalle-section">
-                <h3>📋 Información General</h3>
+                <h3><FiFileText className="section-icon" /> Información General</h3>
                 <div className="detalle-grid">
                   <div className="detalle-item">
                     <strong>Tipo:</strong>
@@ -775,13 +778,13 @@ const UserHistorial = () => {
                   </div>
                   <div className="detalle-item">
                     <strong>Estado:</strong>
-                    <span className="badge badge-completado">✅ Completado</span>
+                    <span className="badge badge-completado"><FiCheckCircle /> Completado</span>
                   </div>
                 </div>
               </div>
 
               <div className="detalle-section">
-                <h3>📅 Fechas</h3>
+                <h3><FiCalendar className="section-icon" /> Fechas</h3>
                 <div className="detalle-grid">
                   <div className="detalle-item">
                     <strong>Fecha de Reserva:</strong>
@@ -804,7 +807,7 @@ const UserHistorial = () => {
 
               {itemSeleccionado.tipo === 'laboratorio' ? (
                 <div className="detalle-section">
-                  <h3>🏢 Detalles del Laboratorio</h3>
+                  <h3><FiPackage className="section-icon" /> Detalles del Laboratorio</h3>
                   <div className="detalle-grid">
                     <div className="detalle-item">
                       <strong>Horarios:</strong>
@@ -818,7 +821,7 @@ const UserHistorial = () => {
                 </div>
               ) : (
                 <div className="detalle-section">
-                  <h3>📦 Detalles del Recurso</h3>
+                  <h3><FiPackage className="section-icon" /> Detalles del Recurso</h3>
                   <div className="detalle-grid">
                     <div className="detalle-item">
                       <strong>Cantidad:</strong>
@@ -829,13 +832,13 @@ const UserHistorial = () => {
               )}
 
               <div className="detalle-section">
-                <h3>📝 Motivo</h3>
+                <h3><FiFileText className="section-icon" /> Motivo</h3>
                 <p className="motivo-text">{itemSeleccionado.motivo}</p>
               </div>
 
               {itemSeleccionado.comentario && (
                 <div className="detalle-section">
-                  <h3>💬 Comentarios</h3>
+                  <h3><FiFileText className="section-icon" /> Comentarios</h3>
                   <p className="comentario-text">{itemSeleccionado.comentario}</p>
                 </div>
               )}

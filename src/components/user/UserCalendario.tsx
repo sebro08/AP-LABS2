@@ -433,12 +433,12 @@ const UserCalendario = () => {
         });
       }
 
-      alert('✅ Solicitud enviada correctamente');
+      alert('Solicitud enviada correctamente');
       cerrarModal();
       cargarReservas();
     } catch (error) {
       console.error('Error enviando solicitud:', error);
-      alert('❌ Error al enviar la solicitud');
+      alert('Error al enviar la solicitud');
     } finally {
       setLoading(false);
     }

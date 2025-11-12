@@ -471,12 +471,12 @@ const AdminCalendario = () => {
         modulo: 'Calendario Admin'
       });
 
-      alert('✅ Bloqueo creado exitosamente');
+      alert('Bloqueo creado exitosamente');
       cerrarModalBloqueo();
       cargarDatos();
     } catch (error) {
       console.error('Error creando bloqueo:', error);
-      alert('❌ Error al crear bloqueo');
+      alert('Error al crear bloqueo');
     } finally {
       setLoading(false);
     }

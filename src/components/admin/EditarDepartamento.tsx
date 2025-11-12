@@ -89,7 +89,7 @@ const EditarDepartamento = () => {
     setSuccess('');
 
     try {
-      console.log('💾 Actualizando departamento...');
+      console.log('Actualizando departamento...');
       
       await updateDoc(doc(db, 'departamentos', id), {
         nombre: formData.nombre,
@@ -100,7 +100,7 @@ const EditarDepartamento = () => {
         activo: formData.activo
       });
 
-      console.log('✅ Departamento actualizado exitosamente');
+      console.log('Departamento actualizado exitosamente');
       setSuccess('Departamento actualizado exitosamente');
       
       setTimeout(() => {
@@ -108,7 +108,7 @@ const EditarDepartamento = () => {
       }, 1500);
 
     } catch (err: any) {
-      console.error('❌ Error:', err);
+      console.error('Error:', err);
       setError(err.message || 'Error al actualizar el departamento');
     } finally {
       setSaving(false);

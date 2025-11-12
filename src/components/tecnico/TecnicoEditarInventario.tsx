@@ -115,7 +115,7 @@ const TecnicoEditarInventario = () => {
     setSuccess('');
 
     try {
-      console.log('💾 Actualizando recurso...');
+      console.log('Actualizando recurso...');
       
       // Obtener nombres de los catálogos seleccionados
       const estadoSeleccionado = estados.find(e => e.id === formData.id_estado);
@@ -151,15 +151,15 @@ const TecnicoEditarInventario = () => {
         fecha_ultimo_mantenimiento: formData.fecha_ultimo_mantenimiento
       });
 
-      console.log('✅ Recurso actualizado exitosamente');
+      console.log('Recurso actualizado exitosamente');
       setSuccess('Recurso actualizado exitosamente');
-      
+
       setTimeout(() => {
         navigate('/tecnico/inventario');
       }, 1500);
 
     } catch (err: any) {
-      console.error('❌ Error:', err);
+      console.error('Error:', err);
       setError(err.message || 'Error al actualizar el recurso');
     } finally {
       setSaving(false);

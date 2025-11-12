@@ -54,7 +54,7 @@ const NuevoDepartamento = () => {
     setSuccess('');
 
     try {
-      console.log('💾 Guardando departamento...');
+      console.log('Guardando departamento...');
       
       await addDoc(collection(db, 'departamentos'), {
         nombre: formData.nombre,
@@ -66,7 +66,7 @@ const NuevoDepartamento = () => {
         fecha_creacion: new Date().toISOString()
       });
 
-      console.log('✅ Departamento creado exitosamente');
+      console.log('Departamento creado exitosamente');
       setSuccess('Departamento creado exitosamente');
       
       setTimeout(() => {

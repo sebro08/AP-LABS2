@@ -3,7 +3,7 @@ export interface Notificacion {
   tipo: 'mensaje' | 'solicitud_aprobada' | 'solicitud_rechazada' | 'mantenimiento_programado' | 'mantenimiento_completado' | 'general';
   titulo: string;
   mensaje: string;
-  fecha_creacion: string;
+  fecha_creacion: string | Date | { toDate: () => Date } | { seconds: number };
   leida: boolean;
   id_usuario: string;
   datos_adicionales?: {
@@ -13,6 +13,7 @@ export interface Notificacion {
     remitente?: string;
     recurso?: string;
     laboratorio?: string;
+    tipo_notificacion?: string;
   };
 }
 

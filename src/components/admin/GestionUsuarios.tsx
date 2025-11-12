@@ -3,6 +3,7 @@ import { useNavigate } from 'react-router-dom';
 import { collection, getDocs, doc, updateDoc, deleteDoc } from 'firebase/firestore';
 import { db } from '../../firebase/config';
 import { Usuario, Rol, Departamento } from '../../types/Usuario';
+import { FiUsers, FiCheckCircle, FiXCircle, FiSearch, FiEdit, FiTrash2, FiAlertCircle, FiPlus } from 'react-icons/fi';
 import './GestionUsuarios.css';
 
 const GestionUsuarios = () => {
@@ -24,7 +25,7 @@ const GestionUsuarios = () => {
     setLoading(true);
     setError('');
     try {
-      console.log('🔄 Iniciando carga de datos...');
+      console.log('Iniciando carga de datos...');
       
       // Cargar roles
       try {
@@ -34,9 +35,9 @@ const GestionUsuarios = () => {
           nombre: doc.data().nombre || 'Sin nombre'
         }));
         setRoles(rolesData);
-        console.log('✅ Roles cargados:', rolesData.length);
+        console.log('Roles cargados:', rolesData.length);
       } catch (err) {
-        console.warn('⚠️ No se pudo cargar roles:', err);
+        console.warn('No se pudo cargar roles:', err);
         setRoles([]);
       }
 
@@ -48,9 +49,9 @@ const GestionUsuarios = () => {
           nombre: doc.data().nombre || 'Sin nombre'
         }));
         setDepartamentos(deptosData);
-        console.log('✅ Departamentos cargados:', deptosData.length);
+        console.log('Departamentos cargados:', deptosData.length);
       } catch (err) {
-        console.warn('⚠️ No se pudo cargar departamentos:', err);
+        console.warn('No se pudo cargar departamentos:', err);
         setDepartamentos([]);
       }
 
@@ -75,10 +76,10 @@ const GestionUsuarios = () => {
       });
       
       setUsuarios(usuariosData);
-      console.log('✅ Datos cargados:', usuariosData.length, 'usuarios');
-      console.log('📋 Primer usuario:', usuariosData[0]);
+      console.log('Datos cargados:', usuariosData.length, 'usuarios');
+      console.log('Primer usuario:', usuariosData[0]);
     } catch (error: any) {
-      console.error('❌ Error cargando datos:', error);
+      console.error('Error cargando datos:', error);
       setError(`Error cargando usuarios: ${error.message}`);
     } finally {
       setLoading(false);
@@ -96,9 +97,9 @@ const GestionUsuarios = () => {
         u.id === usuario.id ? { ...u, activo: nuevoEstado } : u
       ));
 
-      console.log(`✅ Usuario ${nuevoEstado ? 'activado' : 'desactivado'}`);
+      console.log(`Usuario ${nuevoEstado ? 'activado' : 'desactivado'}`);
     } catch (error) {
-      console.error('❌ Error cambiando estado:', error);
+      console.error('Error cambiando estado:', error);
     }
   };
 
@@ -112,9 +113,9 @@ const GestionUsuarios = () => {
         // Actualizar la lista local
         setUsuarios(usuarios.filter(u => u.id !== usuarioId));
         
-        console.log('✅ Usuario eliminado correctamente');
+        console.log('Usuario eliminado correctamente');
       } catch (err) {
-        console.error('❌ Error al eliminar usuario:', err);
+        console.error('Error al eliminar usuario:', err);
         setError('Error al eliminar el usuario');
       }
     }
@@ -170,7 +171,7 @@ const GestionUsuarios = () => {
   if (error) {
     return (
       <div className="error-container">
-        <div className="error-icon">⚠️</div>
+        <div className="error-icon"><FiAlertCircle /></div>
         <h2>Error al cargar datos</h2>
         <p>{error}</p>
         <button className="btn-primary" onClick={cargarDatos}>
@@ -188,14 +189,14 @@ const GestionUsuarios = () => {
           className="btn-primary"
           onClick={() => navigate('/admin/usuarios/nuevo')}
         >
-          <span>➕</span> Nuevo Usuario
+          <FiPlus /> Nuevo Usuario
         </button>
       </div>
 
       {/* Filtros y búsqueda */}
       <div className="filters-section">
         <div className="search-box">
-          <span className="search-icon">🔍</span>
+          <span className="search-icon"><FiSearch /></span>
           <input
             type="text"
             placeholder="Buscar por nombre, email o identificador..."
@@ -242,28 +243,28 @@ const GestionUsuarios = () => {
       {/* Resumen */}
       <div className="summary-cards">
         <div className="summary-card">
-          <div className="summary-icon">👥</div>
+          <div className="summary-icon"><FiUsers /></div>
           <div className="summary-info">
             <div className="summary-value">{usuarios.length}</div>
             <div className="summary-label">Total Usuarios</div>
           </div>
         </div>
         <div className="summary-card">
-          <div className="summary-icon">✅</div>
+          <div className="summary-icon"><FiCheckCircle /></div>
           <div className="summary-info">
             <div className="summary-value">{usuarios.filter(u => u.activo).length}</div>
             <div className="summary-label">Activos</div>
           </div>
         </div>
         <div className="summary-card">
-          <div className="summary-icon">❌</div>
+          <div className="summary-icon"><FiXCircle /></div>
           <div className="summary-info">
             <div className="summary-value">{usuarios.filter(u => !u.activo).length}</div>
             <div className="summary-label">Inactivos</div>
           </div>
         </div>
         <div className="summary-card">
-          <div className="summary-icon">🔍</div>
+          <div className="summary-icon"><FiSearch /></div>
           <div className="summary-info">
             <div className="summary-value">{usuariosFiltrados.length}</div>
             <div className="summary-label">Resultados</div>
@@ -320,21 +321,21 @@ const GestionUsuarios = () => {
                         onClick={() => toggleEstadoUsuario(usuario)}
                         title={usuario.activo ? 'Desactivar' : 'Activar'}
                       >
-                        {usuario.activo ? '🔴' : '🟢'}
+                        {usuario.activo ? <FiXCircle /> : <FiCheckCircle />}
                       </button>
                       <button 
                         className="btn-icon btn-edit"
                         onClick={() => navigate(`/admin/usuarios/editar/${usuario.id}`)}
                         title="Editar"
                       >
-                        ✏️
+                        <FiEdit />
                       </button>
                       <button
                         className="btn-icon btn-delete"
                         onClick={() => eliminarUsuario(usuario.id, getNombreCompleto(usuario))}
                         title="Eliminar"
                       >
-                        🗑️
+                        <FiTrash2 />
                       </button>
                     </div>
                   </td>

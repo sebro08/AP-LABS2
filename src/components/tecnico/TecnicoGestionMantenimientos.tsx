@@ -3,6 +3,7 @@ import { useNavigate } from 'react-router-dom';
 import { collection, getDocs, getDoc, doc } from 'firebase/firestore';
 import { db } from '../../firebase/config';
 import { MantenimientoDetalle } from '../../types/Mantenimiento';
+import { FiTool, FiCheckCircle, FiCalendar, FiSearch, FiEye } from 'react-icons/fi';
 import './TecnicoGestionMantenimientos.css';
 
 const TecnicoGestionMantenimientos = () => {
@@ -20,10 +21,10 @@ const TecnicoGestionMantenimientos = () => {
   const cargarMantenimientos = async () => {
     setLoading(true);
     try {
-      console.log('🔄 Cargando mantenimientos...');
+      console.log('Cargando mantenimientos...');
 
       const mantenimientosSnapshot = await getDocs(collection(db, 'mantenimiento'));
-      console.log(`📦 ${mantenimientosSnapshot.docs.length} mantenimientos encontrados`);
+      console.log(`${mantenimientosSnapshot.docs.length} mantenimientos encontrados`);
 
       const mantenimientosDetalle: MantenimientoDetalle[] = [];
 
@@ -78,7 +79,7 @@ const TecnicoGestionMantenimientos = () => {
             estadoNombre
           });
         } catch (err) {
-          console.error('❌ Error procesando mantenimiento:', docSnap.id, err);
+          console.error('Error procesando mantenimiento:', docSnap.id, err);
         }
       }
 
@@ -90,10 +91,10 @@ const TecnicoGestionMantenimientos = () => {
       });
 
       setMantenimientos(mantenimientosDetalle);
-      console.log(`✅ ${mantenimientosDetalle.length} mantenimientos cargados`);
+      console.log(`${mantenimientosDetalle.length} mantenimientos cargados`);
       setLoading(false);
     } catch (error: any) {
-      console.error('❌ Error cargando mantenimientos:', error);
+      console.error('Error cargando mantenimientos:', error);
       alert('Error al cargar los mantenimientos: ' + error.message);
       setLoading(false);
     }
@@ -126,22 +127,23 @@ const TecnicoGestionMantenimientos = () => {
   return (
     <div className="tecnico-gestion-mantenimientos">
       <div className="page-header">
-        <h1>🔧 Gestión de Mantenimientos</h1>
+        <h1><FiTool className="header-icon" /> Gestión de Mantenimientos</h1>
         <div className="header-buttons">
           <button className="btn-secondary" onClick={() => navigate('/tecnico/mantenimientos/programar')}>
-            📅 Programar Mantenimiento
+            <FiCalendar className="btn-icon" /> Programar Mantenimiento
           </button>
           <button className="btn-primary" onClick={() => navigate('/tecnico/mantenimientos/registrar')}>
-            ✅ Registrar Mantenimiento
+            <FiCheckCircle className="btn-icon" /> Registrar Mantenimiento
           </button>
         </div>
       </div>
 
       <div className="filters-section">
         <div className="search-box">
+          <FiSearch className="search-icon" />
           <input
             type="text"
-            placeholder="🔍 Buscar por recurso, técnico, tipo o detalles..."
+            placeholder="Buscar por recurso, técnico, tipo o detalles..."
             value={searchTerm}
             onChange={(e) => setSearchTerm(e.target.value)}
           />
@@ -195,14 +197,14 @@ const TecnicoGestionMantenimientos = () => {
 
       <div className="summary-cards">
         <div className="summary-card">
-          <div className="summary-icon">🔧</div>
+          <div className="summary-icon"><FiTool /></div>
           <div className="summary-info">
             <div className="summary-value">{mantenimientos.length}</div>
             <div className="summary-label">Total Mantenimientos</div>
           </div>
         </div>
         <div className="summary-card">
-          <div className="summary-icon">✅</div>
+          <div className="summary-icon"><FiCheckCircle /></div>
           <div className="summary-info">
             <div className="summary-value">
               {mantenimientos.filter(m => m.id_estado === '1').length}
@@ -211,7 +213,7 @@ const TecnicoGestionMantenimientos = () => {
           </div>
         </div>
         <div className="summary-card">
-          <div className="summary-icon">📅</div>
+          <div className="summary-icon"><FiCalendar /></div>
           <div className="summary-info">
             <div className="summary-value">
               {mantenimientos.filter(m => m.id_estado === '3').length}
@@ -265,7 +267,7 @@ const TecnicoGestionMantenimientos = () => {
                         onClick={() => navigate(`/tecnico/mantenimientos/detalle/${mant.id}`)}
                         title="Ver Detalles"
                       >
-                        👁️
+                        <FiEye />
                       </button>
                     </div>
                   </td>

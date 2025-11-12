@@ -3,6 +3,7 @@ import { collection, query, where, getDocs, doc, getDoc, updateDoc, deleteDoc } 
 import { db } from '../../firebase/config';
 import { useAuth } from '../../context/AuthContext';
 import { registrarEnBitacora } from '../../utils/bitacoraHelper';
+import { FiClock, FiCheckCircle, FiXCircle, FiPackage, FiSearch, FiFileText, FiAlertCircle, FiX, FiArrowLeft, FiChevronRight } from 'react-icons/fi';
 import './UserSolicitudes.css';
 
 interface Solicitud {
@@ -224,13 +225,13 @@ const UserSolicitudes = () => {
     const estadoLower = estado.toLowerCase();
     switch (estadoLower) {
       case 'pendiente':
-        return <span className="badge badge-warning">⏳ Pendiente</span>;
+        return <span className="badge badge-warning"><FiClock /> Pendiente</span>;
       case 'aprobado':
       case 'aprobada':
-        return <span className="badge badge-success">✅ Aprobada</span>;
+        return <span className="badge badge-success"><FiCheckCircle /> Aprobada</span>;
       case 'rechazado':
       case 'rechazada':
-        return <span className="badge badge-danger">❌ Rechazada</span>;
+        return <span className="badge badge-danger"><FiXCircle /> Rechazada</span>;
       default:
         return <span className="badge badge-secondary">{estado}</span>;
     }
@@ -238,8 +239,8 @@ const UserSolicitudes = () => {
 
   const getTipoBadge = (tipo: 'laboratorio' | 'recurso') => {
     return tipo === 'laboratorio' 
-      ? <span className="badge badge-lab">🔬 Laboratorio</span>
-      : <span className="badge badge-resource">📦 Recurso</span>;
+      ? <span className="badge badge-lab"><FiPackage /> Laboratorio</span>
+      : <span className="badge badge-resource"><FiPackage /> Recurso</span>;
   };
 
   const handleVerDetalle = (solicitud: Solicitud) => {
@@ -258,8 +259,9 @@ const UserSolicitudes = () => {
       // Registrar en bitácora antes de eliminar
       if (currentUser) {
         await registrarEnBitacora({
-          usuario_nombre: currentUser.email || 'Usuario',
+          usuario_nombre: currentUser.nombre || currentUser.email || 'Usuario',
           usuario_email: currentUser.email || '',
+          usuario_rol: currentUser.rol || 'Usuario',
           accion: 'Cancelación',
           accion_detalle: `Canceló y eliminó la solicitud de ${solicitud.tipo === 'laboratorio' ? 'laboratorio' : 'recurso'}: ${solicitud.nombre}`,
           modulo: 'Mis Solicitudes'
@@ -274,12 +276,12 @@ const UserSolicitudes = () => {
         await deleteDoc(doc(db, 'solicitudes_recursos', solicitud.id));
       }
 
-      alert('✅ Solicitud cancelada y eliminada exitosamente');
+      alert('Solicitud cancelada y eliminada exitosamente');
       setShowDetalle(false);
       cargarSolicitudes(); // Recargar solicitudes
     } catch (error: any) {
       console.error('Error al cancelar solicitud:', error);
-      alert('❌ Error al cancelar la solicitud: ' + error.message);
+      alert('Error al cancelar la solicitud: ' + error.message);
     } finally {
       setLoading(false);
     }
@@ -321,8 +323,9 @@ const UserSolicitudes = () => {
           // Registrar en bitácora
           if (currentUser) {
             await registrarEnBitacora({
-              usuario_nombre: currentUser.email || 'Usuario',
+              usuario_nombre: currentUser.nombre || currentUser.email || 'Usuario',
               usuario_email: currentUser.email || '',
+              usuario_rol: currentUser.rol || 'Usuario',
               accion: 'Devolución',
               accion_detalle: `Devolvió el laboratorio: ${solicitud.nombre}`,
               modulo: 'Mis Solicitudes'
@@ -366,8 +369,9 @@ const UserSolicitudes = () => {
           // Registrar en bitácora
           if (currentUser) {
             await registrarEnBitacora({
-              usuario_nombre: currentUser.email || 'Usuario',
+              usuario_nombre: currentUser.nombre || currentUser.email || 'Usuario',
               usuario_email: currentUser.email || '',
+              usuario_rol: currentUser.rol || 'Usuario',
               accion: 'Devolución',
               accion_detalle: `Devolvió el recurso: ${solicitud.nombre}`,
               modulo: 'Mis Solicitudes'
@@ -376,12 +380,12 @@ const UserSolicitudes = () => {
         }
       }
 
-      alert('✅ Devolución registrada exitosamente');
+      alert('Devolución registrada exitosamente');
       setShowDetalle(false);
       cargarSolicitudes(); // Recargar solicitudes
     } catch (error: any) {
       console.error('Error en devolución:', error);
-      alert('❌ Error al registrar la devolución: ' + error.message);
+      alert('Error al registrar la devolución: ' + error.message);
     } finally {
       setLoading(false);
     }
@@ -390,7 +394,7 @@ const UserSolicitudes = () => {
   return (
     <div className="user-solicitudes">
       <div className="page-header">
-        <h1>📋 Mis Solicitudes</h1>
+        <h1><FiFileText className="header-icon" /> Mis Solicitudes</h1>
         <p>Consulta el estado de tus solicitudes de laboratorios y recursos</p>
       </div>
 
@@ -399,9 +403,10 @@ const UserSolicitudes = () => {
           {/* Filtros */}
           <div className="filtros-container">
             <div className="search-box">
+              <FiSearch className="search-icon" />
               <input
                 type="text"
-                placeholder="🔍 Buscar por nombre..."
+                placeholder="Buscar por nombre..."
                 value={searchTerm}
                 onChange={(e) => setSearchTerm(e.target.value)}
               />
@@ -438,28 +443,28 @@ const UserSolicitudes = () => {
           {/* Estadísticas rápidas */}
           <div className="stats-cards">
             <div className="stat-card">
-              <div className="stat-icon">⏳</div>
+              <div className="stat-icon"><FiClock /></div>
               <div className="stat-info">
                 <div className="stat-number">{solicitudes.filter(s => s.estado.toLowerCase() === 'pendiente').length}</div>
                 <div className="stat-label">Pendientes</div>
               </div>
             </div>
             <div className="stat-card">
-              <div className="stat-icon">✅</div>
+              <div className="stat-icon"><FiCheckCircle /></div>
               <div className="stat-info">
                 <div className="stat-number">{solicitudes.filter(s => s.estado.toLowerCase() === 'aprobado' || s.estado.toLowerCase() === 'aprobada').length}</div>
                 <div className="stat-label">Aprobadas</div>
               </div>
             </div>
             <div className="stat-card">
-              <div className="stat-icon">❌</div>
+              <div className="stat-icon"><FiXCircle /></div>
               <div className="stat-info">
                 <div className="stat-number">{solicitudes.filter(s => s.estado.toLowerCase() === 'rechazado' || s.estado.toLowerCase() === 'rechazada').length}</div>
                 <div className="stat-label">Rechazadas</div>
               </div>
             </div>
             <div className="stat-card">
-              <div className="stat-icon">📋</div>
+              <div className="stat-icon"><FiFileText /></div>
               <div className="stat-info">
                 <div className="stat-number">{solicitudes.length}</div>
                 <div className="stat-label">Total</div>
@@ -476,7 +481,8 @@ const UserSolicitudes = () => {
               </div>
             ) : solicitudesFiltradas.length === 0 ? (
               <div className="empty-state">
-                <p>📭 No hay solicitudes que mostrar</p>
+                <FiFileText className="empty-icon" />
+                <p>No hay solicitudes que mostrar</p>
               </div>
             ) : (
               solicitudesFiltradas.map((solicitud) => (
@@ -493,7 +499,7 @@ const UserSolicitudes = () => {
                       className="btn-ver-detalle"
                       onClick={() => handleVerDetalle(solicitud)}
                     >
-                      Ver Detalle →
+                      Ver Detalle <FiChevronRight />
                     </button>
                   </div>
 
@@ -560,7 +566,7 @@ const UserSolicitudes = () => {
         /* Detalle de solicitud */
         <div className="solicitud-detalle">
           <button className="btn-back" onClick={() => setShowDetalle(false)}>
-            ← Volver a la lista
+            <FiArrowLeft /> Volver a la lista
           </button>
 
           {solicitudSeleccionada && (
@@ -659,7 +665,7 @@ const UserSolicitudes = () => {
 
                 {solicitudSeleccionada.motivo_rechazo && (solicitudSeleccionada.estado.toLowerCase() === 'rechazado' || solicitudSeleccionada.estado.toLowerCase() === 'rechazada') && (
                   <div className="detalle-section motivo-rechazo">
-                    <h3>❌ Motivo del Rechazo</h3>
+                    <h3><FiAlertCircle /> Motivo del Rechazo</h3>
                     <p className="justificacion motivo-rechazo-text">{solicitudSeleccionada.motivo_rechazo}</p>
                   </div>
                 )}
@@ -672,7 +678,7 @@ const UserSolicitudes = () => {
                       onClick={() => handleCancelarSolicitud(solicitudSeleccionada)}
                       disabled={loading}
                     >
-                      {loading ? '⏳ Procesando...' : '🚫 Cancelar Solicitud'}
+                      {loading ? 'Procesando...' : <><FiX /> Cancelar Solicitud</>}
                     </button>
                     <p className="cancelar-info">
                       Al cancelar la solicitud, esta será eliminada y no podrá ser procesada.
@@ -685,7 +691,7 @@ const UserSolicitudes = () => {
                   <div className="detalle-section">
                     {solicitudSeleccionada.devuelto ? (
                       <div className="devolucion-completada">
-                        <p className="devolucion-ya-hecha">✅ Este {solicitudSeleccionada.tipo === 'laboratorio' ? 'laboratorio' : 'recurso'} ya fue devuelto</p>
+                        <p className="devolucion-ya-hecha"><FiCheckCircle /> Este {solicitudSeleccionada.tipo === 'laboratorio' ? 'laboratorio' : 'recurso'} ya fue devuelto</p>
                       </div>
                     ) : (
                       <>
@@ -694,7 +700,7 @@ const UserSolicitudes = () => {
                           onClick={() => handleDevolucion(solicitudSeleccionada)}
                           disabled={loading}
                         >
-                          {loading ? '⏳ Procesando...' : '📦 Hacer Devolución'}
+                          {loading ? 'Procesando...' : <><FiPackage /> Hacer Devolución</>}
                         </button>
                         <p className="devolucion-info">
                           Al hacer la devolución, el {solicitudSeleccionada.tipo === 'laboratorio' ? 'laboratorio' : 'recurso'} quedará nuevamente disponible para otros usuarios.

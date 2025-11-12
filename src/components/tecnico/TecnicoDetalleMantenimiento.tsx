@@ -3,6 +3,7 @@ import { useNavigate, useParams } from 'react-router-dom';
 import { doc, getDoc } from 'firebase/firestore';
 import { db } from '../../firebase/config';
 import { MantenimientoDetalle } from '../../types/Mantenimiento';
+import { FiArrowLeft, FiEye, FiCalendar, FiCheckCircle } from 'react-icons/fi';
 import './TecnicoDetalleMantenimiento.css';
 
 const TecnicoDetalleMantenimiento = () => {
@@ -114,7 +115,7 @@ const TecnicoDetalleMantenimiento = () => {
       <div className="tecnico-detalle-mantenimiento">
         <div className="form-header">
           <button className="btn-back" onClick={() => navigate('/tecnico/mantenimientos')}>
-            ← Volver
+            <FiArrowLeft /> Volver
           </button>
           <h1>Error</h1>
         </div>
@@ -129,9 +130,9 @@ const TecnicoDetalleMantenimiento = () => {
     <div className="tecnico-detalle-mantenimiento">
       <div className="form-header">
         <button className="btn-back" onClick={() => navigate('/tecnico/mantenimientos')}>
-          ← Volver
+          <FiArrowLeft /> Volver
         </button>
-        <h1>🔍 Detalle del Mantenimiento</h1>
+        <h1><FiEye className="header-icon" /> Detalle del Mantenimiento</h1>
       </div>
 
       <div className="detalle-container">
@@ -176,7 +177,7 @@ const TecnicoDetalleMantenimiento = () => {
               <label>Fecha Programada</label>
               <div className="detalle-value">
                 {mantenimiento.fecha_programada ? (
-                  <span className="fecha">📅 {formatearFecha(mantenimiento.fecha_programada)}</span>
+                  <span className="fecha"><FiCalendar className="inline-icon" /> {formatearFecha(mantenimiento.fecha_programada)}</span>
                 ) : (
                   <span className="no-disponible">No programada</span>
                 )}
@@ -187,7 +188,7 @@ const TecnicoDetalleMantenimiento = () => {
               <label>Fecha Realizada</label>
               <div className="detalle-value">
                 {mantenimiento.fecha_realizada ? (
-                  <span className="fecha">✅ {formatearFecha(mantenimiento.fecha_realizada)}</span>
+                  <span className="fecha"><FiCheckCircle className="inline-icon" /> {formatearFecha(mantenimiento.fecha_realizada)}</span>
                 ) : (
                   <span className="no-disponible">Pendiente de realizar</span>
                 )}
@@ -225,7 +226,7 @@ const TecnicoDetalleMantenimiento = () => {
             className="btn-secondary"
             onClick={() => navigate('/tecnico/mantenimientos')}
           >
-            ← Volver al Listado
+            <FiArrowLeft /> Volver al Listado
           </button>
         </div>
       </div>

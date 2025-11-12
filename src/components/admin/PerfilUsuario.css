@@ -330,3 +330,62 @@
 .cambio-password-form {
   animation: fadeIn 0.2s ease-out;
 }
+
+/* Iconos en encabezados */
+.header-icon {
+  font-size: 1.5em;
+  margin-right: 0.5rem;
+  vertical-align: middle;
+  color: #ffffff;
+}
+
+/* Iconos inline en texto */
+.inline-icon {
+  font-size: 1em;
+  margin-right: 0.25rem;
+  vertical-align: middle;
+}
+
+/* Iconos en secciones */
+.section-icon {
+  font-size: 1.2em;
+  margin-right: 0.5rem;
+  vertical-align: middle;
+}
+
+/* Iconos en búsqueda */
+.search-box {
+  position: relative;
+  display: flex;
+  align-items: center;
+}
+
+.search-icon {
+  position: absolute;
+  left: 12px;
+  color: #666;
+  pointer-events: none;
+}
+
+.search-box input {
+  padding-left: 40px;
+}
+
+/* Iconos en botones */
+button svg {
+  margin-right: 0.5rem;
+  vertical-align: middle;
+}
+
+/* Iconos en badges */
+.badge svg {
+  margin-right: 0.25rem;
+  vertical-align: middle;
+  font-size: 0.9em;
+}
+
+/* Iconos en stats */
+.stat-icon svg {
+  font-size: 2rem;
+  color: #667eea;
+}

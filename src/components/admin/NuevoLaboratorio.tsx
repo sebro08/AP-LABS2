@@ -81,7 +81,7 @@ const NuevoLaboratorio = () => {
     setSuccess('');
 
     try {
-      console.log('💾 Guardando laboratorio...');
+      console.log('Guardando laboratorio...');
       
       await addDoc(collection(db, 'laboratorios'), {
         nombre: formData.nombre,
@@ -95,7 +95,7 @@ const NuevoLaboratorio = () => {
         fecha_creacion: new Date().toISOString()
       });
 
-      console.log('✅ Laboratorio creado exitosamente');
+      console.log('Laboratorio creado exitosamente');
       setSuccess('Laboratorio creado exitosamente');
       
       setTimeout(() => {
@@ -103,7 +103,7 @@ const NuevoLaboratorio = () => {
       }, 1500);
 
     } catch (err: any) {
-      console.error('❌ Error:', err);
+      console.error('Error:', err);
       setError(err.message || 'Error al crear el laboratorio');
     } finally {
       setSaving(false);

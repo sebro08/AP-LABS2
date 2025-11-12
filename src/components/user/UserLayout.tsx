@@ -3,6 +3,19 @@ import { Outlet, useNavigate, useLocation } from 'react-router-dom';
 import { useAuth } from '../../context/AuthContext';
 import { getAuth } from 'firebase/auth';
 import { getFirestore, doc, getDoc } from 'firebase/firestore';
+import { 
+  FiHome, 
+  FiUser, 
+  FiCalendar, 
+  FiBox, 
+  FiClipboard, 
+  FiBarChart, 
+  FiBell, 
+  FiMail, 
+  FiLogOut,
+  FiChevronLeft,
+  FiChevronRight
+} from 'react-icons/fi';
 import './UserLayout.css';
 
 interface UserData {
@@ -53,16 +66,16 @@ const UserLayout = () => {
   };
 
   const menuItems = [
-    { id: 'dashboard', icon: '🏠', label: 'Inicio', path: '/user/dashboard' },
-    { id: 'perfil', icon: '👤', label: 'Perfil', path: '/user/perfil' },
+    { id: 'dashboard', icon: <FiHome />, label: 'Inicio', path: '/user/dashboard' },
+    { id: 'perfil', icon: <FiUser />, label: 'Perfil', path: '/user/perfil' },
     { id: 'separator1', isSeparator: true, label: 'Servicios' },
-    { id: 'calendario', icon: '📅', label: 'Calendario', path: '/user/calendario' },
-    { id: 'reservas', icon: '🏢', label: 'Reservas', path: '/user/reservas' },
-    { id: 'mis-solicitudes', icon: '📋', label: 'Mis Solicitudes', path: '/user/mis-solicitudes' },
-    { id: 'historial', icon: '📊', label: 'Historial de Uso', path: '/user/historial' },
+    { id: 'calendario', icon: <FiCalendar />, label: 'Calendario', path: '/user/calendario' },
+    { id: 'reservas', icon: <FiBox />, label: 'Reservas', path: '/user/reservas' },
+    { id: 'mis-solicitudes', icon: <FiClipboard />, label: 'Mis Solicitudes', path: '/user/mis-solicitudes' },
+    { id: 'historial', icon: <FiBarChart />, label: 'Historial de Uso', path: '/user/historial' },
     { id: 'separator2', isSeparator: true, label: 'Comunicación' },
-    { id: 'notificaciones', icon: '🔔', label: 'Notificaciones', path: '/user/notificaciones' },
-    { id: 'mensajes', icon: '💬', label: 'Mensajes Internos', path: '/user/mensajes' },
+    { id: 'notificaciones', icon: <FiBell />, label: 'Notificaciones', path: '/user/notificaciones' },
+    { id: 'mensajes', icon: <FiMail />, label: 'Mensajes Internos', path: '/user/mensajes' },
   ];
 
   const handleLogout = async () => {
@@ -88,12 +101,12 @@ const UserLayout = () => {
             className="toggle-btn" 
             onClick={() => setSidebarOpen(!sidebarOpen)}
           >
-            {sidebarOpen ? '◀' : '▶'}
+            {sidebarOpen ? <FiChevronLeft /> : <FiChevronRight />}
           </button>
         </div>
 
         <div className="user-info">
-          <div className="user-avatar">👤</div>
+          <div className="user-avatar"><FiUser /></div>
           {sidebarOpen && (
             <div className="user-details">
               <div className="user-name">{getUserName()}</div>
@@ -129,7 +142,7 @@ const UserLayout = () => {
 
         <div className="sidebar-footer">
           <button className="logout-btn" onClick={handleLogout}>
-            <span className="menu-icon">🚪</span>
+            <span className="menu-icon"><FiLogOut /></span>
             {sidebarOpen && <span>Cerrar Sesión</span>}
           </button>
         </div>

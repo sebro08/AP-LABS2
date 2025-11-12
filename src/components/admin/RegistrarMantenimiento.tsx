@@ -2,6 +2,7 @@ import { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { collection, getDocs, query, where, doc, updateDoc, getDoc } from 'firebase/firestore';
 import { db } from '../../firebase/config';
+import { FiCheckCircle, FiSave, FiArrowLeft } from 'react-icons/fi';
 import './FormularioMantenimiento.css';
 
 interface MantenimientoProgramado {
@@ -184,7 +185,7 @@ const RegistrarMantenimiento = () => {
         id_estado: '1' // Volver a disponible
       });
 
-      setMessage({ type: 'success', text: '✅ Mantenimiento registrado exitosamente' });
+      setMessage({ type: 'success', text: 'Mantenimiento registrado exitosamente' });
       
       setTimeout(() => {
         navigate('/admin/mantenimientos');
@@ -215,9 +216,9 @@ const RegistrarMantenimiento = () => {
     <div className="formulario-mantenimiento">
       <div className="form-header">
         <button className="btn-back" onClick={() => navigate('/admin/mantenimientos')}>
-          ← Volver
+          <FiArrowLeft /> Volver
         </button>
-        <h1>✅ Registrar Mantenimiento Realizado</h1>
+        <h1><FiCheckCircle className="header-icon" /> Registrar Mantenimiento Realizado</h1>
       </div>
 
       <div className="form-container">
@@ -363,7 +364,7 @@ const RegistrarMantenimiento = () => {
               className="btn-primary"
               disabled={saving || !mantenimientoSeleccionado}
             >
-              {saving ? 'Registrando...' : '✅ Registrar Mantenimiento'}
+              {saving ? 'Registrando...' : <><FiSave /> Registrar Mantenimiento</>}
             </button>
           </div>
         </form>

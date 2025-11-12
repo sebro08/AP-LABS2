@@ -5,6 +5,7 @@ import { useAuth } from '../../context/AuthContext';
 import { useNavigate } from 'react-router-dom';
 import { Notificacion, FiltrosNotificacion } from '../../types/Notificacion';
 import { registrarEnBitacora } from '../../utils/bitacoraHelper';
+import { FiBell, FiMessageSquare, FiCheckCircle, FiXCircle, FiTool, FiCalendar, FiCheck, FiTrash2 } from 'react-icons/fi';
 import './UserNotificaciones.css';
 
 const UserNotificaciones = () => {
@@ -28,40 +29,40 @@ const UserNotificaciones = () => {
       setLoading(true);
 
       // Buscar el ID del usuario en Firestore
-      console.log('🔍 Buscando usuario con email:', currentUser.email);
+      console.log('Buscando usuario con email:', currentUser.email);
       const usuariosRef = collection(db, 'usuarios');
       let qUsuario = query(usuariosRef, where('email', '==', currentUser.email));
       let usuarioSnapshot = await getDocs(qUsuario);
       
       if (usuarioSnapshot.empty) {
-        console.log('❌ No encontrado con "email", probando con "correo"');
+        console.log('No encontrado con "email", probando con "correo"');
         qUsuario = query(usuariosRef, where('correo', '==', currentUser.email));
         usuarioSnapshot = await getDocs(qUsuario);
       }
 
       if (usuarioSnapshot.empty) {
-        console.error('❌ Usuario no encontrado en ninguna de las dos búsquedas');
+        console.error('Usuario no encontrado en ninguna de las dos búsquedas');
         return;
       }
 
       const usuarioId = usuarioSnapshot.docs[0].id;
-      console.log('✅ Usuario encontrado con ID:', usuarioId);
+      console.log('Usuario encontrado con ID:', usuarioId);
 
       // Cargar notificaciones del usuario
-      console.log('🔍 Buscando notificaciones para usuario ID:', usuarioId);
+      console.log('Buscando notificaciones para usuario ID:', usuarioId);
       const notificacionesRef = collection(db, 'notificaciones');
       const qNotificaciones = query(
         notificacionesRef,
         where('id_usuario', '==', usuarioId)
       );
 
-      console.log('📡 Ejecutando consulta a Firestore...');
+      console.log('Ejecutando consulta a Firestore...');
       const snapshot = await getDocs(qNotificaciones);
-      console.log('📊 Documentos encontrados en consulta:', snapshot.size);
+      console.log('Documentos encontrados en consulta:', snapshot.size);
       
       const notificacionesData: Notificacion[] = snapshot.docs.map(doc => {
         const data = doc.data();
-        console.log('📄 Documento encontrado:', { id: doc.id, ...data });
+        console.log('Documento encontrado:', { id: doc.id, ...data });
         return {
           id: doc.id,
           ...data
@@ -76,9 +77,11 @@ const UserNotificaciones = () => {
           // Convertir fecha_creacion de A
           if (typeof a.fecha_creacion === 'string') {
             fechaA = new Date(a.fecha_creacion).getTime();
-          } else if (a.fecha_creacion?.toDate) {
+          } else if (a.fecha_creacion instanceof Date) {
+            fechaA = a.fecha_creacion.getTime();
+          } else if ('toDate' in a.fecha_creacion && typeof a.fecha_creacion.toDate === 'function') {
             fechaA = a.fecha_creacion.toDate().getTime();
-          } else if (a.fecha_creacion?.seconds) {
+          } else if ('seconds' in a.fecha_creacion && typeof a.fecha_creacion.seconds === 'number') {
             fechaA = a.fecha_creacion.seconds * 1000;
           } else {
             fechaA = 0;
@@ -87,9 +90,11 @@ const UserNotificaciones = () => {
           // Convertir fecha_creacion de B
           if (typeof b.fecha_creacion === 'string') {
             fechaB = new Date(b.fecha_creacion).getTime();
-          } else if (b.fecha_creacion?.toDate) {
+          } else if (b.fecha_creacion instanceof Date) {
+            fechaB = b.fecha_creacion.getTime();
+          } else if ('toDate' in b.fecha_creacion && typeof b.fecha_creacion.toDate === 'function') {
             fechaB = b.fecha_creacion.toDate().getTime();
-          } else if (b.fecha_creacion?.seconds) {
+          } else if ('seconds' in b.fecha_creacion && typeof b.fecha_creacion.seconds === 'number') {
             fechaB = b.fecha_creacion.seconds * 1000;
           } else {
             fechaB = 0;
@@ -102,14 +107,14 @@ const UserNotificaciones = () => {
         }
       });
 
-      console.log('📢 Notificaciones cargadas desde "notificaciones":', notificacionesData.length);
-      console.log('📋 Resumen de notificaciones:');
+      console.log('Notificaciones cargadas desde "notificaciones":', notificacionesData.length);
+      console.log('Resumen de notificaciones:');
       notificacionesData.forEach((n, index) => {
         console.log(`  ${index + 1}. ID: ${n.id}, Título: "${n.titulo}", Leída: ${n.leida}, Usuario: ${n.id_usuario}`);
       });
       
       if (notificacionesData.length === 0) {
-        console.warn('⚠️ No se encontraron notificaciones. Verifica:');
+        console.warn('No se encontraron notificaciones. Verifica:');
         console.warn('   - Que existe la colección "notificaciones"');
         console.warn('   - Que hay documentos con id_usuario =', usuarioId);
         console.warn('   - Los permisos de Firestore');
@@ -118,7 +123,7 @@ const UserNotificaciones = () => {
       setNotificaciones(notificacionesData);
 
     } catch (error) {
-      console.error('❌ Error cargando notificaciones:', error);
+      console.error('Error cargando notificaciones:', error);
       setNotificaciones([]); // Lista vacía si hay error
     } finally {
       setLoading(false);
@@ -139,11 +144,11 @@ const UserNotificaciones = () => {
 
 
       // Actualizar en Firebase
-      console.log('🔄 Actualizando en Firebase - Colección: notificaciones, ID:', notificacionId);
+      console.log('Actualizando en Firebase - Colección: notificaciones, ID:', notificacionId);
       await updateDoc(doc(db, 'notificaciones', notificacionId), {
         leida: true
       });
-      console.log('✅ Actualización exitosa en Firebase');
+      console.log('Actualización exitosa en Firebase');
 
       if (currentUser) {
         await registrarEnBitacora({
@@ -156,10 +161,10 @@ const UserNotificaciones = () => {
         });
       }
 
-      console.log('✅ Notificación marcada como leída en Firebase:', notificacionId);
+      console.log('Notificación marcada como leída en Firebase:', notificacionId);
 
     } catch (error) {
-      console.error('❌ Error marcando notificación como leída:', error);
+      console.error('Error marcando notificación como leída:', error);
       
       // Revertir el cambio local si falla Firebase
       setNotificaciones(prev => 
@@ -196,11 +201,11 @@ const UserNotificaciones = () => {
   };
 
   const handleAccionNotificacion = async (notificacion: Notificacion) => {
-    console.log('🔔 Click en notificación:', notificacion.titulo, 'Leída:', notificacion.leida);
+    console.log('Click en notificación:', notificacion.titulo, 'Leída:', notificacion.leida);
     
     // Marcar como leída si no lo está
     if (!notificacion.leida) {
-      console.log('📝 Marcando como leída...');
+      console.log('Marcando como leída...');
       await handleMarcarComoLeida(notificacion.id);
     }
 
@@ -210,31 +215,31 @@ const UserNotificaciones = () => {
       const tipoNotificacion = notificacion.datos_adicionales?.tipo_notificacion;
       
       if (tipoNotificacion === 'recordatorio_devolucion' || tipoNotificacion === 'devolucion_vencida') {
-        console.log('📦 Navegando a mis reservas (devolución)');
+        console.log('Navegando a mis reservas (devolución)');
         navigate('/user/reservas');
         return;
       }
 
       switch (notificacion.tipo) {
         case 'mensaje':
-          console.log('📨 Navegando a mensajería');
+          console.log('Navegando a mensajería');
           navigate('/user/mensajes');
           break;
         case 'solicitud_aprobada':
         case 'solicitud_rechazada':
-          console.log('📋 Navegando a mis solicitudes');
+          console.log('Navegando a mis solicitudes');
           navigate('/user/mis-solicitudes');
           break;
         case 'mantenimiento_programado':
           // Podría ser recordatorio de devolución
-          console.log('⏰ Notificación de recordatorio');
+          console.log('Notificación de recordatorio');
           break;
         case 'mantenimiento_completado':
-          console.log('🔧 Navegando a mantenimientos');
+          console.log('Navegando a mantenimientos');
           // Los usuarios no tienen acceso a mantenimientos, solo marcar como leída
           break;
         default:
-          console.log('ℹ️ Notificación general - solo marcada como leída');
+          console.log('Notificación general - solo marcada como leída');
           break;
       }
     }, 200); // Pausa para que se vea el cambio visual
@@ -242,12 +247,12 @@ const UserNotificaciones = () => {
 
   const getIconoTipo = (tipo: string) => {
     switch (tipo) {
-      case 'mensaje': return '💬';
-      case 'solicitud_aprobada': return '✅';
-      case 'solicitud_rechazada': return '❌';
-      case 'mantenimiento_programado': return '🔧';
-      case 'mantenimiento_completado': return '✅';
-      default: return '🔔';
+      case 'mensaje': return <FiMessageSquare />;
+      case 'solicitud_aprobada': return <FiCheckCircle />;
+      case 'solicitud_rechazada': return <FiXCircle />;
+      case 'mantenimiento_programado': return <FiTool />;
+      case 'mantenimiento_completado': return <FiCheckCircle />;
+      default: return <FiBell />;
     }
   };
 
@@ -264,7 +269,7 @@ const UserNotificaciones = () => {
 
   const notificacionesFiltradas = notificaciones.filter(notif => {
     // Debug para ver qué está filtrando
-    console.log(`🔍 Filtrando notificación "${notif.titulo}":`, {
+    console.log(`Filtrando notificación "${notif.titulo}":`, {
       tipo: notif.tipo,
       leida: notif.leida,
       filtroTipo: filtros.tipo,
@@ -273,12 +278,12 @@ const UserNotificaciones = () => {
     });
 
     if (filtros.tipo && notif.tipo !== filtros.tipo) {
-      console.log(`❌ Filtrado por tipo: esperado "${filtros.tipo}", actual "${notif.tipo}"`);
+      console.log(`Filtrado por tipo: esperado "${filtros.tipo}", actual "${notif.tipo}"`);
       return false;
     }
     
     if (filtros.leida !== undefined && notif.leida !== filtros.leida) {
-      console.log(`❌ Filtrado por estado leída: esperado ${filtros.leida}, actual ${notif.leida}`);
+      console.log(`Filtrado por estado leída: esperado ${filtros.leida}, actual ${notif.leida}`);
       return false;
     }
     
@@ -289,12 +294,12 @@ const UserNotificaciones = () => {
         notif.mensaje.toLowerCase().includes(lowerSearch)
       );
       if (!match) {
-        console.log(`❌ Filtrado por búsqueda: "${searchTerm}" no encontrado`);
+        console.log(`Filtrado por búsqueda: "${searchTerm}" no encontrado`);
         return false;
       }
     }
     
-    console.log(`✅ Notificación "${notif.titulo}" pasa todos los filtros`);
+    console.log(`Notificación "${notif.titulo}" pasa todos los filtros`);
     return true;
   });
 
@@ -306,9 +311,11 @@ const UserNotificaciones = () => {
       let fechaNotif;
       if (typeof n.fecha_creacion === 'string') {
         fechaNotif = new Date(n.fecha_creacion).toDateString();
-      } else if (n.fecha_creacion?.toDate) {
+      } else if (n.fecha_creacion instanceof Date) {
+        fechaNotif = n.fecha_creacion.toDateString();
+      } else if ('toDate' in n.fecha_creacion && typeof n.fecha_creacion.toDate === 'function') {
         fechaNotif = n.fecha_creacion.toDate().toDateString();
-      } else if (n.fecha_creacion?.seconds) {
+      } else if ('seconds' in n.fecha_creacion && typeof n.fecha_creacion.seconds === 'number') {
         fechaNotif = new Date(n.fecha_creacion.seconds * 1000).toDateString();
       } else {
         return false;
@@ -320,7 +327,7 @@ const UserNotificaciones = () => {
   }).length;
 
   // Debug de estadísticas
-  console.log('📊 Estadísticas de notificaciones:', {
+  console.log('Estadísticas de notificaciones:', {
     total: notificaciones.length,
     noLeidas: notificacionesNoLeidas,
     leidas: notificacionesLeidas,
@@ -341,14 +348,14 @@ const UserNotificaciones = () => {
   return (
     <div className="gestion-notificaciones">
       <div className="notificaciones-header">
-        <h1>🔔 Notificaciones</h1>
+        <h1><FiBell /> Notificaciones</h1>
         <p className="subtitle">Centro de notificaciones y alertas del sistema</p>
       </div>
 
       {/* Estadísticas */}
       <div className="stats-grid">
         <div className="stat-card">
-          <div className="stat-icon">📢</div>
+          <div className="stat-icon"><FiBell /></div>
           <div className="stat-content">
             <div className="stat-label">Total</div>
             <div className="stat-value">{notificaciones.length}</div>
@@ -356,7 +363,7 @@ const UserNotificaciones = () => {
         </div>
 
         <div className="stat-card">
-          <div className="stat-icon">🔴</div>
+          <div className="stat-icon"><FiBell /></div>
           <div className="stat-content">
             <div className="stat-label">No Leídas</div>
             <div className="stat-value">{notificacionesNoLeidas}</div>
@@ -364,7 +371,7 @@ const UserNotificaciones = () => {
         </div>
 
         <div className="stat-card">
-          <div className="stat-icon">📅</div>
+          <div className="stat-icon"><FiCalendar /></div>
           <div className="stat-content">
             <div className="stat-label">Hoy</div>
             <div className="stat-value">{notificacionesHoy}</div>
@@ -378,7 +385,7 @@ const UserNotificaciones = () => {
         <div className="search-row">
           <input
             type="text"
-            placeholder="🔍 Buscar por usuario o recurso/laboratorio..."
+            placeholder="Buscar por usuario o recurso/laboratorio..."
             value={searchTerm}
             onChange={(e) => setSearchTerm(e.target.value)}
             className="search-input-full"
@@ -393,12 +400,12 @@ const UserNotificaciones = () => {
             className="filter-select"
           >
             <option value="">Tipo: Todos</option>
-            <option value="mensaje">💬 Mensajes</option>
-            <option value="solicitud_aprobada">✅ Solicitudes Aprobadas</option>
-            <option value="solicitud_rechazada">❌ Solicitudes Rechazadas</option>
-            <option value="mantenimiento_programado">🔧 Mantenimientos Programados</option>
-            <option value="mantenimiento_completado">✅ Mantenimientos Completados</option>
-            <option value="general">🔔 Generales</option>
+            <option value="mensaje">Mensajes</option>
+            <option value="solicitud_aprobada">Solicitudes Aprobadas</option>
+            <option value="solicitud_rechazada">Solicitudes Rechazadas</option>
+            <option value="mantenimiento_programado">Mantenimientos Programados</option>
+            <option value="mantenimiento_completado">Mantenimientos Completados</option>
+            <option value="general">Generales</option>
           </select>
 
           <select
@@ -423,7 +430,7 @@ const UserNotificaciones = () => {
       <div className="notificaciones-lista">
         {notificacionesFiltradas.length === 0 ? (
           <div className="empty-state">
-            <div className="empty-icon">🔔</div>
+            <div className="empty-icon"><FiBell /></div>
             <h3>No hay notificaciones</h3>
             <p>No tienes notificaciones que coincidan con los filtros seleccionados.</p>
           </div>
@@ -448,9 +455,11 @@ const UserNotificaciones = () => {
                       try {
                         if (typeof notificacion.fecha_creacion === 'string') {
                           return new Date(notificacion.fecha_creacion).toLocaleString('es-ES');
-                        } else if (notificacion.fecha_creacion?.toDate) {
+                        } else if (notificacion.fecha_creacion instanceof Date) {
+                          return notificacion.fecha_creacion.toLocaleString('es-ES');
+                        } else if ('toDate' in notificacion.fecha_creacion && typeof notificacion.fecha_creacion.toDate === 'function') {
                           return notificacion.fecha_creacion.toDate().toLocaleString('es-ES');
-                        } else if (notificacion.fecha_creacion?.seconds) {
+                        } else if ('seconds' in notificacion.fecha_creacion && typeof notificacion.fecha_creacion.seconds === 'number') {
                           return new Date(notificacion.fecha_creacion.seconds * 1000).toLocaleString('es-ES');
                         }
                         return 'Fecha no disponible';
@@ -487,7 +496,7 @@ const UserNotificaciones = () => {
                     }}
                     title="Marcar como leída"
                   >
-                    ✓
+                    <FiCheck />
                   </button>
                 )}
                 
@@ -499,7 +508,7 @@ const UserNotificaciones = () => {
                   }}
                   title="Eliminar notificación"
                 >
-                  🗑️
+                  <FiTrash2 />
                 </button>
               </div>
             </div>

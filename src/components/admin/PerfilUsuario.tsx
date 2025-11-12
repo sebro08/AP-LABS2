@@ -4,6 +4,7 @@ import { doc, getDoc, updateDoc, collection, query, where, getDocs } from 'fireb
 import { auth, db } from '../../firebase/config';
 import { useAuth } from '../../context/AuthContext';
 import { registrarEnBitacora } from '../../utils/bitacoraHelper';
+import { FiUser, FiLock, FiCheckCircle, FiXCircle, FiAlertCircle, FiInfo, FiKey } from 'react-icons/fi';
 import './PerfilUsuario.css';
 
 interface DatosUsuario {
@@ -142,7 +143,7 @@ const PerfilUsuario = () => {
         modulo: 'Perfil'
       });
 
-      alert('✅ Contraseña actualizada exitosamente');
+      alert('Contraseña actualizada exitosamente');
       setFormPassword({
         passwordActual: '',
         passwordNueva: '',
@@ -153,11 +154,11 @@ const PerfilUsuario = () => {
     } catch (error: any) {
       console.error('Error cambiando contraseña:', error);
       if (error.code === 'auth/wrong-password') {
-        alert('❌ La contraseña actual es incorrecta');
+        alert('La contraseña actual es incorrecta');
       } else if (error.code === 'auth/weak-password') {
-        alert('❌ La nueva contraseña es muy débil');
+        alert('La nueva contraseña es muy débil');
       } else {
-        alert('❌ Error al cambiar la contraseña: ' + error.message);
+        alert('Error al cambiar la contraseña: ' + error.message);
       }
     } finally {
       setActualizando(false);
@@ -205,7 +206,7 @@ const PerfilUsuario = () => {
   if (!datosUsuario) {
     return (
       <div className="perfil-error">
-        <h2>❌ Error</h2>
+        <h2><FiAlertCircle /> Error</h2>
         <p>No se pudieron cargar los datos del perfil</p>
       </div>
     );
@@ -214,7 +215,7 @@ const PerfilUsuario = () => {
   return (
     <div className="perfil-usuario">
       <div className="perfil-header">
-        <h1>👤 Mi Perfil</h1>
+        <h1><FiUser className="header-icon" /> Mi Perfil</h1>
         <p className="subtitle">Información personal y configuración de cuenta</p>
       </div>
 
@@ -222,7 +223,7 @@ const PerfilUsuario = () => {
         {/* Información Personal */}
         <div className="perfil-card">
           <div className="card-header">
-            <h2>📋 Información Personal</h2>
+            <h2><FiUser className="header-icon" /> Información Personal</h2>
           </div>
           
           <div className="info-grid">
@@ -287,7 +288,7 @@ const PerfilUsuario = () => {
               <label>Estado:</label>
               <div className="info-value">
                 <span className={`estado-badge ${datosUsuario.activo ? 'activo' : 'inactivo'}`}>
-                  {datosUsuario.activo ? '✅ Activo' : '❌ Inactivo'}
+                  {datosUsuario.activo ? <><FiCheckCircle /> Activo</> : <><FiXCircle /> Inactivo</>}
                 </span>
               </div>
             </div>
@@ -304,7 +305,7 @@ const PerfilUsuario = () => {
         {/* Seguridad */}
         <div className="perfil-card">
           <div className="card-header">
-            <h2>🔒 Seguridad</h2>
+            <h2><FiLock className="header-icon" /> Seguridad</h2>
           </div>
 
           <div className="seguridad-content">
@@ -314,7 +315,7 @@ const PerfilUsuario = () => {
                   className="btn-cambiar-password"
                   onClick={() => setMostrarCambioPassword(true)}
                 >
-                  🔑 Cambiar Contraseña
+                  <FiKey /> Cambiar Contraseña
                 </button>
               ) : (
                 <div className="cambio-password-form">
@@ -389,7 +390,7 @@ const PerfilUsuario = () => {
         {/* Información del Sistema */}
         <div className="perfil-card">
           <div className="card-header">
-            <h2>ℹ️ Información del Sistema</h2>
+            <h2><FiInfo className="header-icon" /> Información del Sistema</h2>
           </div>
 
           <div className="sistema-info">
