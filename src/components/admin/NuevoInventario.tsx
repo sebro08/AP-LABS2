@@ -4,6 +4,7 @@ import { collection, addDoc, getDocs, query, where, Timestamp } from 'firebase/f
 import { db } from '../../firebase/config';
 import { Estado, TipoRecurso, Medida } from '../../types/Inventario';
 import './NuevoInventario.css';
+import { FiBox } from 'react-icons/fi';
 
 const NuevoInventario = () => {
   const navigate = useNavigate();
@@ -172,7 +173,7 @@ const NuevoInventario = () => {
   return (
     <div className="nuevo-inventario">
       <div className="form-header">
-        <h1>📦 Nuevo Recurso de Inventario</h1>
+        <h1><FiBox /> Nuevo Recurso de Inventario</h1>
         <button 
           type="button"
           className="btn-back"
@@ -322,13 +323,13 @@ const NuevoInventario = () => {
 
         {error && (
           <div className="alert alert-error">
-            ⚠️ {error}
+            {error}
           </div>
         )}
 
         {success && (
           <div className="alert alert-success">
-            ✅ {success}
+            {success}
           </div>
         )}
 

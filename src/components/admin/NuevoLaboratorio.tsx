@@ -3,6 +3,7 @@ import { useNavigate } from 'react-router-dom';
 import { collection, getDocs, addDoc } from 'firebase/firestore';
 import { db } from '../../firebase/config';
 import './NuevoLaboratorio.css';
+import { FiBox } from 'react-icons/fi';
 
 const NuevoLaboratorio = () => {
   const navigate = useNavigate();
@@ -113,7 +114,7 @@ const NuevoLaboratorio = () => {
   return (
     <div className="nuevo-laboratorio">
       <div className="form-header">
-        <h1>🧪 Nuevo Laboratorio</h1>
+        <h1><FiBox /> Nuevo Laboratorio</h1>
         <button 
           type="button"
           className="btn-back"
@@ -254,13 +255,13 @@ const NuevoLaboratorio = () => {
 
         {error && (
           <div className="alert alert-error">
-            ⚠️ {error}
+            {error}
           </div>
         )}
 
         {success && (
           <div className="alert alert-success">
-            ✅ {success}
+            {success}
           </div>
         )}
 

@@ -3,7 +3,7 @@ import { useParams, useNavigate } from 'react-router-dom';
 import { doc, getDoc, updateDoc, collection, getDocs } from 'firebase/firestore';
 import { db } from '../../firebase/config';
 import { Rol, Departamento } from '../../types/Usuario';
-import { FiAlertCircle, FiArrowLeft, FiCheck } from 'react-icons/fi';
+import { FiAlertCircle, FiArrowLeft, FiCheck, FiEdit } from 'react-icons/fi';
 import './EditarUsuario.css';
 
 const EditarUsuario = () => {

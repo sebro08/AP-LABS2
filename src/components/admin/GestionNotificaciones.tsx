@@ -5,7 +5,7 @@ import { useAuth } from '../../context/AuthContext';
 import { useNavigate } from 'react-router-dom';
 import { Notificacion, FiltrosNotificacion } from '../../types/Notificacion';
 import { registrarEnBitacora } from '../../utils/bitacoraHelper';
-import { FiBell, FiCheckCircle, FiXCircle, FiMessageSquare, FiTool } from 'react-icons/fi';
+import { FiBell, FiCheckCircle, FiXCircle, FiMessageSquare, FiTool, FiFile, FiTrash2, FiCheck, FiX, FiBarChart, FiCalendar } from 'react-icons/fi';
 import './GestionNotificaciones.css';
 
 const GestionNotificaciones = () => {
@@ -91,7 +91,7 @@ const GestionNotificaciones = () => {
       });
       
       if (notificacionesData.length === 0) {
-        console.warn('⚠️ No se encontraron notificaciones. Verifica:');
+        console.warn(' No se encontraron notificaciones. Verifica:');
         console.warn('   - Que existe la colección "notificaciones"');
         console.warn('   - Que hay documentos con id_usuario =', usuarioId);
         console.warn('   - Los permisos de Firestore');
@@ -234,7 +234,7 @@ const GestionNotificaciones = () => {
 
   const notificacionesFiltradas = notificaciones.filter(notif => {
     // Debug para ver qué está filtrando
-    console.log(`🔍 Filtrando notificación "${notif.titulo}":`, {
+    console.log(` Filtrando notificación "${notif.titulo}":`, {
       tipo: notif.tipo,
       leida: notif.leida,
       filtroTipo: filtros.tipo,
@@ -243,12 +243,12 @@ const GestionNotificaciones = () => {
     });
 
     if (filtros.tipo && notif.tipo !== filtros.tipo) {
-      console.log(`❌ Filtrado por tipo: esperado "${filtros.tipo}", actual "${notif.tipo}"`);
+      console.log(` Filtrado por tipo: esperado "${filtros.tipo}", actual "${notif.tipo}"`);
       return false;
     }
     
     if (filtros.leida !== undefined && notif.leida !== filtros.leida) {
-      console.log(`❌ Filtrado por estado leída: esperado ${filtros.leida}, actual ${notif.leida}`);
+      console.log(` Filtrado por estado leída: esperado ${filtros.leida}, actual ${notif.leida}`);
       return false;
     }
     
@@ -259,12 +259,12 @@ const GestionNotificaciones = () => {
         notif.mensaje.toLowerCase().includes(lowerSearch)
       );
       if (!match) {
-        console.log(`❌ Filtrado por búsqueda: "${searchTerm}" no encontrado`);
+        console.log(` Filtrado por búsqueda: "${searchTerm}" no encontrado`);
         return false;
       }
     }
     
-    console.log(`✅ Notificación "${notif.titulo}" pasa todos los filtros`);
+    console.log(` Notificación "${notif.titulo}" pasa todos los filtros`);
     return true;
   });
 
@@ -277,7 +277,7 @@ const GestionNotificaciones = () => {
   }).length;
 
   // Debug de estadísticas
-  console.log('📊 Estadísticas de notificaciones:', {
+  console.log(' Estadísticas de notificaciones:', {
     total: notificaciones.length,
     noLeidas: notificacionesNoLeidas,
     leidas: notificacionesLeidas,
@@ -305,7 +305,7 @@ const GestionNotificaciones = () => {
       {/* Estadísticas */}
       <div className="stats-grid">
         <div className="stat-card">
-          <div className="stat-icon">📢</div>
+          <div className="stat-icon"><FiBarChart /></div>
           <div className="stat-content">
             <div className="stat-label">Total</div>
             <div className="stat-value">{notificaciones.length}</div>
@@ -313,7 +313,7 @@ const GestionNotificaciones = () => {
         </div>
 
         <div className="stat-card">
-          <div className="stat-icon">🔴</div>
+          <div className="stat-icon"><FiFile /></div>
           <div className="stat-content">
             <div className="stat-label">No Leídas</div>
             <div className="stat-value">{notificacionesNoLeidas}</div>
@@ -321,7 +321,7 @@ const GestionNotificaciones = () => {
         </div>
 
         <div className="stat-card">
-          <div className="stat-icon">📅</div>
+          <div className="stat-icon"><FiCalendar /></div>
           <div className="stat-content">
             <div className="stat-label">Hoy</div>
             <div className="stat-value">{notificacionesHoy}</div>
@@ -350,12 +350,12 @@ const GestionNotificaciones = () => {
             className="filter-select"
           >
             <option value="">Tipo: Todos</option>
-            <option value="mensaje">💬 Mensajes</option>
-            <option value="solicitud_aprobada">✅ Solicitudes Aprobadas</option>
-            <option value="solicitud_rechazada">❌ Solicitudes Rechazadas</option>
-            <option value="mantenimiento_programado">🔧 Mantenimientos Programados</option>
-            <option value="mantenimiento_completado">✅ Mantenimientos Completados</option>
-            <option value="general">🔔 Generales</option>
+            <option value="mensaje"><FiMessageSquare /> Mensajes</option>
+            <option value="solicitud_aprobada"><FiCheck /> Solicitudes Aprobadas</option>
+            <option value="solicitud_rechazada"><FiX /> Solicitudes Rechazadas</option>
+            <option value="mantenimiento_programado"><FiTool /> Mantenimientos Programados</option>
+            <option value="mantenimiento_completado"><FiCheck /> Mantenimientos Completados</option>
+            <option value="general"><FiBell /> Generales</option>
           </select>
 
           <select
@@ -380,7 +380,7 @@ const GestionNotificaciones = () => {
       <div className="notificaciones-lista">
         {notificacionesFiltradas.length === 0 ? (
           <div className="empty-state">
-            <div className="empty-icon">🔔</div>
+            <div className="empty-icon"><FiBell /></div>
             <h3>No hay notificaciones</h3>
             <p>No tienes notificaciones que coincidan con los filtros seleccionados.</p>
           </div>
@@ -443,7 +443,7 @@ const GestionNotificaciones = () => {
                   }}
                   title="Eliminar notificación"
                 >
-                  🗑️
+                  <FiTrash2 />
                 </button>
               </div>
             </div>

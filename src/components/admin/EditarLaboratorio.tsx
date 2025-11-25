@@ -3,6 +3,7 @@ import { useParams, useNavigate } from 'react-router-dom';
 import { doc, getDoc, updateDoc, collection, getDocs } from 'firebase/firestore';
 import { db } from '../../firebase/config';
 import './NuevoLaboratorio.css';
+import { FiEdit } from 'react-icons/fi';  
 
 const EditarLaboratorio = () => {
   const { id } = useParams<{ id: string }>();
@@ -149,7 +150,7 @@ const EditarLaboratorio = () => {
   return (
     <div className="nuevo-laboratorio">
       <div className="form-header">
-        <h1>✏️ Editar Laboratorio</h1>
+        <h1><FiEdit />Editar Laboratorio</h1>
         <button 
           type="button"
           className="btn-back"
@@ -285,13 +286,13 @@ const EditarLaboratorio = () => {
 
         {error && (
           <div className="alert alert-error">
-            ⚠️ {error}
+            {error}
           </div>
         )}
 
         {success && (
           <div className="alert alert-success">
-            ✅ {success}
+            {success}
           </div>
         )}
 

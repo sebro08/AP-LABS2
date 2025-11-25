@@ -4,6 +4,7 @@ import { doc, getDoc, updateDoc, collection, getDocs } from 'firebase/firestore'
 import { db } from '../../firebase/config';
 import { Estado, TipoRecurso, Medida } from '../../types/Inventario';
 import './NuevoInventario.css';
+import { FiEdit } from 'react-icons/fi';
 
 const EditarInventario = () => {
   const { id } = useParams<{ id: string }>();
@@ -38,7 +39,7 @@ const EditarInventario = () => {
     
     setLoading(true);
     try {
-      console.log('🔄 Cargando datos...');
+      console.log('Cargando datos...');
 
       // Cargar catálogos
       const [estadosSnap, tiposSnap, medidasSnap, recursoDoc] = await Promise.all([
@@ -178,7 +179,7 @@ const EditarInventario = () => {
   return (
     <div className="nuevo-inventario">
       <div className="form-header">
-        <h1>✏️ Editar Recurso de Inventario</h1>
+        <h1><FiEdit />Editar Recurso de Inventario</h1>
         <button 
           type="button"
           className="btn-back"
@@ -325,13 +326,13 @@ const EditarInventario = () => {
 
         {error && (
           <div className="alert alert-error">
-            ⚠️ {error}
+            {error}
           </div>
         )}
 
         {success && (
           <div className="alert alert-success">
-            ✅ {success}
+            {success}
           </div>
         )}
 

@@ -2,7 +2,7 @@ import { useState, useEffect } from 'react';
 import { collection, getDocs, doc, updateDoc, addDoc, Timestamp, getDoc } from 'firebase/firestore';
 import { db } from '../../firebase/config';
 import { SolicitudGestion, SolicitudLaboratorio, SolicitudRecurso } from '../../types/Solicitud';
-import { FiClipboard, FiCheckCircle, FiSearch, FiCheck, FiX, FiClock, FiUser, FiCalendar } from 'react-icons/fi';
+import { FiClipboard, FiCheckCircle, FiSearch, FiCheck, FiX, FiClock, FiUser, FiCalendar, FiBook, FiPackage } from 'react-icons/fi';
 import './TecnicoGestionSolicitudes.css';
 
 const TecnicoGestionSolicitudes = () => {
@@ -218,7 +218,7 @@ const TecnicoGestionSolicitudes = () => {
     }
 
     try {
-      console.log('✅ Aprobando solicitud...');
+      console.log('Aprobando solicitud...');
 
       if (solicitud.tipo === 'LABORATORIO') {
         const datosLab = solicitud.datosOriginales as SolicitudLaboratorio;
@@ -249,7 +249,7 @@ const TecnicoGestionSolicitudes = () => {
         await crearNotificacion(
           datosLab.id_usuario,
           'solicitud_aprobada',
-          '✅ Solicitud Aprobada',
+          'Solicitud Aprobada',
           `Tu solicitud del laboratorio ${solicitud.nombreRecursoLab} para el día ${fechaFormato} ha sido aprobada.`,
           {
             id_solicitud: solicitud.id,
@@ -257,7 +257,7 @@ const TecnicoGestionSolicitudes = () => {
             fecha: datosLab.dia
           }
         );
-        console.log(`✅ Notificación enviada al usuario ${datosLab.id_usuario}`);
+        console.log(`Notificación enviada al usuario ${datosLab.id_usuario}`);
       } else {
         const datosRecurso = solicitud.datosOriginales as SolicitudRecurso;
         
@@ -299,7 +299,7 @@ const TecnicoGestionSolicitudes = () => {
             id_estado: idEstadoReservado,
             estado: nombreEstadoReservado
           });
-          console.log(`✅ Recurso ${datosRecurso.id_recurso} cambiado a estado ${nombreEstadoReservado}`);
+          console.log(`Recurso ${datosRecurso.id_recurso} cambiado a estado ${nombreEstadoReservado}`);
         }
 
         // Crear notificación para el usuario
@@ -308,7 +308,7 @@ const TecnicoGestionSolicitudes = () => {
         await crearNotificacion(
           datosRecurso.id_usuario,
           'solicitud_aprobada',
-          '✅ Solicitud Aprobada',
+          'Solicitud Aprobada',
           `Tu solicitud del recurso ${solicitud.nombreRecursoLab} para el período ${fechaInicio} - ${fechaFin} ha sido aprobada.`,
           {
             id_solicitud: solicitud.id,
@@ -317,10 +317,10 @@ const TecnicoGestionSolicitudes = () => {
             fecha_fin: datosRecurso.fecha_devolucion
           }
         );
-        console.log(`✅ Notificación enviada al usuario ${datosRecurso.id_usuario}`);
+        console.log(`Notificación enviada al usuario ${datosRecurso.id_usuario}`);
       }
 
-      console.log('✅ Solicitud aprobada');
+      console.log('Solicitud aprobada');
       cargarSolicitudes();
     } catch (error: any) {
       console.error('❌ Error aprobando:', error);
@@ -359,7 +359,7 @@ const TecnicoGestionSolicitudes = () => {
   const rechazarSolicitud = async (solicitud: SolicitudGestion, motivo: string) => {
 
     try {
-      console.log('❌ Rechazando solicitud...');
+      console.log('Rechazando solicitud...');
 
       if (solicitud.tipo === 'LABORATORIO') {
         const datosLab = solicitud.datosOriginales as SolicitudLaboratorio;
@@ -388,7 +388,7 @@ const TecnicoGestionSolicitudes = () => {
         await crearNotificacion(
           datosLab.id_usuario,
           'solicitud_rechazada',
-          '❌ Solicitud Rechazada',
+          'Solicitud Rechazada',
           `Tu solicitud del laboratorio ${solicitud.nombreRecursoLab} para el día ${fechaFormato} ha sido rechazada. Motivo: ${motivo}`,
           {
             id_solicitud: solicitud.id,
@@ -426,7 +426,7 @@ const TecnicoGestionSolicitudes = () => {
         await crearNotificacion(
           datosRecurso.id_usuario,
           'solicitud_rechazada',
-          '❌ Solicitud Rechazada',
+          'Solicitud Rechazada',
           `Tu solicitud del recurso ${solicitud.nombreRecursoLab} para el período ${fechaInicio} - ${fechaFin} ha sido rechazada. Motivo: ${motivo}`,
           {
             id_solicitud: solicitud.id,
@@ -436,13 +436,13 @@ const TecnicoGestionSolicitudes = () => {
             motivo_rechazo: motivo
           }
         );
-        console.log(`✅ Notificación de rechazo enviada al usuario ${datosRecurso.id_usuario}`);
+        console.log(`Notificación de rechazo enviada al usuario ${datosRecurso.id_usuario}`);
       }
 
-      console.log('✅ Solicitud rechazada');
+      console.log('Solicitud rechazada');
       cargarSolicitudes();
     } catch (error: any) {
-      console.error('❌ Error rechazando:', error);
+      console.error('Error rechazando:', error);
       alert('Error al rechazar: ' + error.message);
     }
   };
@@ -575,7 +575,7 @@ const TecnicoGestionSolicitudes = () => {
               <div className="solicitud-header">
                 <div className="solicitud-tipo">
                   <span className={`tipo-badge tipo-${solicitud.tipo.toLowerCase()}`}>
-                    {solicitud.tipo === 'LABORATORIO' ? '🔬' : '📦'} {solicitud.tipo}
+                    {solicitud.tipo === 'LABORATORIO' ? <FiBook /> : <FiPackage />} {solicitud.tipo}
                   </span>
                   {solicitud.tipoRecurso && (
                     <span className="tipo-recurso">{solicitud.tipoRecurso}</span>

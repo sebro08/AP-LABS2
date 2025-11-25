@@ -3,7 +3,7 @@ import { useNavigate } from 'react-router-dom';
 import { collection, getDocs, getDoc, doc } from 'firebase/firestore';
 import { db } from '../../firebase/config';
 import { MantenimientoDetalle } from '../../types/Mantenimiento';
-import { FiTool, FiCheckCircle, FiSearch, FiEye, FiCalendar } from 'react-icons/fi';
+import { FiTool, FiCheckCircle, FiEye, FiCalendar  } from 'react-icons/fi';
 import './GestionMantenimientos.css';
 
 const GestionMantenimientos = () => {
@@ -21,7 +21,7 @@ const GestionMantenimientos = () => {
   const cargarMantenimientos = async () => {
     setLoading(true);
     try {
-      console.log('🔄 Cargando mantenimientos...');
+      console.log('Cargando mantenimientos...');
 
       const mantenimientosSnapshot = await getDocs(collection(db, 'mantenimiento'));
       console.log(`${mantenimientosSnapshot.docs.length} mantenimientos encontrados`);
@@ -130,7 +130,7 @@ const GestionMantenimientos = () => {
         <h1><FiTool className="header-icon" /> Gestión de Mantenimientos</h1>
         <div className="header-buttons">
           <button className="btn-secondary" onClick={() => navigate('/admin/mantenimientos/programar')}>
-            📅 Programar Mantenimiento
+            <FiCalendar /> Programar Mantenimiento
           </button>
           <button className="btn-primary" onClick={() => navigate('/admin/mantenimientos/registrar')}>
             <FiCheckCircle /> Registrar Mantenimiento
@@ -212,7 +212,7 @@ const GestionMantenimientos = () => {
           </div>
         </div>
         <div className="summary-card">
-          <div className="summary-icon">📅</div>
+          <div className="summary-icon"><FiCalendar /></div>
           <div className="summary-info">
             <div className="summary-value">
               {mantenimientos.filter(m => m.id_estado === '3').length}

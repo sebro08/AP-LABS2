@@ -172,7 +172,7 @@ const TecnicoNuevoInventario = () => {
   return (
     <div className="tecnico-formulario-inventario">
       <div className="form-header">
-        <h1>📦 Nuevo Recurso de Inventario</h1>
+        <h1>Nuevo Recurso de Inventario</h1>
         <button 
           type="button"
           className="btn-back"
@@ -322,13 +322,13 @@ const TecnicoNuevoInventario = () => {
 
         {error && (
           <div className="alert alert-error">
-            ⚠️ {error}
+            {error}
           </div>
         )}
 
         {success && (
           <div className="alert alert-success">
-            ✅ {success}
+            {success}
           </div>
         )}
 

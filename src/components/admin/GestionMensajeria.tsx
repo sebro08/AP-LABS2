@@ -5,7 +5,7 @@ import { MensajeDisplay } from '../../types/Mensaje';
 import { Usuario } from '../../types/Usuario';
 import { useAuth } from '../../context/AuthContext';
 import { registrarEnBitacora } from '../../utils/bitacoraHelper';
-import { FiMail, FiEdit, FiSend, FiCornerUpLeft, FiTrash2 } from 'react-icons/fi';
+import { FiMail, FiEdit, FiSend, FiCornerUpLeft, FiTrash2, FiFolder, FiDownload } from 'react-icons/fi';
 import './GestionMensajeria.css';
 
 const GestionMensajeria = () => {
@@ -388,14 +388,14 @@ const GestionMensajeria = () => {
           className={`tab ${tabActiva === 'bandeja' ? 'active' : ''}`}
           onClick={() => { setTabActiva('bandeja'); setShowDetalle(false); }}
         >
-          📥 Bandeja de Entrada
+          <FiDownload /> Bandeja de Entrada
           {mensajesNoLeidos > 0 && <span className="badge">{mensajesNoLeidos}</span>}
         </button>
         <button
           className={`tab ${tabActiva === 'enviados' ? 'active' : ''}`}
           onClick={() => { setTabActiva('enviados'); setShowDetalle(false); }}
         >
-          📤 Enviados
+          <FiSend /> Enviados
         </button>
         <button
           className={`tab ${tabActiva === 'redactar' ? 'active' : ''}`}
@@ -407,7 +407,7 @@ const GestionMensajeria = () => {
           className={`tab ${tabActiva === 'archivados' ? 'active' : ''}`}
           onClick={() => { setTabActiva('archivados'); setShowDetalle(false); }}
         >
-          📁 Archivados
+          <FiFolder /> Archivados
         </button>
       </div>
 

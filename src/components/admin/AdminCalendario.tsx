@@ -5,7 +5,7 @@ import { useAuth } from '../../context/AuthContext';
 import { registrarEnBitacora } from '../../utils/bitacoraHelper';
 import { FiCalendar } from 'react-icons/fi';
 import { MdScience, MdBlock } from 'react-icons/md';
-import { FiPackage } from 'react-icons/fi';
+import { FiPackage, FiLoader, FiCheck } from 'react-icons/fi';
 import './AdminCalendario.css';
 
 interface Reserva {
@@ -691,7 +691,7 @@ const AdminCalendario = () => {
 
             <div className="modal-actions">
               <button className="btn-primary" onClick={handleCrearBloqueo} disabled={loading}>
-                {loading ? '⏳ Creando...' : '✅ Crear Bloqueo'}
+                {loading ? <><FiLoader /> Cargando...</> : <><FiCheck /> Crear Bloqueo</>}
               </button>
               <button className="btn-secondary" onClick={cerrarModalBloqueo}>
                 Cancelar

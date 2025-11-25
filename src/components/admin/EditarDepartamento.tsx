@@ -3,6 +3,7 @@ import { useParams, useNavigate } from 'react-router-dom';
 import { doc, getDoc, updateDoc } from 'firebase/firestore';
 import { db } from '../../firebase/config';
 import './NuevoDepartamento.css';
+import { FiEdit } from 'react-icons/fi';
 
 const EditarDepartamento = () => {
   const { id } = useParams<{ id: string }>();
@@ -127,7 +128,7 @@ const EditarDepartamento = () => {
   return (
     <div className="nuevo-departamento">
       <div className="form-header">
-        <h1>✏️ Editar Departamento</h1>
+        <h1><FiEdit /> Editar Departamento</h1>
         <button 
           type="button"
           className="btn-back"
@@ -222,13 +223,13 @@ const EditarDepartamento = () => {
 
         {error && (
           <div className="alert alert-error">
-            ⚠️ {error}
+            {error}
           </div>
         )}
 
         {success && (
           <div className="alert alert-success">
-            ✅ {success}
+            {success}
           </div>
         )}
 

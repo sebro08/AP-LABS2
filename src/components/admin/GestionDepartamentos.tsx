@@ -3,7 +3,7 @@ import { useNavigate } from 'react-router-dom';
 import { collection, getDocs, doc, updateDoc, deleteDoc } from 'firebase/firestore';
 import { db } from '../../firebase/config';
 import { Departamento } from '../../types/Departamento';
-import { FiBox, FiCheckCircle, FiXCircle, FiSearch, FiEdit, FiTrash2, FiAlertCircle, FiPlus } from 'react-icons/fi';
+import { FiBox, FiCheckCircle, FiXCircle, FiSearch, FiEdit, FiTrash2, FiAlertCircle, FiPlus, FiRefreshCw } from 'react-icons/fi';
 import './GestionDepartamentos.css';
 
 const GestionDepartamentos = () => {
@@ -19,7 +19,7 @@ const GestionDepartamentos = () => {
   }, []);
 
   const cargarDatos = async () => {
-    console.log('🔄 [INICIO] Cargando departamentos...');
+    console.log('[INICIO] Cargando departamentos...');
     setLoading(true);
     setError('');
     try {
@@ -125,7 +125,7 @@ const GestionDepartamentos = () => {
         <h2>Error al cargar datos</h2>
         <p>{error}</p>
         <button className="btn-primary" onClick={cargarDatos}>
-          🔄 Reintentar
+          <FiRefreshCw /> Reintentar
         </button>
       </div>
     );

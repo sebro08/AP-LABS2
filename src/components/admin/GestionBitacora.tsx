@@ -4,7 +4,7 @@ import { db } from '../../firebase/config';
 import { BitacoraEntry } from '../../types/Bitacora';
 import jsPDF from 'jspdf';
 import autoTable from 'jspdf-autotable';
-import { FiFileText, FiDownload, FiSearch, FiFolder } from 'react-icons/fi';
+import { FiFileText, FiDownload, FiSearch, FiFolder, FiFile } from 'react-icons/fi';
 import './GestionBitacora.css';
 
 const GestionBitacora = () => {
@@ -408,7 +408,7 @@ const GestionBitacora = () => {
                       checked={exportOptions.formatoPDF}
                       onChange={(e) => setExportOptions({ ...exportOptions, formatoPDF: e.target.checked })}
                     />
-                    <span>📄 PDF</span>
+                    <span><FiFile /> PDF</span>
                   </label>
                 </div>
               </div>
@@ -419,7 +419,7 @@ const GestionBitacora = () => {
                 Cancelar
               </button>
               <button className="btn-primary" onClick={handleExport}>
-                📥 Exportar
+                <FiDownload /> Exportar
               </button>
             </div>
           </div>

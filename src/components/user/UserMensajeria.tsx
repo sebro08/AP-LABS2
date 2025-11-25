@@ -5,7 +5,7 @@ import { Mensaje, MensajeDisplay } from '../../types/Mensaje';
 import { Usuario } from '../../types/Usuario';
 import { useAuth } from '../../context/AuthContext';
 import { registrarEnBitacora } from '../../utils/bitacoraHelper';
-import { FiMail, FiEdit, FiArrowLeft, FiCornerUpLeft, FiTrash2 } from 'react-icons/fi';
+import { FiMail, FiEdit, FiArrowLeft, FiCornerUpLeft, FiTrash2, FiFolder } from 'react-icons/fi';
 import './UserMensajeria.css';
 
 const UserMensajeria = () => {
@@ -45,7 +45,7 @@ const UserMensajeria = () => {
         } as Usuario))
         .filter(u => u.activo); // Solo usuarios activos
       
-      console.log('👥 Usuarios cargados:', usuariosData.length);
+      console.log('Usuarios cargados:', usuariosData.length);
       setUsuarios(usuariosData);
     } catch (error) {
       console.error('Error cargando usuarios:', error);
@@ -407,7 +407,7 @@ const UserMensajeria = () => {
           className={`tab ${tabActiva === 'archivados' ? 'active' : ''}`}
           onClick={() => { setTabActiva('archivados'); setShowDetalle(false); }}
         >
-          📁 Archivados
+          <FiFolder /> Archivados
         </button>
       </div>
 
@@ -476,7 +476,7 @@ const UserMensajeria = () => {
                 Limpiar
               </button>
               <button type="submit" className="btn-primary">
-                📨 Enviar Mensaje
+                Enviar Mensaje
               </button>
             </div>
           </form>
