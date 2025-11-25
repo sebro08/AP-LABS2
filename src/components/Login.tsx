@@ -191,7 +191,13 @@ const Login = () => {
           <div className="login-footer">
             <a href="#" className="link">¿Olvidaste tu contraseña?</a>
             <span className="separator">•</span>
-            <a href="#" className="link">Crear cuenta</a>
+            <button 
+              type="button"
+              className="link"
+              onClick={() => navigate('/signup')}
+            >
+              Crear cuenta
+            </button>
           </div>
         </form>
       </div>
