@@ -266,6 +266,13 @@
   box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
 }
 
+.detalle-top-bar {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 25px;
+}
+
 .btn-back {
   background: transparent;
   border: none;
@@ -274,12 +281,34 @@
   font-weight: 600;
   cursor: pointer;
   padding: 8px 0;
-  margin-bottom: 25px;
   transition: all 0.2s ease;
+  display: flex;
+  align-items: center;
+  gap: 8px;
 }
 
 .btn-back:hover {
   color: #764ba2;
+}
+
+.btn-volver {
+  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  color: white;
+  border: none;
+  padding: 10px 20px;
+  border-radius: 8px;
+  font-size: 14px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.btn-volver:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 4px 12px rgba(102, 126, 234, 0.4);
 }
 
 .detalle-header {

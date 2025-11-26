@@ -50,6 +50,7 @@ const UserCalendario = () => {
   
   // Modal para solicitud rápida
   const [showModal, setShowModal] = useState(false);
+  const [showTipoModal, setShowTipoModal] = useState(false);
   const [diaSeleccionado, setDiaSeleccionado] = useState<Date | null>(null);
   const [itemSeleccionado, setItemSeleccionado] = useState<{tipo: 'laboratorio' | 'recurso', item: Laboratorio | Recurso} | null>(null);
   const [motivoSolicitud, setMotivoSolicitud] = useState('');
@@ -331,14 +332,27 @@ const UserCalendario = () => {
     return fecha.toDateString() === hoy.toDateString();
   };
 
-  const abrirModalSolicitud = (fecha: Date, tipo: 'laboratorio' | 'recurso', item: Laboratorio | Recurso) => {
+  const abrirModalSeleccionTipo = (fecha: Date) => {
     setDiaSeleccionado(fecha);
-    setItemSeleccionado({ tipo, item });
-    setShowModal(true);
+    setShowTipoModal(true);
+  };
+
+  const abrirModalSolicitud = (tipo: 'laboratorio' | 'recurso') => {
+    setShowTipoModal(false);
+    if (tipo === 'laboratorio' && laboratorios.length > 0) {
+      setItemSeleccionado({ tipo, item: laboratorios[0] });
+      setShowModal(true);
+    } else if (tipo === 'recurso' && recursos.length > 0) {
+      setItemSeleccionado({ tipo, item: recursos[0] });
+      setShowModal(true);
+    } else {
+      alert(`No hay ${tipo === 'laboratorio' ? 'laboratorios' : 'recursos'} disponibles`);
+    }
   };
 
   const cerrarModal = () => {
     setShowModal(false);
+    setShowTipoModal(false);
     setDiaSeleccionado(null);
     setItemSeleccionado(null);
     setMotivoSolicitud('');
@@ -491,15 +505,7 @@ const UserCalendario = () => {
                 <div className="dia-acciones">
                   <button
                     className="btn-solicitar-rapido"
-                    onClick={() => {
-                      // Mostrar menú para seleccionar laboratorio o recurso
-                      const tipo = window.confirm('¿Solicitar Laboratorio?\n\nAceptar = Laboratorio\nCancelar = Recurso');
-                      if (tipo && laboratorios.length > 0) {
-                        abrirModalSolicitud(dia, 'laboratorio', laboratorios[0]);
-                      } else if (!tipo && recursos.length > 0) {
-                        abrirModalSolicitud(dia, 'recurso', recursos[0]);
-                      }
-                    }}
+                    onClick={() => abrirModalSeleccionTipo(dia)}
                   >
                     <AiOutlinePlus /> Solicitar
                   </button>
@@ -536,12 +542,7 @@ const UserCalendario = () => {
                   className={`dia-mes ${!esMesActual ? 'otro-mes' : ''} ${esHoyDia ? 'hoy' : ''}`}
                   onClick={() => {
                     if (esMesActual) {
-                      const tipo = window.confirm('¿Solicitar Laboratorio?\n\nAceptar = Laboratorio\nCancelar = Recurso');
-                      if (tipo && laboratorios.length > 0) {
-                        abrirModalSolicitud(fecha, 'laboratorio', laboratorios[0]);
-                      } else if (!tipo && recursos.length > 0) {
-                        abrirModalSolicitud(fecha, 'recurso', recursos[0]);
-                      }
+                      abrirModalSeleccionTipo(fecha);
                     }
                   }}
                 >
@@ -642,6 +643,54 @@ const UserCalendario = () => {
         renderVistaSemanal()
       ) : (
         renderVistaMensual()
+      )}
+
+      {/* Modal de selección de tipo */}
+      {showTipoModal && diaSeleccionado && (
+        <div className="modal-overlay" onClick={cerrarModal}>
+          <div className="modal-content tipo-modal" onClick={(e) => e.stopPropagation()}>
+            <h3><FiCalendar /> ¿Solicitar Laboratorio o Recurso?</h3>
+            <p className="fecha-seleccionada">
+              {diaSeleccionado.toLocaleDateString('es-ES', { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' })}
+            </p>
+            
+            <div className="tipo-opciones">
+              <button
+                className="tipo-opcion laboratorio"
+                onClick={() => abrirModalSolicitud('laboratorio')}
+              >
+                <div className="tipo-icono">
+                  <MdScience size={48} />
+                </div>
+                <div className="tipo-info">
+                  <h4>Solicitar Laboratorio</h4>
+                  <p>Reserva un laboratorio completo para tus actividades</p>
+                  <span className="tipo-disponible">{laboratorios.length} disponibles</span>
+                </div>
+              </button>
+
+              <button
+                className="tipo-opcion recurso"
+                onClick={() => abrirModalSolicitud('recurso')}
+              >
+                <div className="tipo-icono">
+                  <FiPackage size={48} />
+                </div>
+                <div className="tipo-info">
+                  <h4>Solicitar Recurso</h4>
+                  <p>Solicita equipos, materiales o herramientas específicas</p>
+                  <span className="tipo-disponible">{recursos.length} disponibles</span>
+                </div>
+              </button>
+            </div>
+
+            <div className="modal-actions">
+              <button className="btn-secondary" onClick={cerrarModal}>
+                Cancelar
+              </button>
+            </div>
+          </div>
+        </div>
       )}
 
       {/* Modal de solicitud */}

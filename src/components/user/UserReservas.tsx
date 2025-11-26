@@ -550,7 +550,7 @@ const UserReservas: React.FC = () => {
                   <textarea
                     value={motivoLab}
                     onChange={(e) => setMotivoLab(e.target.value)}
-                    rows={4}
+                    rows={1}
                     placeholder="Describe el motivo de tu solicitud..."
                   />
                 </div>

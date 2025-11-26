@@ -451,6 +451,153 @@
   box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3);
 }
 
+/* Modal de selección de tipo */
+.modal-content.tipo-modal {
+  background: white;
+  border-radius: 16px;
+  padding: 30px;
+  max-width: 700px;
+  width: 90%;
+  box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3);
+  animation: slideIn 0.3s ease-out;
+}
+
+@keyframes slideIn {
+  from {
+    opacity: 0;
+    transform: translateY(-20px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.modal-content.tipo-modal h3 {
+  color: #2d3748;
+  font-size: 1.8rem;
+  margin-bottom: 15px;
+  text-align: center;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 10px;
+}
+
+.tipo-opciones {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 20px;
+  margin: 30px 0;
+}
+
+.tipo-opcion {
+  background: white;
+  border: 3px solid #e2e8f0;
+  border-radius: 16px;
+  padding: 30px 20px;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  text-align: center;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 15px;
+  min-height: 250px;
+}
+
+.tipo-opcion:hover {
+  transform: translateY(-8px);
+  box-shadow: 0 12px 30px rgba(0, 0, 0, 0.15);
+}
+
+.tipo-opcion.laboratorio {
+  border-color: #667eea;
+}
+
+.tipo-opcion.laboratorio:hover {
+  background: linear-gradient(135deg, rgba(102, 126, 234, 0.05) 0%, rgba(118, 75, 162, 0.05) 100%);
+  border-color: #667eea;
+  box-shadow: 0 12px 30px rgba(102, 126, 234, 0.3);
+}
+
+.tipo-opcion.recurso {
+  border-color: #48bb78;
+}
+
+.tipo-opcion.recurso:hover {
+  background: linear-gradient(135deg, rgba(72, 187, 120, 0.05) 0%, rgba(56, 161, 105, 0.05) 100%);
+  border-color: #48bb78;
+  box-shadow: 0 12px 30px rgba(72, 187, 120, 0.3);
+}
+
+.tipo-icono {
+  width: 80px;
+  height: 80px;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin-bottom: 10px;
+  transition: all 0.3s ease;
+}
+
+.tipo-opcion.laboratorio .tipo-icono {
+  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  color: white;
+}
+
+.tipo-opcion.recurso .tipo-icono {
+  background: linear-gradient(135deg, #48bb78 0%, #38a169 100%);
+  color: white;
+}
+
+.tipo-opcion:hover .tipo-icono {
+  transform: scale(1.1) rotate(5deg);
+}
+
+.tipo-info {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.tipo-info h4 {
+  color: #2d3748;
+  font-size: 1.3rem;
+  font-weight: 700;
+  margin: 0;
+}
+
+.tipo-info p {
+  color: #718096;
+  font-size: 0.95rem;
+  line-height: 1.5;
+  margin: 0;
+}
+
+.tipo-disponible {
+  display: inline-block;
+  background: #f7fafc;
+  color: #4a5568;
+  padding: 8px 16px;
+  border-radius: 20px;
+  font-size: 0.85rem;
+  font-weight: 600;
+  margin-top: 10px;
+}
+
+.tipo-opcion.laboratorio .tipo-disponible {
+  background: rgba(102, 126, 234, 0.1);
+  color: #667eea;
+}
+
+.tipo-opcion.recurso .tipo-disponible {
+  background: rgba(72, 187, 120, 0.1);
+  color: #48bb78;
+}
+
 .modal-content.calendario-modal h3 {
   color: #2d3748;
   font-size: 1.5rem;
@@ -591,6 +738,15 @@
   .modal-content.calendario-modal {
     width: 95%;
     padding: 20px;
+  }
+
+  .modal-content.tipo-modal {
+    width: 95%;
+    padding: 20px;
+  }
+
+  .tipo-opciones {
+    grid-template-columns: 1fr;
   }
 
   .form-row {

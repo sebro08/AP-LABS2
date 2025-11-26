@@ -565,9 +565,14 @@ const UserSolicitudes = () => {
       ) : (
         /* Detalle de solicitud */
         <div className="solicitud-detalle">
-          <button className="btn-back" onClick={() => setShowDetalle(false)}>
-            <FiArrowLeft /> Volver a la lista
-          </button>
+          <div className="detalle-top-bar">
+            <button className="btn-back" onClick={() => setShowDetalle(false)}>
+              <FiArrowLeft /> Volver a la lista
+            </button>
+            <button className="btn-volver" onClick={() => setShowDetalle(false)}>
+              <FiArrowLeft /> Volver
+            </button>
+          </div>
 
           {solicitudSeleccionada && (
             <>
