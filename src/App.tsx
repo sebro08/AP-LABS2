@@ -28,6 +28,7 @@ import GestionBitacora from './components/admin/GestionBitacora';
 import GestionMensajeria from './components/admin/GestionMensajeria';
 import GestionReportes from './components/admin/GestionReportes';
 import PerfilUsuario from './components/admin/PerfilUsuario';
+import EditarPerfil from './components/admin/EditarPerfil';
 import GestionNotificaciones from './components/admin/GestionNotificaciones';
 import ParametrosGlobales from './components/admin/ParametrosGlobales';
 import AdminCalendario from './components/admin/AdminCalendario';
@@ -42,6 +43,8 @@ import UserReservas from './components/user/UserReservas';
 import UserHistorial from './components/user/UserHistorial';
 import UserCalendario from './components/user/UserCalendario';
 import TecnicoLayout from './components/tecnico/TecnicoLayout';
+import TecnicoPerfil from './components/tecnico/TecnicoPerfil';
+import TecnicoEditarPerfil from './components/tecnico/TecnicoEditarPerfil';
 import TecnicoDashboard from './components/tecnico/TecnicoDashboard';
 import TecnicoGestionSolicitudes from './components/tecnico/TecnicoGestionSolicitudes';
 import TecnicoGestionMantenimientos from './components/tecnico/TecnicoGestionMantenimientos';
@@ -78,6 +81,7 @@ function App() {
             <Route index element={<Navigate to="/admin/dashboard" replace />} />
             <Route path="dashboard" element={<AdminDashboard />} />
             <Route path="perfil" element={<PerfilUsuario />} />
+            <Route path="perfil/editar" element={<EditarPerfil />} />
             <Route path="bitacora" element={<GestionBitacora />} />
             <Route path="calendario" element={<AdminCalendario />} />
             <Route path="reportes-uso" element={<div style={{padding: '30px'}}>Reportes de Uso (Próximamente)</div>} />
@@ -128,6 +132,8 @@ function App() {
           {/* Rutas de Técnico */}
           <Route path="/tecnico" element={<ProtectedRoute><TecnicoLayout /></ProtectedRoute>}>
             <Route index element={<Navigate to="/tecnico/dashboard" replace />} />
+            <Route path="perfil" element={<TecnicoPerfil />} />
+            <Route path="perfil/editar" element={<TecnicoEditarPerfil />} />
             <Route path="dashboard" element={<TecnicoDashboard />} />
             <Route path="solicitudes" element={<TecnicoGestionSolicitudes />} />
             <Route path="mantenimientos" element={<TecnicoGestionMantenimientos />} />

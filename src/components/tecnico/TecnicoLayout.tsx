@@ -8,7 +8,8 @@ import {
   FiPackage, 
   FiLogOut,
   FiChevronLeft,
-  FiChevronRight
+  FiChevronRight,
+  FiUser
 } from 'react-icons/fi';
 import './TecnicoLayout.css';
 
@@ -20,6 +21,7 @@ const TecnicoLayout = () => {
 
   const menuItems = [
     { id: 'dashboard', icon: <FiHome />, label: 'Inicio', path: '/tecnico/dashboard' },
+    { id: 'perfil', icon: <FiUser />, label: 'Perfil', path: '/tecnico/perfil' },
     { id: 'separator1', isSeparator: true, label: 'Gestión Principal' },
     { id: 'solicitudes', icon: <FiClipboard />, label: 'Gestión de Solicitudes', path: '/tecnico/solicitudes' },
     { id: 'mantenimientos', icon: <FiTool />, label: 'Gestión de Mantenimientos', path: '/tecnico/mantenimientos' },

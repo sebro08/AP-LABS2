@@ -4,7 +4,8 @@ import { doc, getDoc, updateDoc, collection, query, where, getDocs } from 'fireb
 import { auth, db } from '../../firebase/config';
 import { useAuth } from '../../context/AuthContext';
 import { registrarEnBitacora } from '../../utils/bitacoraHelper';
-import { FiUser, FiLock, FiCheckCircle, FiXCircle, FiAlertCircle, FiInfo, FiKey } from 'react-icons/fi';
+import { FiUser, FiLock, FiCheckCircle, FiXCircle, FiAlertCircle, FiInfo, FiEdit, FiKey } from 'react-icons/fi';
+import { useNavigate } from 'react-router-dom';
 import './PerfilUsuario.css';
 
 interface DatosUsuario {
@@ -30,6 +31,7 @@ const PerfilUsuario = () => {
   const [actualizando, setActualizando] = useState(false);
   const [datosUsuario, setDatosUsuario] = useState<DatosUsuario | null>(null);
   const [mostrarCambioPassword, setMostrarCambioPassword] = useState(false);
+  const navigate = useNavigate();
 
   const [formPassword, setFormPassword] = useState({
     passwordActual: '',
@@ -215,8 +217,14 @@ const PerfilUsuario = () => {
   return (
     <div className="perfil-usuario">
       <div className="perfil-header">
-        <h1><FiUser className="header-icon" /> Mi Perfil</h1>
+        <h1><FiUser className="header-icon" color='purple'/> Mi Perfil</h1>
         <p className="subtitle">Información personal y configuración de cuenta</p>
+        <button 
+          className="btn-editar-perfil"
+          onClick={() => navigate('/admin/perfil/editar')}
+        >
+          <FiEdit /> Editar Perfil
+        </button>
       </div>
 
       <div className="perfil-content">
