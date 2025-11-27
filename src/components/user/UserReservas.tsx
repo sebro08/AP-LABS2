@@ -4,7 +4,7 @@ import { db } from '../../firebase/config';
 import { useAuth } from '../../context/AuthContext';
 import { registrarEnBitacora } from '../../utils/bitacoraHelper';
 import { crearNotificacion } from '../../utils/notificacionesHelper';
-import { FiClipboard, FiPackage, FiSearch, FiTrash2, FiTag, FiBarChart } from 'react-icons/fi';
+import { FiClipboard, FiPackage, FiBox, FiTrash2, FiTag, FiBarChart, FiFileText } from 'react-icons/fi';
 import './UserReservas.css';
 
 interface Laboratorio {
@@ -352,7 +352,7 @@ const UserReservas: React.FC = () => {
             setSearchTerm('');
           }}
         >
-          🔬 Laboratorios
+          <FiBox/> Laboratorios
         </button>
         <button
           className={`tab-btn ${tabActiva === 'recursos' ? 'active' : ''}`}
@@ -426,7 +426,7 @@ const UserReservas: React.FC = () => {
             laboratoriosFiltrados.map(lab => (
               <div key={lab.id} className="item-card">
                 <div className="item-header">
-                  <h3>🔬 {lab.nombre}</h3>
+                  <h3><FiBox /> {lab.nombre}</h3>
                   <span className={`badge badge-${
                     lab.estado === 'Disponible' ? 'success' : 
                     lab.estado === 'En Mantenimiento' ? 'warning' : 
@@ -436,8 +436,8 @@ const UserReservas: React.FC = () => {
                   </span>
                 </div>
                 <div className="item-info">
-                  <p><strong>📍 Ubicación:</strong> {lab.ubicacion}</p>
-                  <p><strong>👥 Capacidad:</strong> {lab.capacidad} personas</p>
+                  <p><strong>Ubicación:</strong> {lab.ubicacion}</p>
+                  <p><strong>Capacidad:</strong> {lab.capacidad} personas</p>
                 </div>
                 <button
                   className="btn-solicitar"
@@ -495,7 +495,7 @@ const UserReservas: React.FC = () => {
           <div className="modal-content" onClick={(e) => e.stopPropagation()}>
             {labSeleccionado ? (
               <>
-                <h3>📝 Solicitud de Laboratorio</h3>
+                <h3><FiFileText /> Solicitud de Laboratorio</h3>
                 <h4>{labSeleccionado.nombre}</h4>
                 
                 <div className="form-group">
@@ -570,7 +570,7 @@ const UserReservas: React.FC = () => {
               </>
             ) : recursoSeleccionado ? (
               <>
-                <h3>📝 Solicitud de Recurso</h3>
+                <h3><FiFileText /> Solicitud de Recurso</h3>
                 <h4>{recursoSeleccionado.nombre}</h4>
                 
                 <div className="form-group">

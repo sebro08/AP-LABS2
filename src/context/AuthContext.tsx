@@ -39,7 +39,7 @@ export const AuthProvider = ({ children }: AuthProviderProps) => {
 
   useEffect(() => {
     const unsubscribe = onAuthStateChanged(auth, async (firebaseUser: FirebaseUser | null) => {
-      console.log('🔄 Auth state changed:', firebaseUser?.email);
+      console.log('Auth state changed:', firebaseUser?.email);
       
       if (firebaseUser) {
         try {
@@ -53,7 +53,7 @@ export const AuthProvider = ({ children }: AuthProviderProps) => {
             const userDoc = querySnapshot.docs[0];
             const userData = userDoc.data() as UserFirestore;
             
-            console.log('✅ Usuario encontrado en AuthContext:', userData);
+            console.log('Usuario encontrado en AuthContext:', userData);
             
             const nombreCompleto = [
               userData.primer_nombre,
@@ -93,10 +93,10 @@ export const AuthProvider = ({ children }: AuthProviderProps) => {
             console.log('💾 Guardando usuario en contexto:', authUser);
             setUser(authUser);
           } else {
-            console.warn('⚠️ Usuario no encontrado en Firestore');
+            console.warn('Usuario no encontrado en Firestore');
           }
         } catch (error) {
-          console.error('❌ Error obteniendo datos del usuario:', error);
+          console.error('Error obteniendo datos del usuario:', error);
         }
       } else {
         setUser(null);

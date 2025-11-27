@@ -114,7 +114,7 @@ const NuevoUsuario = () => {
     setSuccess('');
 
     try {
-      console.log('🔐 Creando usuario en Firebase Auth...');
+      console.log('Creando usuario en Firebase Auth...');
       
       // Crear usuario en Firebase Authentication
       const userCredential = await createUserWithEmailAndPassword(

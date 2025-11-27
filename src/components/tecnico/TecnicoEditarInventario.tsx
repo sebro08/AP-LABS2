@@ -38,7 +38,7 @@ const TecnicoEditarInventario = () => {
     
     setLoading(true);
     try {
-      console.log('🔄 Cargando datos...');
+      console.log('Cargando datos...');
 
       // Cargar catálogos
       const [estadosSnap, tiposSnap, medidasSnap, recursoDoc] = await Promise.all([
@@ -72,10 +72,10 @@ const TecnicoEditarInventario = () => {
         setError('Recurso no encontrado');
       }
 
-      console.log('✅ Datos cargados');
+      console.log('Datos cargados');
       setLoading(false);
     } catch (err: any) {
-      console.error('❌ Error cargando datos:', err);
+      console.error('Error cargando datos:', err);
       setError('Error al cargar los datos: ' + err.message);
       setLoading(false);
     }
@@ -325,13 +325,13 @@ const TecnicoEditarInventario = () => {
 
         {error && (
           <div className="alert alert-error">
-            ⚠️ {error}
+            {error}
           </div>
         )}
 
         {success && (
           <div className="alert alert-success">
-            ✅ {success}
+            {success}
           </div>
         )}
 

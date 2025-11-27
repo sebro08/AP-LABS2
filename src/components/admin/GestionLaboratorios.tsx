@@ -20,11 +20,11 @@ const GestionLaboratorios = () => {
   }, []);
 
   const cargarDatos = async () => {
-    console.log('🔄 [INICIO] Función cargarDatos ejecutándose...');
+    console.log('[INICIO] Función cargarDatos ejecutándose...');
     setLoading(true);
     setError('');
     try {
-      console.log('🔄 Intentando conectar con Firebase...');
+      console.log('Intentando conectar con Firebase...');
       console.log('Colección: laboratorios');
       
       const labsSnapshot = await getDocs(collection(db, 'laboratorios'));

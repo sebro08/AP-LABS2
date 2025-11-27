@@ -24,7 +24,7 @@ const GestionInventario = () => {
   const cargarDatos = async () => {
     setLoading(true);
     try {
-      console.log('🔄 Cargando datos de inventario...');
+      console.log('Cargando datos de inventario...');
 
       // Cargar recursos
       const recursosQuery = query(collection(db, 'recurso'), orderBy('nombre'));
